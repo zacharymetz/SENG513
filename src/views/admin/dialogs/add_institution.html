@@ -1,0 +1,87 @@
+<div id="new_institution_dialog"  style="display:none;width:600px;" title="New Institution">
+    <div class="form-group">
+          <label for="univeristyname">Univeristy Name</label>
+          <input type="text" class="form-control" id="univeristyname" aria-describedby="emailHelp" placeholder="Univierty of Calgary">
+          <small id="uniHelp" class="form-text text-muted">The institution's full name</small>
+        </div>
+        <div class="form-group">
+          <label for="univeristyshortname">Univeristy Short Name</label>
+          <input type="text" class="form-control" id="univeristyshortname" aria-describedby="emailHelp" placeholder="UCalgary">
+          <small id="unishortHelp" class="form-text text-muted">The institution's short name</small>
+    </div>
+    <label for="address_row">Address</label>
+    <div id="address_row" class="row">
+      <div class="form-group col-sm-3">
+        <label for="exampleFormControlInput1">Number</label>
+        <input type="text" class="form-control" id="new_cust_number">
+      </div>
+      <div class="form-group col-sm-6">
+        <label for="exampleFormControlInput1">Street</label>
+        <input type="text" class="form-control" id="new_cust_street">
+      </div>
+      <div class="form-group col-sm-3">
+        <label for="exampleFormControlInput1">Postal Code</label>
+        <input type="text" class="form-control" id="new_cust_postal">
+      </div>
+      <div class="form-group col-sm-4">
+        <label for="city_select">City</label>
+        <select class="form-control" id="city_select">
+          <option>Calgary</option>
+          <option>Edmonton</option>
+          <option>Vancouver</option>
+          <option>Salmon Arm</option>
+          <option>Vicotria</option>
+        </select>
+      </div>
+      <div class="form-group col-sm-4">
+        <label for="state_select">Province/State</label>
+        <select class="form-control" id="state_select">
+          <option>Alberta</option>
+          <option>BC</option>
+
+        </select>
+      </div>
+      <div class="form-group col-sm-4">
+        <label for="country_select">Country</label>
+        <select class="form-control" id="country_select">
+          <option>Canada</option>
+          <option>USA</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="new_cust_first_name">First Name</label>
+      <input type="text" class="form-control" id="new_cust_first_name">
+    </div>
+    <div class="form-group">
+      <label for="new_cust_last_name">Last Name</label>
+      <input type="text" class="form-control" id="new_cust_last_name">
+    </div>
+    <div class="form-group">
+      <label for="new_cust_email">Email</label>
+      <input type="text" class="form-control" id="new_cust_email">
+    </div>
+    <div class="form-group">
+      <label for="new_cust_phone">Phone Number</label>
+      <input type="text" class="form-control" id="new_cust_phone">
+    </div>
+    
+  <div>
+    <button type="button" class="btn btn-success" id="create-new-customer-btn" style="float:right;">Create Institution</button>
+  </div>
+</div>
+
+<script>
+  function openNewInstitutionDialog(){
+$( "#new_institution_dialog" ).dialog({
+  width: 600,
+  height: 675
+});
+$( "#new_institution_dialog" ).show();
+}
+function closeNewCustomerDialog(){
+$( "#new_institution_dialog" ).dialog("close");
+}
+
+
+</script>

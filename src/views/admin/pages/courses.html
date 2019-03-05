@@ -1,0 +1,34 @@
+<h2>Class Information</h2>
+<div id="infotabs">
+<ul>
+    <li><a href="#tabs-1">Faculties</a></li>
+    <li><a href="#tabs-2">Departments</a></li>
+    <li><a href="#tabs-3">Courses</a></li>
+</ul>
+<div id="tabs-1">
+    <div class="grid-buttons">
+    <button type="button" onclick="openNewFacultyDialog()" class="btn btn-primary">Add Faculty</button>
+    </div>
+    
+    <div id="facultyGrid"></div>
+</div>
+<div id="tabs-2">
+    <div class="grid-buttons">
+    <button type="button" onclick="openNewDepartmentDialog()" class="btn btn-primary">Add Department</button>
+    </div>
+    
+    <div id="departmentGrid"></div>
+</div>
+<div id="tabs-3">
+    <div class="grid-buttons">
+    <button type="button" onclick="openNewCourseDialog()" class="btn btn-primary">Add Course</button>
+    </div>
+    
+    <div id="courseGrid"></div>
+</div>
+</div>
+<script>
+  $( function() {
+    $( "#infotabs" ).tabs();
+  } );
+</script>

@@ -1,0 +1,176 @@
+.brand-colors{
+display:flex;
+
+}
+.brand-color-selector{
+width:4rem;
+height:4rem;
+border:2px solid black;
+margin:2rem;
+}
+
+
+#courses-page{
+display:flex;
+flex-direction: column;
+
+}
+#infotabs{
+flex:1 0 0;
+}
+.login{
+margin:0 auto;
+position: absolute;
+top: 50%; left: 50%;
+transform: translate(-50%,-50%);
+text-align:center;
+min-width:20rem;
+}
+.login-logo{
+height:3rem!important;
+width:3rem!important;
+margin: 0 auto;
+margin-bottom:0.5rem;
+}
+.nav-icon{
+display:inline-block;
+margin-right:0.25rem;
+margin-bottom:-0.25rem;
+height:1.25rem;
+width:1.25rem;
+
+}
+.upload-icon{
+background:  url('/static/img/share.svg');
+background-size: contain;
+background-position: top center; 
+background-repeat: no-repeat;
+}
+.course-icon{
+background:  url('/static/img/register.svg');
+background-size: contain;
+background-position: top center; 
+background-repeat: no-repeat;
+}
+.customize-icon{
+background:  url('/static/img/pen-and-brush.svg');
+background-size: contain;
+background-position: top center; 
+background-repeat: no-repeat; 
+}
+.add-instituition-icon{
+background:  url('/static/img/apartments.svg');
+background-size: contain;
+background-position: top center; 
+background-repeat: no-repeat;
+}
+.accounts-icon{
+background:  url('/static/img/account.svg');
+background-size: contain;
+background-position: top center; 
+background-repeat: no-repeat;
+}
+.settings-icon{
+background:  url('/static/img/settings.svg');
+background-size: contain;
+background-position: top center; 
+background-repeat: no-repeat;
+}
+.help-icon{
+background:  url('/static/img/question.svg');
+background-size: contain;
+background-position: top center; 
+background-repeat: no-repeat;
+}
+#upload-page{
+text-align: center;
+}
+.custom-file{
+text-align:left;
+max-width:30rem;
+}
+.drag-file-area{
+margin:2rem auto;
+height: 15rem;
+width:15rem;
+border:3px solid rgba(0,0,0,.125);
+
+    background-color: #f8f9fa;
+border-radius:6px;
+position:relative;
+}
+.drag-file-wrapper{
+margin:0 auto;
+position: absolute;
+top: 50%; left: 50%;
+transform: translate(-50%,-50%);
+text-align:center;
+}
+.drag-file-text{
+text-align:center;
+    color: #495057;
+margin:0.5rem 0;
+}
+.drag-file-icon{
+margin:0 auto;
+height:5rem;
+width:5rem;
+background:  url('/static/img/upload.svg');
+background-size: contain;
+background-position: top center; 
+background-repeat: no-repeat;
+
+}
+  
+.active-item{
+    background-color: #e9ecef!important;
+}
+.admin-action{
+    overflow-y:auto;
+    height:100%;
+    width:100%;
+    padding:2rem;
+}
+.grid-buttons{
+    margin:1rem 0;
+}
+.current-user{
+    flex:1;
+    text-align:right;
+    align-self: center;
+}
+.logo{
+    background:url('/static/img/logo.svg');
+    background-size:contain;
+    height:2rem;
+    width:2rem;
+}
+.nav-text-item{
+    font-size:1.25rem;
+    margin-left:1rem;
+    font-weight:600;
+}
+.form-control{
+    max-width:30rem;
+}
+.admin-nav{
+    padding:1rem 2rem;
+    display:flex;
+    height:4rem;
+    background:#f8f9fa;
+    border-bottom:1px solid rgba(0,0,0,.125);
+}
+.admin-content{
+    height:calc( 100vh - 4rem);
+    display:flex;
+}
+.admin-content-nav{
+    flex:1;
+    max-width:12rem;
+    min-width:12rem;
+    border-right:1px solid rgba(0,0,0,.125);
+    
+}
+.admin-content-actions{
+    flex:1;
+}

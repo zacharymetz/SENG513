@@ -4,9 +4,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width">
     <title>{% block title %}{% endblock %}</title>
+    <link rel="shortcut icon" type="image/png" href="/static/styles/icons/logo.png"/>
     <link href="/static/styles/bootstrap.css" rel="stylesheet" type="text/css" />
     <link href="/static/styles/theme.css" rel="stylesheet" type="text/css" />
+    <link href="/static/styles/admin.css" rel="stylesheet" type="text/css" />
     <link href="/static/styles/icons/style.css" rel="stylesheet" type="text/css" />
+    
     <script src="/static/scripts/jquery.js"></script>
     <script src="/static/scripts/popper.js"></script>
     <script src="/static/scripts/bootstrap.js"></script>
@@ -14,7 +17,19 @@
     {% block dependancies %}{% endblock %}
   </head>
   <body>
-    <!-- Boy Start -->
-    {% block body %}{% endblock %}
+    <!-- Body Start -->
+    <div class="admin-nav">
+      <div class="logo"></div>
+      <div class="nav-text-item">
+        Our App
+      </div>
+      <div class="current-user">
+        john.doe@ucalgary.ca
+      </div>
+    </div>
+    
+    <div class="admin-content">
+      {% block body %}{% endblock %}
+    </div>
   </body>
 </html>

@@ -15,11 +15,13 @@ nunjucks.configure('views', {
   express: app
 });
 
-var app = require('./controllers/app');
+var admin = require('./controllers/admin');
+var pages = require('./controllers/pages');
 var search = require('./controllers/search');
 
 
-app.use('/', app);
+app.use('/admin', admin);
+app.use('/', pages);
 app.use('/search', search);
 
 //listen at 3000
