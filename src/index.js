@@ -15,12 +15,14 @@ nunjucks.configure('views', {
   express: app
 });
 
+var adminGrid = require('./controllers/adminGrid');
 var admin = require('./controllers/admin');
 var pages = require('./controllers/pages');
 var search = require('./controllers/search');
 
 
 app.use('/admin', admin);
+app.use('/adminGrid', adminGrid);
 app.use('/', pages);
 app.use('/search', search);
 

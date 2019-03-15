@@ -53,6 +53,50 @@
     </div>
     </div>
 </div>
+<script>
+$.ajax({
+        type: 'POST',
+        url: "/adminGrid/GetCountries",
+        dataType: "json",
+        data: {name : "",
+        pageIndex: 1,
+        pageSize: 300,}
+    }).done(function(dataResult) {
+        //  lets fill up the select with countries
+        var html = "";
+        for(var i=0;i<dataResult.data.length;i++){
+            html = html + "<option onclick='getStates("+dataResult.data[i].countryid+")>"+dataResult.data[i].name+"</option>";
+            
+        }
+        console.log(html);
+        $("#country_select").html(html);
+        console.log(dataResult);
+
+    });
+//  get the associated states 
+function getStates(countryid){
+    $.ajax({
+        type: 'POST',
+        url: "/adminGrid/GetStates",
+        dataType: "json",
+        data: {name : "",
+        pageIndex: 1,
+        pageSize: 300,}
+    }).done(function(dataResult) {
+        //  lets fill up the select with countries
+        var html = "";
+        for(var i=0;i<dataResult.data.length;i++){
+            html = html + "<option onclick='getCities("+dataResult.data[i].stateid+")>"+dataResult.data[i].name+"</option>";
+            
+        }
+        console.log(html);
+        $("#state_select").html(html);
+        console.log(dataResult);
+
+    });
+
+}
+</script>
 
 <small id="unishortHelp" class="form-text text-muted">The location of the institution</small>
 </br>

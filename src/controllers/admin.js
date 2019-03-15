@@ -12,6 +12,8 @@ var router = express.Router();
 router.get('/admin', (req, res) => {
   //dont have to do nothing lol
 
+
+
   res.render('admin/index.html');
 });
 router.get('/admin/login', (req, res) => {
@@ -32,6 +34,8 @@ router.post('/admin/logout', (req, res) => {
     res.send(JSON.stringify({
         success :true
     }));
+
+
 });
 
 

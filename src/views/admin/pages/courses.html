@@ -31,4 +31,89 @@
   $( function() {
     $( "#infotabs" ).tabs();
   } );
+  
+  //  create the grids 
+  $("#facultyGrid").jsGrid({
+        width: "100%",
+ 
+              filtering: true,
+               editing: true,
+               sorting: true,
+               paging: true,
+               autoload: true,
+               pageSize: 20,
+               pageLoading:true,
+              pageButtonCount: 7,
+              fields: [
+            { name: "code", type: "text", width: 100 },
+            { name: "longname", type: "text", width: 100 },
+            {type: "control"}
+        ],
+
+ 
+        
+ 
+        
+          controller: {
+          loadData: function(filter) {
+                var d = $.Deferred();
+                console.log(filter);
+                $.ajax({
+                  type: 'POST',
+                    url: "/adminGrid/GetFaculty",
+                    dataType: "json",
+                    data: filter
+                }).done(function(dataResult) {
+                  console.log(dataResult);
+                    d.resolve(dataResult);
+                });
+                return d.promise();
+            }
+          }
+ 
+        
+    });
+
+
+
+
+    $("#departmentGrid").jsGrid({
+        width: "100%",
+ 
+        filtering: true,
+        sorting: true,
+        paging: true,
+        autoload: true,
+ 
+        pageSize: 15,
+        pageButtonCount: 5,
+ 
+        fields: [
+            { name: "name", type: "text", width: 100 },
+            { name: "code", type: "text", width: 50 },
+            { name: "longname", type: "text", width: 50 },
+            
+            { type: "control" }
+        ],
+ 
+        controller: {
+          loadData: function(filter) {
+                var d = $.Deferred();
+                $.ajax({
+                  type: 'POST',
+                    url: "/adminGrid/GetDepartment",
+                    dataType: "json",
+                    data: filter
+                }).done(function(dataResult) {
+                  console.log(dataResult);
+                    d.resolve(dataResult);
+                });
+                return d.promise();
+            }
+          }
+ 
+ 
+        
+    });
 </script>
+

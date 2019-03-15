@@ -68,56 +68,8 @@ $(document).ready(function(){
             { type: "control" }
         ]
     });
-    $("#facultyGrid").jsGrid({
-        height: "80%",
-        width: "100%",
- 
-        filtering: true,
-        sorting: true,
-        paging: true,
-        autoload: true,
- 
-        pageSize: 15,
-        pageButtonCount: 5,
- 
-        
- 
-        controller: db,
- 
-        fields: [
-            { name: "Course Name", type: "text", width: 100 },
-            { name: "Level", type: "number", width: 50 },
-            { name: "Department", type: "text", width: 150 },
-            { name: "Faculty", type: "text" ,width: 150},
-            
-            { type: "control" }
-        ]
-    });
-    $("#departmentGrid").jsGrid({
-        height: "80%",
-        width: "100%",
- 
-        filtering: true,
-        sorting: true,
-        paging: true,
-        autoload: true,
- 
-        pageSize: 15,
-        pageButtonCount: 5,
- 
-        
- 
-        controller: db,
- 
-        fields: [
-            { name: "Course Name", type: "text", width: 100 },
-            { name: "Level", type: "number", width: 50 },
-            { name: "Department", type: "text", width: 150 },
-            { name: "Faculty", type: "text" ,width: 150},
-            
-            { type: "control" }
-        ]
-    });
+    
+    
 
     $("#courseGrid").jsGrid({
         height: "80%",

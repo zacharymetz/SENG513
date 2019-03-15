@@ -11,11 +11,14 @@ var DEFAULT_PAGE_SIZE = 20;
  // returns the query sting and the options
 
 */
-function jsGridQueryBuilder(tableName,query,validSortFeilds,innerJoin=null){
+function jsGridQueryBuilder(tableName,query,validSortFeilds,innerJoin=null,schema=null){
   var query_string ="";
   var query_options = [];
   var andFlag = false; //if there is only one option no need for and
-
+  var actualTableName = tableName;
+  if(schema != null){
+    actualTableName =  schema +"." + tableName;
+  }
 
   var attributes = Object.keys(query);
   //remove page Size, page Index, SortFeild and Sort Order
@@ -80,8 +83,9 @@ function jsGridQueryBuilder(tableName,query,validSortFeilds,innerJoin=null){
      query_string_selec = query_string_selec + ", "+ innerJoin.columns[i];
    }
  }
-
- query_string = query_string_select +", count(*) OVER() AS itemsNumber From " + tableName + "  " + query_string;
+ 
+ query_string = query_string_select +", count(*) OVER() AS itemsNumber From " +  actualTableName + "  " + query_string;
+ 
  //check to see if there are any options to query by
 var sort = "";
  // check to see if there is a sort feild and add it to the query
@@ -119,6 +123,7 @@ var sort = "";
  }
  query_string = query_string + "; ";
  //add the part to get the number of records in the database
+ console.log(query_string);
  return [query_string,query_options];
 }
 module.exports.jsGridQueryBuilder = jsGridQueryBuilder;
