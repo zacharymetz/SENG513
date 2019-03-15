@@ -1,5 +1,5 @@
 /*
-Search Module 
+Search Module
 All the supporting functions for the main application of the application
 */
 const db = require('../db');
@@ -10,6 +10,11 @@ var router = express.Router();
 /*
 
 */
+router.get('/',(req,res) =>{
+  res.render('search/index.html');
+});
+
+
 router.get('/GetInsitutions', (req, res) => {
   //dont have to do nothing lol
 

@@ -23,8 +23,8 @@ var search = require('./controllers/search');
 
 app.use('/admin', admin);
 app.use('/adminGrid', adminGrid);
-app.use('/', pages);
-app.use('/search', search);
+app.use('/pages', pages);
+app.use('/', search);
 
 //listen at 3000
 app.listen(3000, () => console.log('server started'));
