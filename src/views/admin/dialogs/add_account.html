@@ -1,0 +1,130 @@
+
+
+<div id="new_account_dialog"  style="display:none;width:600px;" title="New Account">
+    <div class="form-group">
+      <label for="new_cust_first_name">First Name</label>
+      <input type="text" class="form-control" id="new_account_first_name">
+    </div>
+    <div class="form-group">
+      <label for="new_cust_last_name">Last Name</label>
+      <input type="text" class="form-control" id="new_account_last_name">
+    </div>
+    <div class="form-group">
+      <label for="new_cust_email">Email</label>
+      <input type="text" class="form-control" id="new_account_email">
+    </div>
+    <div class="form-group">
+      <label for="new_cust_phone">Phone Number</label>
+      <input type="text" class="form-control" id="new_account_phone">
+    </div>
+    <!-- here i want what institutions you have power over or if -->
+    <div class="form-group">
+        <label for="new_cust_first_name">Access Managment</label>
+        <!-- have the differnt admin access -->
+        <label for="new_cust_first_name">Admin</label>
+        <div class="row">
+            <div class="form-check col-sm-6">
+                <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                <label class="form-check-label" for="exampleCheck1">View Accounts</label>
+            </div>
+            <div class="form-check col-sm-6">
+                <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                <label class="form-check-label" for="exampleCheck1">Edit Accounts</label>
+            </div>
+            <div class="form-check col-sm-6">
+                <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                <label class="form-check-label" for="exampleCheck1">View Insitutions</label>
+            </div>
+            <div class="form-check col-sm-6">
+                <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                <label class="form-check-label" for="exampleCheck1">Edit Institutions</label>
+            </div>
+            <div class="form-check col-sm-6">
+                <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                <label class="form-check-label" for="exampleCheck1">Site Changes</label>
+            </div>
+            
+        </div>
+        <label for="new_cust_first_name">Insitutions</label>
+        <!--   have a select drop down to determ which accounts and stuff -->
+        <div class="form-group col-sm-4">
+            <label for="city_select">City</label>
+            <select class="form-control" id="new_institution_city_select">
+              <option>Calgary</option>
+              <option>Edmonton</option>
+              <option>Vancouver</option>
+              <option>Salmon Arm</option>
+              <option>Vicotria</option>
+            </select>
+        </div>
+        <div class="row">
+            <div class="form-check col-sm-6">
+                <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                <label class="form-check-label" for="exampleCheck1">View Data</label>
+            </div>
+            <div class="form-check col-sm-6">
+                <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                <label class="form-check-label" for="exampleCheck1">Edit Data</label>
+            </div>
+            <div class="form-check col-sm-6">
+                <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                <label class="form-check-label" for="exampleCheck1">Customize</label>
+            </div>
+            <div class="form-check col-sm-6">
+                <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                <label class="form-check-label" for="exampleCheck1">Upload Data</label>
+            </div>
+        </div>
+        <button type="button" class="btn btn-primary">Add Institution</button>
+    </div>
+
+    
+  <div>
+    <button type="button" class="btn btn-success" id="create-new-account-btn" style="float:right;">Create Account</button>
+  </div>
+</div>
+
+<script>
+function openNewInstitutionDialog(){
+$( "#new_account_dialog" ).dialog({
+  width: 600,
+  height: 675
+});
+$( "#new_account_dialog" ).show();
+}
+function closeNewCustomerDialog(){
+$( "#new_account_dialog" ).dialog("close");
+}
+
+function createInstitution(){
+  $/post("NewInstitution",{
+    
+      
+
+      firstName : $("#new_institution_first_name").val(),
+      lastName : $("#new_institution_last_name").val(),
+      email :$("#new_institution_email").val(),
+      phoneNumber :  $("#new_institution_phone").val()
+    
+  }).done((data)=>{
+    if(data.success){
+      alert("your insitution was created");
+    }else{
+      alert("your insitution could not be created");
+    }
+  });
+}
+
+
+//  initalize the date selector  
+$(document).ready(()=>{
+  initLocationSelect("new_institution_");
+  //  add the new insitution button
+  $("#create-new-institution-btn").click(()=>{
+    createInstitution();
+  });
+});
+
+
+
+</script>
