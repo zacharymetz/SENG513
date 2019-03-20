@@ -1,14 +1,10 @@
 <div id="new_institution_dialog"  style="display:none;width:600px;" title="New Institution">
     <div class="form-group">
           <label for="univeristyname">Univeristy Name</label>
-          <input type="text" class="form-control" id="univeristyname" aria-describedby="emailHelp" placeholder="Univierty of Calgary">
+          <input type="text" class="form-control" id="newinstitutionname" aria-describedby="emailHelp" placeholder="Univierty of Calgary">
           <small id="uniHelp" class="form-text text-muted">The institution's full name</small>
         </div>
-        <div class="form-group">
-          <label for="univeristyshortname">Univeristy Short Name</label>
-          <input type="text" class="form-control" id="univeristyshortname" aria-describedby="emailHelp" placeholder="UCalgary">
-          <small id="unishortHelp" class="form-text text-muted">The institution's short name</small>
-    </div>
+        
     <label for="address_row">Address</label>
     <div id="address_row" class="row">
       <div class="form-group col-sm-3">
@@ -81,6 +77,19 @@ $( "#new_institution_dialog" ).show();
 }
 function closeNewCustomerDialog(){
 $( "#new_institution_dialog" ).dialog("close");
+}
+
+function createInstitution(){
+  $.post("/admin/newInstitution",{
+    name : $("#newinstitutionname").val(),
+    address : {
+      streetNumber : 0,
+      streetName : 0,
+      postalCode
+    }
+  }, (data)=>{
+
+  });
 }
 
 

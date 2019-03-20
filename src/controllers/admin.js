@@ -9,7 +9,7 @@ var router = express.Router();
 /*
 
 */
-router.get('/admin', (req, res) => {
+router.get('/', (req, res) => {
   //dont have to do nothing lol
 
 
