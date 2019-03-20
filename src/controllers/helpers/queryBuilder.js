@@ -56,7 +56,7 @@ function jsGridQueryBuilder(tableName,query,validSortFeilds,innerJoin=null,schem
      // WARNING ALL UNTESTED BUT WORKS WITH STRINGS, no idea about dates tho
      // havent gotten that far lol
      if(!isNaN(query[attributes[i]])){ // if its a number
-       query_string = query_string + attributes[i] +" = $" + (query_options.length + 1) + " ";
+       query_string = query_string + actualTableName + "."+ attributes[i] +" = $" + (query_options.length + 1) + " ";
      }
      else if(new Date(query[attributes[i]]) !== "Invalid Date" && !isNaN(new Date(query[attributes[i]]))){ // see if its a valid date
        query_string = query_string + attributes[i] +" = $" + (query_options.length + 1) + " ";
@@ -76,7 +76,7 @@ function jsGridQueryBuilder(tableName,query,validSortFeilds,innerJoin=null,schem
 
 
  //also have a thing that retinr the items number with it
- var query_string_select = "SELECT *" ;
+ var query_string_select = "SELECT"+" *" ;
  // here incase there is an inner join we might need to ad extra columns here
  if(innerJoin != null){
    for(var i=0;i<innerJoin.columns;i++){

@@ -1,7 +1,7 @@
 <div id="new_institution_dialog"  style="display:none;width:600px;" title="New Institution">
     <div class="form-group">
           <label for="univeristyname">Univeristy Name</label>
-          <input type="text" class="form-control" id="newinstitutionname" aria-describedby="emailHelp" placeholder="Univierty of Calgary">
+          <input type="text" class="form-control" id="new_institution_name" aria-describedby="emailHelp" placeholder="Univierty of Calgary">
           <small id="uniHelp" class="form-text text-muted">The institution's full name</small>
         </div>
         
@@ -9,19 +9,19 @@
     <div id="address_row" class="row">
       <div class="form-group col-sm-3">
         <label for="exampleFormControlInput1">Number</label>
-        <input type="text" class="form-control" id="new_cust_number">
+        <input type="text" class="form-control" id="new_institution_number">
       </div>
       <div class="form-group col-sm-6">
         <label for="exampleFormControlInput1">Street</label>
-        <input type="text" class="form-control" id="new_cust_street">
+        <input type="text" class="form-control" id="new_institution_street">
       </div>
       <div class="form-group col-sm-3">
         <label for="exampleFormControlInput1">Postal Code</label>
-        <input type="text" class="form-control" id="new_cust_postal">
+        <input type="text" class="form-control" id="new_institution_postal">
       </div>
       <div class="form-group col-sm-4">
         <label for="city_select">City</label>
-        <select class="form-control" id="city_select">
+        <select class="form-control" id="new_institution_city_select">
           <option>Calgary</option>
           <option>Edmonton</option>
           <option>Vancouver</option>
@@ -31,7 +31,7 @@
       </div>
       <div class="form-group col-sm-4">
         <label for="state_select">Province/State</label>
-        <select class="form-control" id="state_select">
+        <select class="form-control" id="new_institution_state_select">
           <option>Alberta</option>
           <option>BC</option>
 
@@ -39,7 +39,7 @@
       </div>
       <div class="form-group col-sm-4">
         <label for="country_select">Country</label>
-        <select class="form-control" id="country_select">
+        <select class="form-control" id="new_institution_country_select">
           <option>Canada</option>
           <option>USA</option>
         </select>
@@ -47,28 +47,28 @@
     </div>
     <div class="form-group">
       <label for="new_cust_first_name">First Name</label>
-      <input type="text" class="form-control" id="new_cust_first_name">
+      <input type="text" class="form-control" id="new_institution_first_name">
     </div>
     <div class="form-group">
       <label for="new_cust_last_name">Last Name</label>
-      <input type="text" class="form-control" id="new_cust_last_name">
+      <input type="text" class="form-control" id="new_institution_last_name">
     </div>
     <div class="form-group">
       <label for="new_cust_email">Email</label>
-      <input type="text" class="form-control" id="new_cust_email">
+      <input type="text" class="form-control" id="new_institution_email">
     </div>
     <div class="form-group">
       <label for="new_cust_phone">Phone Number</label>
-      <input type="text" class="form-control" id="new_cust_phone">
+      <input type="text" class="form-control" id="new_institution_phone">
     </div>
     
   <div>
-    <button type="button" class="btn btn-success" id="create-new-customer-btn" style="float:right;">Create Institution</button>
+    <button type="button" class="btn btn-success" id="create-new-institution-btn" style="float:right;">Create Institution</button>
   </div>
 </div>
 
 <script>
-  function openNewInstitutionDialog(){
+function openNewInstitutionDialog(){
 $( "#new_institution_dialog" ).dialog({
   width: 600,
   height: 675
@@ -80,17 +80,43 @@ $( "#new_institution_dialog" ).dialog("close");
 }
 
 function createInstitution(){
-  $.post("/admin/newInstitution",{
-    name : $("#newinstitutionname").val(),
+  $/post("NewInstitution",{
+    name : $("#new_institution_name").val(),
     address : {
-      streetNumber : 0,
-      streetName : 0,
-      postalCode
-    }
-  }, (data)=>{
+      streetNumber : $("#new_institution_number").val(),
+      streetName : $("#new_institution_street").val(),
+      postalCode : $("#new_institution_postal").val(),
+      city :$("#new_institution_city_select").val(),
+      state :$("#new_institution_state_select").val(),
+      country :$("#new_institution_country_select").val()
+    },
 
+      
+
+      firstName : $("#new_institution_first_name").val(),
+      lastName : $("#new_institution_last_name").val(),
+      email :$("#new_institution_email").val(),
+      phoneNumber :  $("#new_institution_phone").val()
+    
+  }).done((data)=>{
+    if(data.success){
+      alert("your insitution was created");
+    }else{
+      alert("your insitution could not be created");
+    }
   });
 }
+
+
+//  initalize the date selector  
+$(document).ready(()=>{
+  initLocationSelect("new_institution_");
+  //  add the new insitution button
+  $("#create-new-institution-btn").click(()=>{
+    createInstitution();
+  });
+});
+
 
 
 </script>

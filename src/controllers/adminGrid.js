@@ -108,12 +108,12 @@ router.post('/GetStates', (req, res) => {
   var validSortFeilds = ["name"];
   var innerJoin = {  // inner join on the departments table so we can display the name of the department instead o fhte id 
     columns : [
-      "longname"
+      "countryid"
     ],
-    query: " inner join academicgroup on subject.academicgroupid = academicgroup.academicgroupid "
+    query: " inner join geo.country on geo.state.countryid = geo.country.countryid "
   };
 
-  var queryOptions = queryBuilder.jsGridQueryBuilder("country", query, validSortFeilds,innerJoin,"geo");
+  var queryOptions = queryBuilder.jsGridQueryBuilder("state", query, validSortFeilds,innerJoin,"geo");
     db.query(queryOptions[0],queryOptions[1] ,(err, result) => {
         if (err) {
           console.log(err.stack);
@@ -135,6 +135,28 @@ router.post('/GetStates', (req, res) => {
 });
 
 router.post('/GetCities', (req, res) => {
+  var query = req.body;
+  var validSortFeilds = ["name"];
+  
+
+  var queryOptions = queryBuilder.jsGridQueryBuilder("city", query, validSortFeilds,null,"geo");
+    db.query(queryOptions[0],queryOptions[1] ,(err, result) => {
+        if (err) {
+          console.log(err.stack);
+          res.send(JSON.stringify({
+              d: false
+          }));
+        } else {
+          var numberOfItems = 0;
+          if(result.rows[0]){
+            numberOfItems = result.rows[0].itemsnumber
+          }
+          res.send(JSON.stringify({
+              data: result.rows,
+              itemsCount: numberOfItems
+          }));
+        }
+      });
   
 });
 

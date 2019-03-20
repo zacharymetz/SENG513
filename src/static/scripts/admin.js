@@ -121,3 +121,105 @@ function goToPage(id){
   
   return;
 }
+
+
+
+function initLocationSelect(prefix){
+  $.ajax({
+      type: 'POST',
+      url: "/adminGrid/GetCountries",
+      dataType: "json",
+      data: {name : "",
+      pageIndex: 1,
+      pageSize: 300,}
+  }).done(function(dataResult) {
+      //  lets fill up the select with countries
+      var html = "";
+      for(var i=0;i<dataResult.data.length;i++){
+          html = html + "<option value="+dataResult.data[i].countryid+" >"+dataResult.data[i].name+"</option>";
+          
+      }
+      console.log(html);
+      $("#"+prefix+"country_select").html(html);
+      //  create an onclick change functron 
+      $("#"+prefix+"country_select").change(()=>{
+        getStates($("#"+prefix+"country_select").val(),prefix);
+        console.log($("#"+prefix+"country_select").val());
+      });
+      console.log(dataResult);
+
+  });
+
+}
+
+//  get the associated states 
+function getStates(countryid,prefix){
+  //  load states
+    $.ajax({
+        type: 'POST',
+        url: "/adminGrid/GetStates",
+        dataType: "json",
+        data: {countryid : $("#"+prefix+"country_select").val(),
+        pageIndex: 1,
+        pageSize: 300,}
+    }).done(function(dataResult) {
+        //  lets fill up the select with countries
+        console.log("fdasfdsa",dataResult);
+        var html = "";
+        for(var i=0;i<dataResult.data.length;i++){
+            html = html + "<option value="+dataResult.data[i].stateid+" >"+dataResult.data[i].statename+"</option>";
+            
+        }
+        console.log(html);
+        $("#"+prefix+"state_select").html(html);
+        $("#"+prefix+"state_select").change(()=>{
+          getCities($("#"+prefix+"state_select").val(),prefix);
+        });
+        console.log(dataResult);
+
+    });
+    //  also load all of the cities 
+    $.ajax({
+        type: 'POST',
+        url: "/adminGrid/GetCities",
+        dataType: "json",
+        data: {countryid : $("#"+prefix+"country_select").val(),
+        pageIndex: 1,
+        pageSize: 300,}
+    }).done(function(dataResult) {
+        //  lets fill up the select with countries
+        var html = "";
+        for(var i=0;i<dataResult.data.length;i++){
+            html = html + "<option >"+dataResult.data[i].name+"</option>";
+            
+        }
+        console.log(html);
+        $("#"+prefix+"city_select").html(html);
+        console.log(dataResult);
+
+    });
+
+}
+function getCities(stateid,prefix){
+  $.ajax({
+        type: 'POST',
+        url: "/adminGrid/GetCities",
+        dataType: "json",
+        data: {stateid : stateid,
+        pageIndex: 1,
+        pageSize: 300,}
+    }).done(function(dataResult) {
+        //  lets fill up the select with countries
+        var html = "";
+        for(var i=0;i<dataResult.data.length;i++){
+            html = html + "<option >"+dataResult.data[i].name+"</option>";
+            
+        }
+        console.log(html);
+        $("#"+prefix+"city_select").html(html);
+        console.log(dataResult);
+
+    });
+}
+
+

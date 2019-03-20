@@ -84,6 +84,7 @@ function getStates(countryid){
         pageSize: 300,}
     }).done(function(dataResult) {
         //  lets fill up the select with countries
+        console.log(dataResult);
         var html = "";
         for(var i=0;i<dataResult.data.length;i++){
             html = html + "<option onclick='getCities("+dataResult.data[i].stateid+")>"+dataResult.data[i].name+"</option>";
