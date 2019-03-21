@@ -16,30 +16,38 @@ router.get('/', (req, res) => {
 
   res.render('admin/index.html');
 });
-router.get('/login', (req, res) => {
+router.get('/auth/login', (req, res) => {
     //dont have to do nothing lol
   
-    res.render('invoices/list.html');
+    res.render('admin/login.html');
 });
-router.post('/login', (req, res) => {
-    //dont have to do nothing lol
-  
-    res.send(JSON.stringify({
-        success :true
-    }));
-});
-router.post('/logout', (req, res) => {
+router.post('/auth/login', (req, res) => {
     //dont have to do nothing lol
   
     res.send(JSON.stringify({
         success :true
     }));
+});
+router.post('/auth/logout', (req, res) => {
+    //dont have to do nothing lol
+  
+    res.send(JSON.stringify({
+        success :true
+    }));
 
 
 });
 
 
 
+router.get('/setup',(req, res) => {
+    //  lets figure out from the cookie what institutions they can setup before they can do anything else 
+
+  
+    res.render('admin/setup.html');
+
+
+});
 
 
 

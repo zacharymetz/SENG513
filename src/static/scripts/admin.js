@@ -32,7 +32,22 @@ $(document).ready(function(){
  
         
  
-        controller: db,
+        controller: {
+          loadData: function(filter) {
+                var d = $.Deferred();
+                console.log(filter);
+                $.ajax({
+                  type: 'POST',
+                    url: "/adminGrid/GetInstitutions",
+                    dataType: "json",
+                    data: filter
+                }).done(function(dataResult) {
+                  console.log(dataResult);
+                    d.resolve(dataResult);
+                });
+                return d.promise();
+            }
+          },
  
         fields: [
             { name: "Course Name", type: "text", width: 100 },
@@ -57,7 +72,22 @@ $(document).ready(function(){
  
         
  
-        controller: db,
+        controller: {
+          loadData: function(filter) {
+                var d = $.Deferred();
+                console.log(filter);
+                $.ajax({
+                  type: 'POST',
+                    url: "/adminGrid/GetAccounts",
+                    dataType: "json",
+                    data: filter
+                }).done(function(dataResult) {
+                  console.log(dataResult);
+                    d.resolve(dataResult);
+                });
+                return d.promise();
+            }
+          },
  
         fields: [
             { name: "First", type: "text", width: 100 },

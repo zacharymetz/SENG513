@@ -223,8 +223,55 @@ router.post('/NewInstitution',(req,res)=>{
 
 
 
+router.post('/GetAccounts',(req,res)=>{
+  var query = req.body;
+  var validSortFeilds = ["name"];
+  
 
+  var queryOptions = queryBuilder.jsGridQueryBuilder("account", query, validSortFeilds,null);
+    db.query(queryOptions[0],queryOptions[1] ,(err, result) => {
+        if (err) {
+          console.log(err.stack);
+          res.send(JSON.stringify({
+              d: false
+          }));
+        } else {
+          var numberOfItems = 0;
+          if(result.rows[0]){
+            numberOfItems = result.rows[0].itemsnumber
+          }
+          res.send(JSON.stringify({
+              data: result.rows,
+              itemsCount: numberOfItems
+          }));
+        }
+      });
+});
 
+router.post('/GetInstitutions',(req,res)=>{
+  var query = req.body;
+  var validSortFeilds = ["name"];
+  
+
+  var queryOptions = queryBuilder.jsGridQueryBuilder("institution", query, validSortFeilds,null);
+    db.query(queryOptions[0],queryOptions[1] ,(err, result) => {
+        if (err) {
+          console.log(err.stack);
+          res.send(JSON.stringify({
+              d: false
+          }));
+        } else {
+          var numberOfItems = 0;
+          if(result.rows[0]){
+            numberOfItems = result.rows[0].itemsnumber
+          }
+          res.send(JSON.stringify({
+              data: result.rows,
+              itemsCount: numberOfItems
+          }));
+        }
+      });
+});
 
 
 
