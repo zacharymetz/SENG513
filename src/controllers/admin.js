@@ -16,19 +16,19 @@ router.get('/', (req, res) => {
 
   res.render('admin/index.html');
 });
-router.get('/admin/login', (req, res) => {
+router.get('/login', (req, res) => {
     //dont have to do nothing lol
   
     res.render('invoices/list.html');
 });
-router.post('/admin/login', (req, res) => {
+router.post('/login', (req, res) => {
     //dont have to do nothing lol
   
     res.send(JSON.stringify({
         success :true
     }));
 });
-router.post('/admin/logout', (req, res) => {
+router.post('/logout', (req, res) => {
     //dont have to do nothing lol
   
     res.send(JSON.stringify({
@@ -37,6 +37,9 @@ router.post('/admin/logout', (req, res) => {
 
 
 });
+
+
+
 
 
 

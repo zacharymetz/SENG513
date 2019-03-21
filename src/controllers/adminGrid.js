@@ -165,6 +165,61 @@ router.post('/GetCities', (req, res) => {
 
 
 
+router.post('/NewInstitution',(req,res)=>{
+  var body = req.body;
+  //  pretty much we need to create the insitution 
+  var sql_string = "INSERT INTO public.institution(name,  inialized, created_at) VALUES ( $1, false, now()) returning institutionid;";
+
+  var sql_params = [body.institutionName];
+  db.query(sql_string,sql_params ,(err, result) => {
+    if (err) {
+      console.log(err.stack);
+      res.send(JSON.stringify({
+          success : false,
+          message : "Insitution could not be created"
+      }));
+    } else {
+      //  i think it was created so now we can create teh started account for the person and generate a password 
+      //  ( which for now will be returned )
+      var accountString = "INSERT INTO public.account( email, passworddigest, firstname, lastname, phonenumber, created_at) VALUES ($1, $2, $3, $4,  $5,now()) returning accountid";
+      var accountParams = [body.email,"test123",body.firstName,body.lastName,0];
+      db.query(accountString,accountParams ,(err1, result1) => {
+        if (err1) {
+          console.log(err1.stack);
+          res.send(JSON.stringify({
+              success : false,
+              message : "Insitution was created but inital account was not, please go to accounts and create a new one there"
+          }));
+        } else {
+
+          //  before everything is done we also need to take the retuned value 
+          var premissionsString = "INSERT INTO public.accountinstitution(accountid, institutionid) VALUES ( $1, $2);"
+          
+          var premissionParams = [result1.rows[0].accountid,result.rows[0].institutionid];
+          console.log(premissionParams);
+          db.query(premissionsString,premissionParams ,(err2, result2) => { 
+            if (err2) {
+              console.log(err1.stack);
+              res.send(JSON.stringify({
+                  success : false,
+                  message : "Insitution and account was created but permissions could not be initalized, please go to accounts and create a new one there"
+              }));
+            } else {
+              //  everything is super dope
+              res.send(JSON.stringify({
+                success : true
+            }));
+            }
+    
+          });
+          
+          
+        }
+      });
+    }
+  });
+  
+});
 
 
 

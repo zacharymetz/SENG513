@@ -21,7 +21,7 @@
     <div class="form-group">
         <label for="new_cust_first_name">Access Managment</label>
         <!-- have the differnt admin access -->
-        <label for="new_cust_first_name">Admin</label>
+        <label for="">Admin</label>
         <div class="row">
             <div class="form-check col-sm-6">
                 <input type="checkbox" class="form-check-input" id="exampleCheck1">
@@ -85,19 +85,19 @@
 </div>
 
 <script>
-function openNewInstitutionDialog(){
+function openNewAccountDialog(){
 $( "#new_account_dialog" ).dialog({
   width: 600,
   height: 675
 });
 $( "#new_account_dialog" ).show();
 }
-function closeNewCustomerDialog(){
+function closeNewAccountDialog(){
 $( "#new_account_dialog" ).dialog("close");
 }
 
-function createInstitution(){
-  $/post("NewInstitution",{
+function createAccount(){
+  $/post("NewAccount",{
     
       
 
@@ -108,9 +108,9 @@ function createInstitution(){
     
   }).done((data)=>{
     if(data.success){
-      alert("your insitution was created");
+      alert("your Account was created");
     }else{
-      alert("your insitution could not be created");
+      alert("your Account could not be created");
     }
   });
 }
