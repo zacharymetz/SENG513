@@ -18,65 +18,96 @@
       <input type="text" class="form-control" id="new_account_phone">
     </div>
     <!-- here i want what institutions you have power over or if -->
-    <div class="form-group">
-        <label for="new_cust_first_name">Access Managment</label>
+    <label for="new_cust_first_name">Access Managment</label>
+    <div class="alert alert-secondary" role="alert">
+       
+      
+      <a  href="#adminCollapse" data-toggle="collapse" aria-expanded="false" aria-controls="adminCollapse" style="width:100%;display:block;padding:0;">
+          Admin Permissions
+      </a>
+    <div class="form-group" style="margin-bottom: 0;">
+        
         <!-- have the differnt admin access -->
-        <label for="">Admin</label>
-        <div class="row">
-            <div class="form-check col-sm-6">
-                <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                <label class="form-check-label" for="exampleCheck1">View Accounts</label>
+        
+        <div class="row collapse" id="adminCollapse">
+          
+            <div  class="form-check ">
+                <input type="checkbox" class="form-check-input" id="admin-view-accounts">
+                <label class="form-check-label" for="admin-view-accounts">View Accounts</label>
             </div>
-            <div class="form-check col-sm-6">
-                <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                <label class="form-check-label" for="exampleCheck1">Edit Accounts</label>
+            <div class="form-check ">
+                <input type="checkbox" class="form-check-input" id="admin-edit-accounts">
+                <label class="form-check-label" for="admin-edit-accounts">Edit Accounts</label>
             </div>
-            <div class="form-check col-sm-6">
-                <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                <label class="form-check-label" for="exampleCheck1">View Insitutions</label>
+            <div class="form-check ">
+                <input type="checkbox" class="form-check-input" id="admin-view-insitutions">
+                <label class="form-check-label" for="admin-view-insitutions">View Insitutions</label>
             </div>
-            <div class="form-check col-sm-6">
-                <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                <label class="form-check-label" for="exampleCheck1">Edit Institutions</label>
+            <div class="form-check ">
+                <input type="checkbox" class="form-check-input" id="admin-edit-insitutions">
+                <label class="form-check-label" for="admin-edit-insitutions">Edit Institutions</label>
             </div>
-            <div class="form-check col-sm-6">
+            <div class="form-check ">
                 <input type="checkbox" class="form-check-input" id="exampleCheck1">
                 <label class="form-check-label" for="exampleCheck1">Site Changes</label>
             </div>
             
         </div>
-        <label for="new_cust_first_name">Insitutions</label>
-        <!--   have a select drop down to determ which accounts and stuff -->
-        <div class="form-group col-sm-4">
-            <label for="city_select">City</label>
-            <select class="form-control" id="new_institution_city_select">
-              <option>Calgary</option>
-              <option>Edmonton</option>
-              <option>Vancouver</option>
-              <option>Salmon Arm</option>
-              <option>Vicotria</option>
-            </select>
-        </div>
-        <div class="row">
-            <div class="form-check col-sm-6">
-                <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                <label class="form-check-label" for="exampleCheck1">View Data</label>
-            </div>
-            <div class="form-check col-sm-6">
-                <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                <label class="form-check-label" for="exampleCheck1">Edit Data</label>
-            </div>
-            <div class="form-check col-sm-6">
-                <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                <label class="form-check-label" for="exampleCheck1">Customize</label>
-            </div>
-            <div class="form-check col-sm-6">
-                <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                <label class="form-check-label" for="exampleCheck1">Upload Data</label>
-            </div>
-        </div>
-        <button type="button" class="btn btn-primary">Add Institution</button>
+      </div>
     </div>
+        <label for="institution_permission_select">Insitutions</label>
+        <!--   have a select drop down to determ which accounts and stuff -->
+    <div class="alert alert-info" role="alert">
+    
+  
+        <a  href="#insitutionCollapse" data-toggle="collapse" aria-expanded="false" aria-controls="insitutionCollapse" style="width:100%;display:block;padding:0;">
+            Univeristy of Calgary 
+        </a>
+      <div class="form-group" style="margin-bottom: 0;">
+          
+          <!-- have the differnt admin access -->
+          
+          <div class="row collapse" id="insitutionCollapse">
+            
+              <div  class="form-check ">
+                  <input type="checkbox" class="form-check-input" id="insitution-view-data">
+                  <label class="form-check-label" for="insitution-view-data">View Data</label>
+              </div>
+              <div class="form-check ">
+                  <input type="checkbox" class="form-check-input" id="insitution-edit-data">
+                  <label class="form-check-label" for="insitution-edit-data">Edit Data</label>
+              </div>
+              <div class="form-check ">
+                  <input type="checkbox" class="form-check-input" id="admin-upload-data">
+                  <label class="form-check-label" for="admin-upload-data">Upload Data</label>
+              </div>
+              <div class="form-check ">
+                  <input type="checkbox" class="form-check-input" id="insitution-customize">
+                  <label class="form-check-label" for="insitution-customize">Customize</label>
+              </div>
+              
+              
+              
+          </div>
+        </div>
+      </div>
+        <div style="display:flex;">
+            <div class="form-group" style="flex-grow: 1;">
+                <select class="form-control" id="institution_permission_select">
+                  <option>Calgary</option>
+                  <option>Edmonton</option>
+                  <option>Vancouver</option>
+                  <option>Salmon Arm</option>
+                  <option>Vicotria</option>
+                </select>
+            </div>
+            <div style="flex-grow: 0;padding:0 1rem;">
+                <button type="button" class="btn btn-success">Add Institution</button>
+            </div>
+        </div>
+        
+        
+    
 
     
   <div>
@@ -115,16 +146,24 @@ function createAccount(){
   });
 }
 
+//  function to add an insitution to the list that this account has permissions over 
+function addInstitutionPolicy(name,id){
+
+}
+
 
 //  initalize the date selector  
 $(document).ready(()=>{
-  initLocationSelect("new_institution_");
-  //  add the new insitution button
-  $("#create-new-institution-btn").click(()=>{
-    createInstitution();
-  });
+  
+  //  
 });
 
 
 
 </script>
+<style>
+.form-check{
+  padding-left:3.5rem!important;
+  display: inline-block;
+}
+</style>

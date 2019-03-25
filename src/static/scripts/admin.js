@@ -23,9 +23,13 @@ $(document).ready(function(){
         width: "100%",
  
         filtering: true,
-        sorting: true,
-        paging: true,
-        autoload: true,
+               editing: false,
+               sorting: true,
+               paging: true,
+               autoload: true,
+               pageSize: 20,
+               pageLoading:true,
+              pageButtonCount: 7,
  
         pageSize: 15,
         pageButtonCount: 5,
@@ -50,10 +54,7 @@ $(document).ready(function(){
           },
  
         fields: [
-            { name: "Course Name", type: "text", width: 100 },
-            { name: "Level", type: "number", width: 50 },
-            { name: "Department", type: "text", width: 150 },
-            { name: "Faculty", type: "text" ,width: 150},
+            { name: "name", type: "text", width: 100 },
             
             { type: "control" }
         ]
@@ -63,15 +64,22 @@ $(document).ready(function(){
         width: "100%",
  
         filtering: true,
-        sorting: true,
-        paging: true,
-        autoload: true,
- 
-        pageSize: 15,
-        pageButtonCount: 5,
+               editing: false,
+               sorting: true,
+               paging: true,
+               autoload: true,
+               pageSize: 20,
+               pageLoading:true,
+              pageButtonCount: 7,
  
         
  
+        
+        fields: [
+            { name: "firstname", type: "text", width: 100 },
+            { name: "lastname", type: "text", width: 100 },
+            { type: "control" }
+        ],
         controller: {
           loadData: function(filter) {
                 var d = $.Deferred();
@@ -87,16 +95,7 @@ $(document).ready(function(){
                 });
                 return d.promise();
             }
-          },
- 
-        fields: [
-            { name: "First", type: "text", width: 100 },
-            { name: "Last", type: "text", width: 100 },
-            { name: "Insitution", type: "text", width: 150 },
-            { name: "Last Login", type: "text" },
-            { name: "Active", type: "checkbox", sorting: false },
-            { type: "control" }
-        ]
+          }
     });
     
     

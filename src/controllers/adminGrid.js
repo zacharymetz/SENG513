@@ -225,7 +225,7 @@ router.post('/NewInstitution',(req,res)=>{
 
 router.post('/GetAccounts',(req,res)=>{
   var query = req.body;
-  var validSortFeilds = ["name"];
+  var validSortFeilds = ["firstname","lastname"];
   
 
   var queryOptions = queryBuilder.jsGridQueryBuilder("account", query, validSortFeilds,null);
@@ -240,6 +240,7 @@ router.post('/GetAccounts',(req,res)=>{
           if(result.rows[0]){
             numberOfItems = result.rows[0].itemsnumber
           }
+          console.log(result.rows);
           res.send(JSON.stringify({
               data: result.rows,
               itemsCount: numberOfItems
@@ -252,8 +253,9 @@ router.post('/GetInstitutions',(req,res)=>{
   var query = req.body;
   var validSortFeilds = ["name"];
   
-
+ 
   var queryOptions = queryBuilder.jsGridQueryBuilder("institution", query, validSortFeilds,null);
+  console.log(queryOptions);
     db.query(queryOptions[0],queryOptions[1] ,(err, result) => {
         if (err) {
           console.log(err.stack);
