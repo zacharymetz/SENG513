@@ -1,0 +1,89 @@
+{% block dependancies %}
+<link href="/static/styles/bootstrap.css" rel="stylesheet" type="text/css" />
+<link href="/static/styles/open-iconic-bootstrap.css" rel="stylesheet">
+<link href="/static/styles/schoolStyle.css" rel="stylesheet">
+<script src="/static/scripts/jquery-ui.js"></script>
+{% endblock %}
+
+{% block body %}
+  <div class="row topBar">
+    <div class="header"><b>University of Calgary</b></div>
+    <div class="img">
+      <img src="/static/img/UofCLogo.png" id="barLogo">
+    </div>
+  </div>
+
+  <div id="bottomPart">
+    <div class="row collection">
+        <div class="collectItem">
+          <div id="collectImage" style="background-image:url('https://www.nbn.org.il/wp-content/uploads/2014/01/engineering_mechanical_3042380_cropped.jpg');"></div>
+          <div class="collectName">Engineering</div>
+        </div>
+        <div class="collectItem">
+          <div id="collectImage" style="background-image:url('https://d2ai0ibaxpbki1.cloudfront.net/v2/images/collections/video-music-licensing-collection-optimistic.jpg');"></div>
+          <div class="collectName">Science</div>
+        </div>
+        <div class="collectItem">
+          <div id="collectImage" style="background-image:url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQwFhPeuIV3Yytxh8z-tkvYDsfYuQcaXG-hYaKR76bl715RBUkw');"></div>
+          <div class="collectName">Fine Arts</div>
+        </div>
+        <div class="collectItem">
+          <div id="collectImage" style="background-image:url('https://pbs.twimg.com/profile_images/787764476078587904/vcAZZNg1_400x400.jpg');"></div>
+          <div class="collectName">Kinesiology</div>
+        </div>
+        <div class="collectItem">
+          <div id="collectImage" style="background-image:url('https://www.dbs.ie/images/default-source/default-album/law-dbs.jpg?sfvrsn=1ee3bee9_1&MaxWidth=680&MaxHeight=&ScaleUp=false&Quality=High&Method=ResizeFitToAreaArguments&Signature=8213D2FDF018878A6EEE96858D640DA49E296056');"></div>
+          <div class="collectName">Law</div>
+        </div>
+        <div class="collectItem">
+          <div id="collectImage" style="background-image:url('https://images.freeimages.com/images/large-previews/adf/sun-burst-1478549.jpg');"></div>
+          <div class="collectName">Business</div>
+        </div>
+        <div class="collectItem">
+          <div id="collectImage" style="background-image:url('https://www.intercleanshow.com/-/media/websites/interclean/isa/images/news/isa2018-healthcare-cleaning-1100x400.ashx');"></div>
+          <div class="collectName">Medicine</div>
+        </div>
+        <div class="collectItem">
+          <div id="collectImage" style="background-image:url('https://cdn20.patchcdn.com/users/22896301/20180813/011024/styles/T800x600/public/processed_images/school_4-1534180194-2580.jpg');"></div>
+          <div class="collectName">Education</div>
+        </div>
+        <div class="collectItem">
+          <div id="collectImage" style="background-image:url('https://sloanreview.mit.edu/content/uploads/2017/04/Gen-Michelman-End-of-Corporate-Culture-1200-1200x627.jpg');"></div>
+          <div class="collectName">Arts</div>
+        </div>
+        <div class="collectItem">
+          <div id="collectImage" style="background-image:url('https://demedbook.com/images/2/how-do-clinical-trials-work-and-who-can-participate_7.jpg');"></div>
+          <div class="collectName">Nursing</div>
+        </div>
+        <div class="collectItem">
+          <div id="collectImage" style="background-image:url('https://blogs.ufv.ca/science/files/2016/10/WestGen-2016-Awards.png');"></div>
+          <div class="collectName">Veterinary Medicine</div>
+        </div>
+        <div class="collectItem">
+          <div id="collectImage" style="background-image:url('https://ariahesaraki.files.wordpress.com/2014/01/skygardenhouse01.jpg');"></div>
+          <div class="collectName">Environmental Design</div>
+        </div>
+        <div class="collectItem">
+          <div id="collectImage" style="background-image:url('https://blogs.ufv.ca/swhs/files/2018/03/Hand-tree-purchased-image-from-Marcom-Copy.jpg');"></div>
+          <div class="collectName">Social Work</div>
+        </div>
+      </div>
+
+    <div id="sideItems">
+      <div><input type="text" placeholder="search" id="courseSearch"/></div>
+      <center><div class="info">Build a list of courses you might be interested in! Make
+        a password and share it with other students to sync your lists! </div></center>
+      <div><input type="text" placeholder="password" id="viewerPass"/></div>
+      <div><button type="button" class="btn btn-primary btn-sm">sync</button></div>
+      <center><div id="userList">
+        <div class="info" id="listTitle">My List</div>
+        <div><ul id="courseList" class="info">
+          <li><div class="courseInList">SENG513 </div> <div class="oi oi-trash" title="trash" aria-hidden="true"></div></li>
+          <li><div class="courseInList">SENG513 </div> <div class="oi oi-trash" title="trash" aria-hidden="true"></div></li>
+          <li><div class="courseInList">SENG513 </div> <div class="oi oi-trash" title="trash" aria-hidden="true"></div></li>
+          <li><div class="courseInList">SENG513 </div> <div class="oi oi-trash" title="trash" aria-hidden="true"></div></li>
+        </ul></div>
+      </div></center>
+    </div>
+  </div>
+{% endblock %}

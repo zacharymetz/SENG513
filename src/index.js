@@ -19,12 +19,13 @@ var adminGrid = require('./controllers/adminGrid');
 var admin = require('./controllers/admin');
 var pages = require('./controllers/pages');
 var search = require('./controllers/search');
-
+var main = require('./controllers/main');
 
 app.use('/admin', admin);
 app.use('/adminGrid', adminGrid);
 app.use('/pages', pages);
-app.use('/', search);
+//app.use('/', search);
+app.use('/', main);
 
 //listen at 3000
 app.listen(3000, () => console.log('server started'));

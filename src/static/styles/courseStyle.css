@@ -1,0 +1,52 @@
+.listItem {
+  color: #4D4D4D;
+  text-align: left;
+  width: 100%;
+  padding: 4px;
+}
+.collection {
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 15px;
+}
+.courseTopLine {
+  display: flex;
+  flex-flow: row;
+}
+.courseName {
+  width: 90%;
+}
+.courseInfo {
+  width: 90%;
+  margin-left: 12px;
+  margin-bottom: 4px;
+  padding: 2px;
+}
+.courseBottomLine {
+  border-bottom: 1px solid #D0D0D0;
+  width: 93%;
+  margin: 4px;
+  margin-bottom: 6px;
+}
+#downArrow, .courseInfo {
+  display: none;
+}
+.oi-plus {
+  padding-top: 4px;
+}
+
+@media (min-width: 580px) {
+
+}
+
+@media (min-width: 740px) {
+
+}
+
+@media (min-width: 900px) {
+
+
+}
+
+@media (min-width: 1200px) {
+
+}
