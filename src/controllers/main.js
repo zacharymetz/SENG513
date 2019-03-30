@@ -13,13 +13,24 @@ router.get('/', (req, res) => {
   res.render('main/index.html');
 });
 
-router.post('/GetInsitutions', (req, res) => {
+router.post('/GetSchools', (req, res) => {
   //dont have to do nothing lol
 
   res.send(JSON.stringify({
-    success :true,
-    listofuniversities :["calgary","edmonton"]
+    items : [{
+      img : "UofC.png",
+      id : 1
+      }, {
+        img :"MRoyal.png", id : 2
+      },{
+        img :"Sait.png",id : 3
+      } ,{
+        img :"BValley.png", id : 4
+      },{
+        img :"CDICol.png",id : 5
+      }]
   }));
+
 });
 
 

@@ -2,59 +2,75 @@
 <link href="/static/styles/bootstrap.css" rel="stylesheet" type="text/css" />
 <link href="/static/styles/schoolStyle.css" rel="stylesheet">
 <script src="/static/scripts/jquery-ui.js"></script>
+<script src="/static/scripts/jquery.js"></script>
+<script src="/static/scripts/nunjucks.js"></script>
 {% endblock %}
 
 {% block body %}
-
-<center>
+<div id="home-page">
+<center >
   <div class="header" id="homeHdr"><b>Prerequisites Free</b></div>
   <div class="info">Find your option courses, no prerequisites attached!</div>
   <div><input type="text" class="userinput" placeholder="Calgary, AB"/></div>
   <div><button type="button" class="btn btn-primary btn-sm">search</button></div>
   <div class="info">Schools available in your city:</div>
-  <div class="row collection">
-    <div class="collectItem">
-      <div>
-        <img id="barLogo" src="/static/img/UofC.png">
-      </div>
-    </div>
-    <div class="collectItem">
-      <div>
-        <img id="barLogo" src="/static/img/MRoyal.png">
-      </div>
-    </div>
-    <div class="collectItem">
-      <div>
-        <img id="barLogo" src="/static/img/Sait.png">
-      </div>
-    </div>
-    <div class="collectItem">
-      <div>
-        <img id="barLogo" src="/static/img/BValley.png">
-      </div>
-    </div>
-    <div class="collectItem">
-      <div>
-        <img id="barLogo" src="/static/img/CDICol.png">
-      </div>
-    </div>
-    <div class="collectItem">
-      <div>
-        <img id="barLogo" src="/static/img/ReevsCol.png">
-      </div>
-    </div>
-    <div class="collectItem">
-      <div>
-        <img id="barLogo" src="/static/img/AmbrUni.png">
-      </div>
-    </div>
-    <div class="collectItem">
-      <div>
-        <img id="barLogo" src="/static/img/StMarys.png">
-      </div>
-    </div>
+  <div class="row collection" id="SchoolGrid">
+
+
   </div>
   <a href="url" class="info" id="schoolReg">register school</a>
 </center>
+</div>
+
+<div id="school-page">
+asdfasdf
+</div>
+
+
+
+<script>
+var currentPage = "home-page";
+
+var pages =["home-page","school-page"]
+
+
+function gotoPage(page){
+  for(var i=0;i<pages.length;i++){
+    if(page != pages[i]){
+      $("#"+pages[i]).hide();
+    }else{
+      $("#"+pages[i]).show();
+    }
+  }
+
+}
+function renderSchoolGrid(requestData=null){
+  $.post("/GetSchools",requestData).done((data)=>{
+    var html = "";
+    console.log(data);
+    data= JSON.parse(data);
+    nunjucks.configure({ autoescape: true });
+    for(var i=0;i<data.items.length;i++){
+    html +=  '<div class="collectItem" id="school-card-'+ data.items[i].id+'">'
+    html +=  '  <div>'
+    html +=  '   <img id="barLogo" src="/static/img/'+ data.items[i].img +'">'
+    html +=  ' </div>'
+    html +=  '</div>'
+    }
+    $("#SchoolGrid").html(html);
+    for(var i=0;i<data.items.length;i++){
+      $("#school-card-"+data.items[i].id).click(()=>{
+        // update the next
+        gotoPage("school-page");
+      });
+    };
+  })
+}
+$(()=>{
+  renderSchoolGrid();
+});
+</script>
+
+
 
 {% endblock %}
