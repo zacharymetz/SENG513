@@ -14,22 +14,41 @@
   <div><input type="text" class="userinput" placeholder="Calgary, AB"/></div>
   <div><button type="button" class="btn btn-primary btn-sm">search</button></div>
   <div class="info">Schools available in your city:</div>
-  <div class="row collection" id="SchoolGrid">
-
-
-  </div>
+  <div class="row collection" id="SchoolGrid"></div>
   <a href="url" class="info" id="schoolReg">register school</a>
 </center>
 </div>
 
 <div id="school-page">
-asdfasdf
-</div>
+  <div class="row topBar">
+    <div class="header"><b>University of Calgary</b></div>
+    <div class="img">
+      <img src="/static/img/UofCLogo.png" id="barLogo">
+    </div>
+  </div>
+  <div id="bottomPart">
+    <div class="row collection" id="FacDeptGrid"></div>
+    <div id="sideItems">
+      <div><input type="text" placeholder="search" id="courseSearch"/></div>
+      <center><div class="info">Build a list of courses you might be interested in! Make
+        a password and share it with other students to sync your lists! </div></center>
+      <div><input type="text" placeholder="password" id="viewerPass"/></div>
+      <div><button type="button" class="btn btn-primary btn-sm">sync</button></div>
+      <center><div id="userList">
+        <div class="info" id="listTitle">My List</div>
+        <div><ul id="courseList" class="info">
+          <li><div class="courseInList">SENG513 </div> <div class="oi oi-trash" title="trash" aria-hidden="true"></div></li>
+          <li><div class="courseInList">SENG513 </div> <div class="oi oi-trash" title="trash" aria-hidden="true"></div></li>
+        </ul></div>
+      </div></center>
+    </div>
+  </div>
 
 
 
 <script>
 var currentPage = "home-page";
+var previousPage = "home-page";
 
 var pages =["home-page","school-page"]
 
@@ -40,37 +59,81 @@ function gotoPage(page){
       $("#"+pages[i]).hide();
     }else{
       $("#"+pages[i]).show();
+      currentPage = page;
     }
   }
-
 }
+
+
+
 function renderSchoolGrid(requestData=null){
   $.post("/GetSchools",requestData).done((data)=>{
     var html = "";
     console.log(data);
     data= JSON.parse(data);
-    nunjucks.configure({ autoescape: true });
     for(var i=0;i<data.items.length;i++){
-    html +=  '<div class="collectItem" id="school-card-'+ data.items[i].id+'">'
-    html +=  '  <div>'
-    html +=  '   <img id="barLogo" src="/static/img/'+ data.items[i].img +'">'
-    html +=  ' </div>'
-    html +=  '</div>'
+      html +=  '<div class="collectItem" id="school-card-'+ data.items[i].id+'">'
+      html +=  '  <div>'
+      html +=  '   <img id="barLogo" src="/static/img/'+ data.items[i].img +'">'
+      html +=  ' </div>'
+      html +=  '</div>'
     }
     $("#SchoolGrid").html(html);
     for(var i=0;i<data.items.length;i++){
       $("#school-card-"+data.items[i].id).click(()=>{
-        // update the next
+        //go to school faculties
         gotoPage("school-page");
+        renderFacultiesGrid();
       });
     };
   })
 }
+function renderFacultiesGrid(requestData=null){
+  $.post("/GetFaculties",requestData).done((data)=>{
+    var html = "";
+    console.log(data);
+    data= JSON.parse(data);
+    for(var i=0;i<data.items.length;i++){
+      html +=  '<div class="collectItem" id="faculty-card-'+ data.items[i].id+'">'
+      html +=  '  <div id="collectImage" style="background-image:url('+ data.items[i].img +');"></div>'
+      html +=  '   <div class="collectName">'+ data.items[i].name +'</div>'
+      html +=  '</div>'
+    }
+    $("#FacDeptGrid").html(html);
+    for(var i=0;i<data.items.length;i++){
+      $("#faculty-card-"+data.items[i].id).click(()=>{
+        //reload page with departments
+        renderDeptsGrid();
+      });
+    };
+  })
+}
+function renderDeptsGrid(requestData=null){
+  $.post("/GetDepts",requestData).done((data)=>{
+    var html = "";
+    console.log(data);
+    data= JSON.parse(data);
+    for(var i=0;i<data.items.length;i++){
+      html +=  '<div class="collectItem" id="dept-card-'+ data.items[i].id+'">'
+      html +=  '  <div id="collectImage" style="background-image:url('+ data.items[i].img +');"></div>'
+      html +=  '   <div class="collectName">'+ data.items[i].name +'</div>'
+      html +=  '</div>'
+    }
+    $("#FacDeptGrid").html(html);
+    for(var i=0;i<data.items.length;i++){
+      $("#dept-card-"+data.items[i].id).click(()=>{
+        //load dept course list
+
+      });
+    };
+  })
+}
+
+// runs after the page has been loaded
 $(()=>{
   renderSchoolGrid();
+  gotoPage("home-page");
 });
 </script>
-
-
 
 {% endblock %}
