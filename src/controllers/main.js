@@ -92,5 +92,39 @@ router.post('/GetDepts', (req, res) => {
 
 });
 
+router.post('/GetCourses', (req, res) => {
+  //dont have to do nothing lol
+
+  res.send(JSON.stringify({
+    items : [{
+      course : "SENG513",
+      name : "Web Based applications",
+      info : "This course is taught by Pavlo Escobald",
+      id : 1
+      }, {
+        course : "SENG513",
+        name : "Web Based applications",
+        info : "This course is taught by Pavlo Escobald",
+        id : 2
+      },{
+        course : "SENG513",
+        name : "Web Based applications",
+        info : "This course is taught by Pavlo Escobald",
+        id : 3
+      } ,{
+        course : "SENG513",
+        name : "Web Based applications",
+        info : "This course is taught by Pavlo Escobald",
+        id : 4
+      },{
+        course : "SENG513",
+        name : "Web Based applications",
+        info : "This course is taught by Pavlo Escobald",
+        id : 5
+      }]
+  }));
+
+});
+
 
 module.exports = router;
