@@ -9,7 +9,7 @@ body {
   margin: 0;
   padding: 0;
 }
-.collection {
+.collection, .listView {
   color: white;
   font-size: 9px;
   margin: 30px;
@@ -107,6 +107,44 @@ li {
 #homeHdr {
   color: #00BFFF;
 }
+.listItem {
+  color: #4D4D4D;
+  text-align: left;
+  width: 100%;
+  padding: 4px;
+}
+.listView {
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 15px;
+}
+.courseTopLine {
+  display: flex;
+  flex-flow: row;
+}
+.courseName {
+  width: 90%;
+}
+.courseInfo {
+  width: 90%;
+  margin-left: 12px;
+  margin-bottom: 4px;
+  padding: 2px;
+}
+.courseBottomLine {
+  border-bottom: 1px solid #D0D0D0;
+  width: 93%;
+  margin: 4px;
+  margin-bottom: 6px;
+}
+#downArrow {
+  display: none;
+}
+.oi-plus {
+  padding-top: 4px;
+}
+#schoolCourses {
+  display: none;
+}
 
 @media (min-width: 580px) {
   .header{
@@ -116,7 +154,7 @@ li {
     max-height: 80px;
     max-width: 80px;
   }
-  .collection {
+  .collection, .listView {
     font-size: 12px;
   }
   .collectName {
@@ -148,7 +186,7 @@ li {
     width: 100px;
     border-radius: 10px;
   }
-  .collection {
+  .collection, .listView {
     font-size: 15px;
   }
   .info, #userList {
@@ -179,7 +217,7 @@ li {
     height: 120px;
     width: 120px;
   }
-  .collection {
+  .collection, .listView {
     width: 74%;
   }
   .info {
