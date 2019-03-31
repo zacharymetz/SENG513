@@ -1,0 +1,28 @@
+{% extends "light_layout.html" %}
+{% block title %}Admin{% endblock %}
+{% block dependancies %}
+<script src="/static/scripts/jsgrid.js"></script>
+<link href="/static/styles/jsgrid.css" rel="stylesheet" type="text/css" />
+<link href="/static/styles/jsgrid-theme.css" rel="stylesheet" type="text/css" />
+<link href="/static/styles/jquery-ui.css"rel="stylesheet" />
+<script src="/static/scripts/jquery-ui.js"></script>
+{% endblock %}
+
+{% block body %}
+<form class="login">
+    <div class="logo login-logo"></div>
+    <h3>Login</h3>
+    <div class="form-group">
+        
+        <input type="email" class="form-control text-center" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Email">
+        
+    </div>
+    <div class="form-group">
+        
+        <input type="password" class="form-control text-center" id="exampleInputPassword1" placeholder="Password">
+    </div>
+
+    <button type="submit" class="btn btn-primary">Login</button><br>
+    <a href="#" style="font-size:0.85rem;">Forgot Passowrd</a>
+</form>
+{% endblock %}
