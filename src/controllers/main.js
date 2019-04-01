@@ -111,7 +111,7 @@ router.post('/GetCourses', (req, res) => {
         name : "Web Based applications",
         info : "This course is taught by Pavlo Escobald",
         id : 3
-      } ,{
+      },{
         course : "SENG513",
         name : "Web Based applications",
         info : "This course is taught by Pavlo Escobald",

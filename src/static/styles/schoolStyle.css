@@ -147,7 +147,6 @@ li {
 .courseBottomLine {
   border-bottom: 1px solid #D0D0D0;
   width: 93%;
-  margin: 4px;
   margin-bottom: 6px;
 }
 #downArrow {
@@ -189,6 +188,7 @@ li {
   border-radius: 6px;
   width: 34%;
   min-height: 54px;
+  margin-top: 25px;
 }
 
 @media (min-width: 580px) {
