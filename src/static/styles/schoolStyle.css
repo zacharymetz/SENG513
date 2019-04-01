@@ -9,15 +9,20 @@ body {
   margin: 0;
   padding: 0;
 }
+#bottomPart {
+  margin-top: 0px;
+}
 .collection, .listView {
   color: white;
   font-size: 9px;
-  margin: 30px;
+  margin: 15px;
+  margin-top: 5px;
   padding: 10px;
   padding-left: 15px;
 }
 .collectItem {
   margin: 20px;
+  text-align: center;
 }
 .collectName {
   text-align: center;
@@ -31,9 +36,9 @@ body {
 }
 .header {
   color: black;
-  font-size: 30px;
+  font-size: 25px;
   width: 80%;
-  margin-left: 15px;
+  margin-left: 10px;
 }
 input {
   text-align: center;
@@ -46,7 +51,7 @@ input {
   text-align: center;
   color: white;
   margin: 10px 0px;
-  font-size: 13px;
+  font-size: 10px;
   width: 36%;
 }
 #barLogo {
@@ -67,6 +72,7 @@ input {
   background-color: rgba(255, 255, 255, 0.9);
   border-radius: 6px;
   width: 34%;
+  min-height: 54px;
 }
 #listTitle {
   width: 100%;
@@ -101,15 +107,21 @@ li {
   text-align: center;
   padding-top: 20px;
 }
-#schoolReg {
-  color: #007bff;
+#homeLink {
+  color: #00BFFF;
+  font-size: 16px;
+}
+#preReqsLogo {
+  width: 18px;
+  height: 18px;
+  margin-bottom: 4px;
 }
 #homeHdr {
   color: #00BFFF;
 }
 .listItem {
   color: #4D4D4D;
-  text-align: left;
+  text-align: center;
   width: 100%;
   padding: 4px;
 }
@@ -122,6 +134,7 @@ li {
   flex-flow: row;
 }
 .courseName {
+  text-align: left;
   width: 90%;
 }
 .courseInfo {
@@ -129,11 +142,11 @@ li {
   margin-left: 12px;
   margin-bottom: 4px;
   padding: 2px;
+  text-align: left;
 }
 .courseBottomLine {
   border-bottom: 1px solid #D0D0D0;
   width: 93%;
-  margin: 4px;
   margin-bottom: 6px;
 }
 #downArrow {
@@ -144,6 +157,38 @@ li {
 }
 #schoolCourses {
   display: none;
+}
+#viewerEmail {
+  margin-top: 0px;
+}
+#backButtonText {
+  font-size: 12px;
+  padding-top: 2px;
+}
+#myListPopup, #backButton {
+  margin: 5px;
+  margin-bottom: 0px;
+}
+#navButtons {
+  display: flex;
+  flex-flow: row;
+  padding-left: 8px;
+  margin-bottom: 0px;
+  padding-bottom: 0px;
+}
+#buttonGap {
+  width: 70%;
+}
+#viewListModalTitle {
+  color: white;
+  background-color: #007bff;
+}
+#modalListContent {
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 6px;
+  width: 34%;
+  min-height: 54px;
+  margin-top: 25px;
 }
 
 @media (min-width: 580px) {
@@ -164,8 +209,11 @@ li {
     height: 80px;
     width: 80px;
   }
-  .info, #userList {
+  .info, #userList, #modalListContent {
     width: 30%;
+  }
+  #buttonGap {
+    width: 77%;
   }
 }
 
@@ -190,6 +238,10 @@ li {
     font-size: 15px;
   }
   .info, #userList {
+    width: 26%;
+    font-size: 13px;
+  }
+  #modalListContent {
     width: 26%;
   }
 }
@@ -229,6 +281,9 @@ li {
   }
   #userList {
     width: 100%;
+  }
+  #myListPopup {
+    display: none;
   }
 }
 
