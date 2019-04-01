@@ -1,8 +1,7 @@
+var currentSchool = 1;
 var currentPage = "home-page";
-var previousPage = "home-page";
-
-var pages =["home-page","school-page"]
-
+var navHistory = [];
+var pages =["home-page","school-page","faculty-page","dept-page","course-page"];
 
 function gotoPage(page){
   for(var i=0;i<pages.length;i++){
@@ -13,9 +12,20 @@ function gotoPage(page){
       currentPage = page;
     }
   }
-}
 
-
+  if (page == "home-page"){
+    renderSchoolGrid();
+  }else if ((page == "school-page") || (page == "faculty-page")){
+    renderFacultyGrid();
+    $("#school-page").show();
+  }else if (page == "dept-page"){
+    renderDeptGrid();
+    $("#school-page").show();
+  }else{
+    renderCourseGrid();
+    $("#school-page").show();
+  }
+};
 
 function renderSchoolGrid(requestData=null){
   $.post("/GetSchools",requestData).done((data)=>{
@@ -29,12 +39,12 @@ function renderSchoolGrid(requestData=null){
       html +=  '  </div>'
       html +=  '</div>'
     }
-    $("#SchoolGrid").html(html);
+    $("#schoolGrid").html(html);
     for(var i=0;i<data.items.length;i++){
       $("#school-card-"+data.items[i].id).click(()=>{
         //go to school faculties
-        gotoPage("school-page");
-        renderFacultyGrid();
+        navHistory.push(currentPage);
+        gotoPage("faculty-page");
       });
     };
   })
@@ -50,11 +60,12 @@ function renderFacultyGrid(requestData=null){
       html +=  '  <div class="collectName">'+data.items[i].name+'</div>'
       html +=  '</div>'
     }
-    $("#schoolContentGrid").html(html);
+    $("#faculty-page").html(html);
     for(var i=0;i<data.items.length;i++){
       $("#faculty-card-"+data.items[i].id).click(()=>{
         //reload page with departments
-        renderDeptGrid();
+        navHistory.push(currentPage);
+        gotoPage("dept-page");
       });
     };
   })
@@ -70,11 +81,12 @@ function renderDeptGrid(requestData=null){
       html +=  '  <div class="collectName">'+data.items[i].name+'</div>'
       html +=  '</div>'
     }
-    $("#schoolContentGrid").html(html);
+    $("#dept-page").html(html);
     for(var i=0;i<data.items.length;i++){
       $("#dept-card-"+data.items[i].id).click(()=>{
         //load dept course list
-        renderCourseGrid();
+        navHistory.push(currentPage);
+        gotoPage("course-page");
       });
     };
   })
@@ -100,9 +112,7 @@ function renderCourseGrid(requestData=null){
       html +=  '  <div class="courseBottomLine"></div>'
       html +=  '</div>'
     }
-    $("#schoolContentGrid").hide();
-    $("#schoolCourses").html(html);
-    $("#schoolCourses").show();
+    $("#course-page").html(html);
     for(var i=0;i<data.items.length;i++){
       $("#course-card-"+data.items[i].id).click(()=>{
         //load dept course list
@@ -114,10 +124,18 @@ function renderCourseGrid(requestData=null){
 
 // runs after the page has been loaded
 $(()=>{
-  renderSchoolGrid();
   gotoPage("home-page");
-  ipLookUp();
-  console.log(localStorage.length);
+  //ipLookUp();
+  //console.log(localStorage.length);
+  $("#backButton").click(()=>{
+    console.log(navHistory);
+    var prevPage = navHistory.pop();
+    console.log("previous page: " + prevPage);
+    if (prevPage == "home-page") {
+      navHistory = [];
+    }
+    gotoPage(prevPage);
+  });
 });
 
 function ipLookUp () {
