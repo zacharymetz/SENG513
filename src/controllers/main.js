@@ -127,4 +127,40 @@ router.post('/GetCourses', (req, res) => {
 });
 
 
+router.post('/inquireform', (req, res) => {
+
+  // send call to aws lambda 
+  var lambda = new AWS.Lambda({region: REGION, apiVersion: '2015-03-31'});
+  // create JSON object for parameters for invoking Lambda function
+  var pullParams = {
+    FunctionName : 'appDataAccess',
+    InvocationType : 'RequestResponse',
+    LogType : 'None',
+    payload : {
+      //  this is where all the form data to send to aws will go
+    }
+  };
+  // create variable to hold data returned by the Lambda function
+
+  lambda.invoke(pullParams, function(error, data) {
+    if (error) {
+      prompt(error);
+      res.send(JSON.stringify({
+        //  this will run if aws lambda retruns an error to us and we can let the front end know
+        success : false,
+        message : ""
+      }));
+    } else {
+      var pullResults = JSON.parse(data.Payload);
+      res.send(JSON.stringify({
+        //  the json that gets send back to front when it was sucessful 
+        success : true
+      }));
+    }
+  });
+  
+
+});
+
+
 module.exports = router;
