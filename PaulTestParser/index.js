@@ -33,13 +33,13 @@ db = {
 
 
 //callback for check faculty here data is the output of the query returned from check faculty
-checkFaculty("paul12",(data)=>{
+checkFaculty("dan2",(data)=>{
   console.log(data[0].academicgroupid);  //returns all the rows that have AR in them
   console.log("CHECK FACULTY OVER------------------------------");
   //TODO call the check department now which will take the current faculty ID and based on that faculty ID  it will retrieve the department ID assoc with it
 
   /*department Callback function, data is the output from the query returned from check Depertment*/
-  checkDepartment(data[0].academicgroupid, "paul12",(data) =>{
+  checkDepartment(data[0].academicgroupid, "dan2",(data) =>{
     //if there is something that already exists for this department with the corresponding faculty then I am returned the facultyID and the departmentID
     console.log(data);
     //if there isn't something then it inserts and returned the facultyID for the newest faculty added but has no academicgroupID associated with it
@@ -97,29 +97,30 @@ function checkFaculty (code,next) {
 code = subject column which is a 4 letter code "ITAL" would be the DEPARTMENT of italian
 facultyID = the corresponding facultyID to insert the department object for
 */
-function checkDepartment (facultyID, code, next){
+function checkDepartment (academicgroupid, code, next){
   var depQuery = "";
+
   //QUERY
-  depQuery += "SELECT subjectid, academicgroupid, code";
-  depQuery += "	FROM public.subject WHERE code = $2;";
+  depQuery += "SELECT subjectid, academicgroupid";
+  depQuery += "	FROM public.subject WHERE academicgroupid = $1;";
   //PARAMS
-  depParams = [code]
+  depParams = [academicgroupid];
+
 
   db.query(depQuery, depParams, (err, result) => {
     if (err){
-      console.log(err);
+      console.log("this is where the error" + err);
     } else {
       if (result.rows.length > 0) {
         next(result.rows) //give it to the checkDepartment callback function
       } else {
-        console.log("Department code " + code + "doesn't exist, Inserting");
         //QUERY
         depQuery = ""; //reset query string
         depQuery += "INSERT INTO public.subject";
         depQuery += "(academicgroupid, code)";
-        depQuery += "VALUES ($1::int, $2) returning *;";
+        depQuery += "VALUES ($1 , $2) returning *;";
         //PARAMS
-        depParams = [facultyID, code];
+        depParams = [academicgroupid, code];
         db.query(depQuery, depParams, (err1, result1) => {
           if (err1) {
             console.log(err1);
