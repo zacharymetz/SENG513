@@ -12,7 +12,7 @@ const server = http.createServer(app);
 const port = 3000
 
 //for database
-const  { Pool,Client } = require('pg'); 
+const  { Pool,Client } = require('pg');
 const pool = new Client({
   user: 'postgres',
   host: '96.51.140.32',
@@ -32,34 +32,39 @@ db = {
 
 
 
-
-checkFac("phfy",(data)=>{
-  console.log(data);  //returns all the rows that have AR in them 
+//callback for check faculty here data is the output of the query returned from check faculty
+checkFaculty("asdf",(data)=>{
+  console.log(data);  //returns all the rows that have AR in them
+  console.log("CHECK FACULTY OVER------------------------------");
+  //TODO call the check department now which will take the current faculty ID and based on that faculty ID  it will retrieve the department ID assoc with it
 });
 
-/*based on a code that I passs in which will then be just extracted from the row of the 
-csv I need to check if the code exists then if it doesnt just create a new ID for that user. 
+/*
+code =  Acad Group column so "SC" would be the FACULTY of science
 */
-function checkFac (code,next) {
-  var sqlQuery = "";
-  sqlQuery += "SELECT academicgroupid";
-  sqlQuery += "	FROM public.academicgroup WHERE code=$1;";
-  sqlParams = [code];
-
-  db.query(sqlQuery,sqlParams ,(err, result) => {
+function checkFaculty (code,next) {
+  var facQuery = "";
+  //QUERY
+  facQuery += "SELECT academicgroupid";
+  facQuery += "	FROM public.academicgroup WHERE code = $1;";
+  //PARAMS
+  facParams = [code];
+  db.query(facQuery,facParams ,(err, result) => {
     if (err) {
       console.log(err);
     } else {
       if(result.rows.length > 0){
         next(result.rows) //data is now result.rows
       }else{
-        console.log("Doesn't exist");
-        sqlQuery = "";
-        sqlQuery += "INSERT INTO public.academicgroup";
-        sqlQuery += "(code, longname)";
-        sqlQuery += "VALUES ($1, $2) returning *;";
-        sqlParams = ['pp', 'PaulDan'];
-        db.query(sqlQuery,sqlParams ,(err1, result1) => {
+        console.log("Faculty code " + code + "doesn't exist. Inserting");
+        //QUERY
+        facQuery = "";
+        facQuery += "INSERT INTO public.academicgroup";
+        facQuery += "(code)";
+        facQuery += "VALUES ($1) returning *;";
+        //PARAMS
+        facParams = [code];  //these paramaters will be read in from the csv file "Acad Group" column
+        db.query(facQuery,facParams ,(err1, result1) => {
           if (err1) {
             console.log(err1);
           } else {
@@ -69,12 +74,47 @@ function checkFac (code,next) {
       }
     }
   });
+}
+
+/*department Callback function, data is the output from the query returned from check Depertment*/
+checkDepartment("ART", (data) =>{
+  console.log(data);
+  console.log("CHECK DEPARTMENT OVER------------------------------");
+});
+
+
+/*
+code = subject column which is a 4 letter code "ITAL" would be the DEPARTMENT of italian
+*/
+function checkDepartment (code, next){
+  var depQuery = "";
+  //QUERY
+  depQuery += "SELECT subjectid, academicgroupid, code";
+  depQuery += "	FROM public.subject WHERE code = $1;";
+  //PARAMS
+  depParams = [code]
+
+  db.query(depQuery, depParams, (err, result) => {
+    if (err){
+      console.log(err);
+    } else {
+      if (result.rows.length > 0) {
+        next(result.rows) //give it to the checkDepartment callback function
+      } else {
+        console.log("Department code " + code + "doesn't exist, Inserting");
+      }
+      //TODO write insert for check department
+    }
+  });
+
 
 }
 
 
 
 
+
+//---------------------------------------RETRIEVING FILE AND GETTING IT INTO THE FORMAT WE WANT FOR PARSING------------------------------------//
 app.set('view engine', 'ejs');
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -114,7 +154,7 @@ function readCSVPassedIn(filePath) {
   // console.log(filePath);
   fs.createReadStream(filePath)
   .pipe(csv1())
-  .on('data', function(data){  
+  .on('data', function(data){
       try {       //perform the operation
         console.log(data);
       }
@@ -123,4 +163,3 @@ function readCSVPassedIn(filePath) {
       }
   });
 }
-
