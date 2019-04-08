@@ -33,18 +33,21 @@ db = {
 
 
 //callback for check faculty here data is the output of the query returned from check faculty
-checkFaculty("dan2",(data)=>{
-  console.log(data[0].academicgroupid);  //returns all the rows that have AR in them
-  console.log("CHECK FACULTY OVER------------------------------");
+checkFaculty("doesThisWork",(data)=>{
+  console.log("CHECK FACULTY------------------------------");
+  console.log(data);//returns all the rows that have the code we pass in them
+  console.log("CHECK FACULTY------------------------------");
   //TODO call the check department now which will take the current faculty ID and based on that faculty ID  it will retrieve the department ID assoc with it
 
   /*department Callback function, data is the output from the query returned from check Depertment*/
-  checkDepartment(data[0].academicgroupid, "dan2",(data) =>{
+  checkDepartment(data[0].academicgroupid, "ARST",(data) =>{
+    console.log("CHECK DEPARTMENT------------------------------");
     //if there is something that already exists for this department with the corresponding faculty then I am returned the facultyID and the departmentID
     console.log(data);
     //if there isn't something then it inserts and returned the facultyID for the newest faculty added but has no academicgroupID associated with it
-    console.log("CHECK DEPARTMENT OVER------------------------------");
+    console.log("CHECK DEPARTMENT------------------------------");
   });
+
 
 });
 
