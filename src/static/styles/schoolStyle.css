@@ -23,6 +23,7 @@ body {
 .collectItem {
   margin: 20px;
   text-align: center;
+  cursor: pointer;
 }
 .collectName {
   text-align: center;
@@ -135,7 +136,8 @@ li {
 }
 .courseName {
   text-align: left;
-  width: 90%;
+  /*width: 90%;*/
+  cursor: pointer;
 }
 .courseInfo {
   width: 90%;
@@ -149,8 +151,11 @@ li {
   width: 93%;
   margin-bottom: 6px;
 }
-#downArrow {
+.oi-chevron-bottom, .courseInfo {
   display: none;
+}
+.oi {
+  cursor: pointer;
 }
 .oi-plus {
   padding-top: 4px;
@@ -178,6 +183,9 @@ li {
 }
 #buttonGap {
   width: 70%;
+}
+#courseNameGap {
+  width: 42%;
 }
 #viewListModalTitle {
   color: white;
@@ -214,6 +222,9 @@ li {
   }
   #buttonGap {
     width: 77%;
+  }
+  #courseNameGap {
+    width: 55%;
   }
 }
 
@@ -301,5 +312,8 @@ li {
   #collectImage {
     height: 125px;
     width: 125px;
+  }
+  #courseNameGap {
+    width: 60%;
   }
 }

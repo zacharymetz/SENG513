@@ -22,6 +22,18 @@ app.use('/admin', admin);
 app.use('/adminGrid', adminGrid);
 app.use('/', main);
 
+io.on('connection', function(socket){
+
+  socket.on('disconnect', function(){
+
+  });
+
+  socket.on('syncList', function(userStorage){
+
+  });
+
+});
+
 //listen at 3000
 http.listen(3000, function(){
   console.log('Server started, listening on *:3000');

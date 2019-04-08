@@ -5,7 +5,6 @@ const db = require('../db');
 const express = require('express');
 var queryBuilder = require('./helpers/queryBuilder');
 var router = express.Router();
-
 /*
 
 */
@@ -14,8 +13,7 @@ router.get('/', (req, res) => {
 });
 
 router.post('/GetSchools', (req, res) => {
-  //dont have to do nothing lol
-
+  console.log(req.body.city);
   res.send(JSON.stringify({
     items : [{
       img : "UofC.png",
@@ -123,8 +121,6 @@ router.post('/GetCourses', (req, res) => {
         id : 5
       }]
   }));
-
 });
-
 
 module.exports = router;
