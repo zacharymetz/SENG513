@@ -5,7 +5,7 @@ var clientCity = "";
 var currentSchoolID;
 var currentFacultyID;
 var currentDepartmentID;
-//var socket = io();
+var socket;
 var listSynced = false;
 
 function gotoPage(page){
@@ -40,7 +40,7 @@ function renderSchoolGrid(requestData={city: clientCity}){
     for(var i=0;i<data.rows.length;i++){
       html +=  '<div class="collectItem" id="school-card-'+data.rows[i].institutionid+'">'
       html +=  '  <div>'
-      html +=  '    <img id="school-card-'+data.rows[i].institutionid+'" class="barLogo" src="/static/img/'+data.rows[i].institutionid+'">'
+      html +=  '    <img id="school-card-'+data.rows[i].institutionid+'" class="barLogo" src="/static/img/'+"UofC.png"+'">'
       html +=  '  </div>'
       html +=  '</div>'
     }
@@ -65,7 +65,7 @@ function renderFacultyGrid(requestData=null){
     data= JSON.parse(data);
     for(var i=0;i<data.rows.length;i++){
       html +=  '<div class="collectItem" id="faculty-card-'+data.rows[i].academicgroupid+'">'
-      html +=  '  <div id="collectImage" style="background-image:url("https://d2ai0ibaxpbki1.cloudfront.net/v2/images/collections/video-music-licensing-collection-optimistic.jpg");"></div>'
+      html +=  '  <div id="collectImage" style="background-image:url('+"https://d2ai0ibaxpbki1.cloudfront.net/v2/images/collections/video-music-licensing-collection-optimistic.jpg"+');"></div>'
       html +=  '  <div class='+data.rows[i].academicgroupid+' class="collectName">'+data.rows[i].code+'</div>'
       html +=  '</div>'
     }
@@ -164,17 +164,16 @@ function renderCourseGrid(requestData=null){
 function updateUserList() {
   //emit through socket to update user list
   renderUserList();
-  socket.emit('updateList', JSON.stringify(localStorage));
+  socket.emit('updateList', localStorage);
 }
 
 function renderUserList() {
   var html = "";
   var htmlModal = "";
   var listKeys = [];
-  if (localStorage.length > 1) {
     for (var i = 0; i < localStorage.length; i++) {
       var storageKey = localStorage.key(i);
-      if ((storageKey === "syncPass") || (storageKey === "currentSchool")) continue;
+      if ((storageKey === "syncPass") || (storageKey === "currentSchoolID")) continue;
       listKeys.push(storageKey);
       html +=  '<li><div class="courseInList" id="in-list-'+storageKey+'">'+localStorage.getItem(storageKey)+'</div> <div id="course-trash-'+storageKey+'" class="oi oi-trash" title="trash" aria-hidden="true"></div></li>'
       htmlModal +=  '<li><div class="courseInList" id="in-list-'+storageKey+'">'+localStorage.getItem(storageKey)+'</div> <div id="modal-trash-'+storageKey+'" class="oi oi-trash" title="trash" aria-hidden="true"></div></li>'
@@ -200,7 +199,6 @@ function renderUserList() {
         updateUserList();
       });
     }
-  }
 }
 
 function ipLookUp () {
@@ -221,7 +219,8 @@ function ipLookUp () {
 
 // runs after the page has been loaded
 $(()=>{
-
+  localStorage.removeItem("syncPass");
+  socket = io();
   ipLookUp();
 
   $("#backButton").click(()=>{
@@ -236,31 +235,32 @@ $(()=>{
     var syncPass = $("#viewerPass").val();
     if (syncPass != "") {
       localStorage.setItem("syncPass", syncPass);
-      socket.emit('syncList', JSON.stringify(localStorage));
+      socket.emit('syncList', localStorage);
     }
   });
 
   //receive through socket any updates/sync
-  socket.on('syncList', function(userData) {
-    var userStorage = JSON.parse(userData);
-    if ((userStorage.syncPass === localStorage.getItem(syncPass)) && (userStorage.currentSchool === currentSchool)) {
-      if(!listSynced) {
-        listSynced = true;
-        for (var key in userStorage) {
-          localStorage.setItem(key, userStorage.key);
-        }
-        renderUserList();
-        socket.emit('syncList', JSON.stringify(localStorage));
+  socket.on('syncList', function(userStorage) {
+    console.log(userStorage.syncPass);
+    if ((userStorage.syncPass === localStorage.getItem("syncPass")) && (userStorage.currentSchoolID === localStorage.getItem("currentSchoolID"))) {
+      var listKeys = Object.keys(userStorage);
+      var listVals = Object.values(userStorage);
+      for (var i = 0; i < listKeys.length; i++) {
+        localStorage.setItem(listKeys[i], listVals[i]);
       }
+      renderUserList();
     }
   });
 
   socket.on('updateList', function(userStorage) {
-    var userStorage = JSON.parse(userData);
-    localStorage.clear();
-    if ((userStorage.syncPass === localStorage.getItem(syncPass)) && (userStorage.currentSchool === currentSchool)) {
-      for (var key in userStorage) {
-        localStorage.setItem(key, userStorage.key);
+    if (userStorage.syncPass != null) {
+      if ((userStorage.syncPass === localStorage.getItem("syncPass")) && (userStorage.currentSchoolID === localStorage.getItem("currentSchoolID"))) {
+        localStorage.clear();
+        var listKeys = Object.keys(userStorage);
+        var listVals = Object.values(userStorage);
+        for (var i = 0; i < listKeys.length; i++) {
+          localStorage.setItem(listKeys[i], listVals[i]);
+        }
       }
     }
     renderUserList();

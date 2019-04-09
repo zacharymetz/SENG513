@@ -5,9 +5,6 @@ const db = require('../db');
 const express = require('express');
 var queryBuilder = require('./helpers/queryBuilder');
 var router = express.Router();
-var http = require('http').Server(router);
-var io = require('socket.io')(http);
-
 
 router.get('/', (req, res) => {
   res.render('main/index.html');
@@ -100,22 +97,5 @@ router.post('/GetCourses', (req, res) => {
   })
 
 });
-
-io.on('connection', function(socket){
-
-  socket.on('disconnect', function(){
-
-  });
-
-  socket.on('syncList', function(userStorage){
-    io.emit('syncList', userStorage);
-  });
-
-  socket.on('updateList', function(userStorage){
-    io.emit('updateList', userStorage);
-  });
-
-});
-
 
 module.exports = router;
