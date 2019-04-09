@@ -55,7 +55,7 @@ input {
   font-size: 10px;
   width: 36%;
 }
-#barLogo {
+.barLogo {
   max-height: 60px;
   max-width: 60px;
   border-radius: 10px;
@@ -83,7 +83,7 @@ input {
   border-radius: 6px 6px 0px 0px;
   background-color: #007bff;
 }
-#courseList {
+#courseList, #courseList-modal {
   width: 100%;
   list-style: none;
   color: #4D4D4D;
@@ -203,7 +203,7 @@ li {
   .header{
     font-size: 38px;
   }
-  #barLogo {
+  .barLogo {
     max-height: 80px;
     max-width: 80px;
   }
@@ -232,7 +232,7 @@ li {
   .header{
     font-size: 50px;
   }
-  #barLogo {
+  .barLogo {
     max-height: 100px;
     max-width: 100px;
     border-radius: 14px;
@@ -265,7 +265,7 @@ li {
   .header{
     font-size: 62px;
   }
-  #barLogo {
+  .barLogo {
     max-height: 120px;
     max-width: 120px;
     margin-left: 10px;
@@ -302,7 +302,7 @@ li {
   .header{
     font-size: 68px;
   }
-  #barLogo {
+  .barLogo {
     max-height: 125px;
     max-width: 125px;
   }

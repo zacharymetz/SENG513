@@ -1,9 +1,12 @@
-var currentSchool = 1;
 var currentPage = "home-page";
 var navHistory = [];
 var pages =["home-page","school-page","faculty-page","dept-page","course-page"];
-var userCity = "";
+var clientCity = "";
+var currentSchoolID;
+var currentFacultyID;
+var currentDepartmentID;
 var socket = io();
+var listSynced = false;
 
 function gotoPage(page){
   for(var i=0;i<pages.length;i++){
@@ -29,22 +32,26 @@ function gotoPage(page){
   }
 };
 
-function renderSchoolGrid(requestData={city: userCity}){
+function renderSchoolGrid(requestData={city: clientCity}){
   $.post("/GetSchools",requestData).done((data)=>{
     var html = "";
     //console.log(data);
     data= JSON.parse(data);
-    for(var i=0;i<data.items.length;i++){
-      html +=  '<div class="collectItem" id="school-card-'+data.items[i].id+'">'
+    for(var i=0;i<data.rows.length;i++){
+      html +=  '<div class="collectItem" id="school-card-'+data.rows[i].institutionid+'">'
       html +=  '  <div>'
-      html +=  '    <img id="barLogo" src="/static/img/'+data.items[i].img+'">'
+      html +=  '    <img id="school-card-'+data.rows[i].institutionid+'" class="barLogo" src="/static/img/'+data.rows[i].institutionid+'">'
       html +=  '  </div>'
       html +=  '</div>'
     }
     $("#schoolGrid").html(html);
-    for(var i=0;i<data.items.length;i++){
-      $("#school-card-"+data.items[i].id).click(()=>{
-        //go to school faculties
+    for(var i=0;i<data.rows.length;i++){
+      $("#school-card-"+data.rows[i].institutionid).click(()=>{
+        var idStr = event.target.id;
+        var idParts = idStr.split('-', 3);
+        currentSchoolID = idParts[2];
+        localStorage.setItem("currentSchoolID", currentSchoolID);
+        renderUserList();
         navHistory.push(currentPage);
         gotoPage("faculty-page");
       });
@@ -52,20 +59,21 @@ function renderSchoolGrid(requestData={city: userCity}){
   })
 }
 function renderFacultyGrid(requestData=null){
-  $.post("/GetFaculties",requestData).done((data)=>{
+  $.post("/GetFaculties",{city: clientCity, schoolID: currentSchoolID}).done((data)=>{
     var html = "";
     //console.log(data);
     data= JSON.parse(data);
-    for(var i=0;i<data.items.length;i++){
-      html +=  '<div class="collectItem" id="faculty-card-'+data.items[i].id+'">'
-      html +=  '  <div id="collectImage" style="background-image:url('+data.items[i].img+');"></div>'
-      html +=  '  <div class="collectName">'+data.items[i].name+'</div>'
+    for(var i=0;i<data.rows.length;i++){
+      html +=  '<div class="collectItem" id="faculty-card-'+data.rows[i].academicgroupid+'">'
+      html +=  '  <div id="collectImage" style="background-image:url("https://d2ai0ibaxpbki1.cloudfront.net/v2/images/collections/video-music-licensing-collection-optimistic.jpg");"></div>'
+      html +=  '  <div class='+data.rows[i].academicgroupid+' class="collectName">'+data.rows[i].code+'</div>'
       html +=  '</div>'
     }
     $("#faculty-page").html(html);
-    for(var i=0;i<data.items.length;i++){
-      $("#faculty-card-"+data.items[i].id).click(()=>{
-        //load page with departments in faculty
+    for(var i=0;i<data.rows.length;i++){
+      $("#faculty-card-"+data.rows[i].academicgroupid).click(()=>{
+        //reload page with departments
+        currentFacultyID = event.target.nextElementSibling.className;
         navHistory.push(currentPage);
         gotoPage("dept-page");
       });
@@ -73,20 +81,25 @@ function renderFacultyGrid(requestData=null){
   })
 }
 function renderDeptGrid(requestData=null){
-  $.post("/GetDepts",requestData).done((data)=>{
+  $.post("/GetDepts", {
+    city:clientCity,
+    schoolID:currentSchool,
+    facultyID:currentFacultyID
+  }).done((data)=>{
     var html = "";
     //console.log(data);
     data= JSON.parse(data);
-    for(var i=0;i<data.items.length;i++){
-      html +=  '<div class="collectItem" id="dept-card-'+data.items[i].id+'">'
-      html +=  '  <div id="collectImage" style="background-image:url('+data.items[i].img+');"></div>'
-      html +=  '  <div class="collectName">'+data.items[i].name+'</div>'
+    for(var i=0;i<data.rows.length;i++){
+      html +=  '<div class="collectItem" id="dept-card-'+data.rows[i].subjectid+'">'
+      html +=  '  <div id="collectImage" style="background-image:url('+"https://pbs.twimg.com/profile_images/787764476078587904/vcAZZNg1_400x400.jpg"+');"></div>'
+      html +=  '  <div class ='+data.rows[i].subjectid+' class="collectName">'+data.rows[i].code+'</div>'
       html +=  '</div>'
     }
     $("#dept-page").html(html);
-    for(var i=0;i<data.items.length;i++){
-      $("#dept-card-"+data.items[i].id).click(()=>{
-        //load courses in department
+    for(var i=0;i<data.rows.length;i++){
+      $("#dept-card-"+data.rows[i].subjectid).click(()=>{
+        //load dept course list
+        currentDepartmentID = event.target.nextElementSibling.className;
         navHistory.push(currentPage);
         gotoPage("course-page");
       });
@@ -95,29 +108,34 @@ function renderDeptGrid(requestData=null){
 }
 
 function renderCourseGrid(requestData=null){
-  $.post("/GetCourses",requestData).done((data)=>{
+  $.post("/GetCourses", {
+    city: clientCity,
+    schoolID: currentSchoolID,
+    facultyID: currentFacultyID,
+    departmentID: currentDepartmentID
+  }).done((data)=>{
     var html = "";
     //console.log(data);
     data= JSON.parse(data);
-    for(var i=0;i<data.items.length;i++){
+    for(var i=0;i<data.rows.length;i++){
       html +=  '<div class="listItem">'
       html +=  '  <div class="courseTopLine">'
-      html +=  '    <div class="courseName" id="course-card-'+data.items[i].id+'">'
-      html +=  '      <span class="oi oi-chevron-right" title="chevron-right" aria-hidden="true" id="right-Arrow-'+data.items[i].id+'"></span>'
-      html +=  '      <span class="oi oi-chevron-bottom" title="chevron-bottom" aria-hidden="true" id="down-Arrow-'+data.items[i].id+'"></span>'
-      html +=  '      <span><b class="course-'+data.items[i].id+'" id="course-card-'+data.items[i].id+'">'+data.items[i].course+': </b></span>'
-      html +=  '      <span id="course-card-'+data.items[i].id+'">'+data.items[i].name+'</span>'
+      html +=  '    <div class="courseName" id="course-card-'+data.rows[i].id+'">'
+      html +=  '      <span class="oi oi-chevron-right" title="chevron-right" aria-hidden="true" id="right-Arrow-'+data.rows[i].id+'"></span>'
+      html +=  '      <span class="oi oi-chevron-bottom" title="chevron-bottom" aria-hidden="true" id="down-Arrow-'+data.rows[i].id+'"></span>'
+      html +=  '      <span><b class="course-'+data.rows[i].id+'" id="course-card-'+data.rows[i].id+'">'+data.rows[i].catalognumber+': </b></span>'
+      html +=  '      <span id="course-card-'+data.rows[i].id+'">'+data.rows[i].description+'</span>'
       html +=  '    </div>'
       html +=  '    <div id="courseNameGap"></div>'
-      html +=  '    <div class="oi oi-plus" title="plus" aria-hidden="true" id="course-add-'+data.items[i].id+'" ></div>'
+      html +=  '    <div class="oi oi-plus" title="plus" aria-hidden="true" id="course-add-'+data.rows[i].id+'" ></div>'
       html +=  '  </div>'
-      html +=  '  <div class="courseInfo" id="course-info-'+data.items[i].id+'">'+data.items[i].info+'</div>'
+      html +=  '  <div class="courseInfo" id="course-info-'+data.rows[i].id+'">'+data.rows[i].topicdescription+'</div>'
       html +=  '  <div class="courseBottomLine"></div>'
       html +=  '</div>'
     }
     $("#course-page").html(html);
-    for(var i=0;i<data.items.length;i++){
-      $("#course-card-"+data.items[i].id).click(()=>{
+    for(var i=0;i<data.rows.length;i++){
+      $("#course-card-"+data.rows[i].id).click(()=>{
         var idStr = event.target.id;
         var idParts = idStr.split('-', 3);
         var courseID = idParts[2];
@@ -131,7 +149,7 @@ function renderCourseGrid(requestData=null){
           $("#right-Arrow-"+courseID).hide();
         }
       });
-      $("#course-add-"+data.items[i].id).click(()=>{
+      $("#course-add-"+data.rows[i].id).click(()=>{
         var idStr = event.target.id;
         var idParts = idStr.split('-', 3);
         var courseID = idParts[2];
@@ -146,17 +164,50 @@ function renderCourseGrid(requestData=null){
 function updateUserList() {
   //emit through socket to update user list
   renderUserList();
+  socket.emit('updateList', JSON.stringify(localStorage));
 }
 
 function renderUserList() {
-
+  var html = "";
+  var htmlModal = "";
+  var listKeys = [];
+  if (localStorage.length > 1) {
+    for (var i = 0; i < localStorage.length; i++) {
+      var storageKey = localStorage.key(i);
+      if ((storageKey === "syncPass") || (storageKey === "currentSchool")) continue;
+      listKeys.push(storageKey);
+      html +=  '<li><div class="courseInList" id="in-list-'+storageKey+'">'+localStorage.getItem(storageKey)+'</div> <div id="course-trash-'+storageKey+'" class="oi oi-trash" title="trash" aria-hidden="true"></div></li>'
+      htmlModal +=  '<li><div class="courseInList" id="in-list-'+storageKey+'">'+localStorage.getItem(storageKey)+'</div> <div id="modal-trash-'+storageKey+'" class="oi oi-trash" title="trash" aria-hidden="true"></div></li>'
+    }
+    $("#courseList").html(html);
+    $("#courseList-modal").html(htmlModal);
+    //for loop to add click on trash for each course in list
+    for (var i = 0; i < listKeys.length; i++) {
+      $("#course-trash-"+listKeys[i]).click(()=>{
+        var idStr = event.target.id;
+        var idParts = idStr.split('-', 3);
+        var courseID = idParts[2];
+        localStorage.removeItem(courseID);
+        updateUserList();
+      });
+    }
+    for (var i = 0; i < listKeys.length; i++) {
+      $("#modal-trash-"+listKeys[i]).click(()=>{
+        var idStr = event.target.id;
+        var idParts = idStr.split('-', 3);
+        var courseID = idParts[2];
+        localStorage.removeItem(courseID);
+        updateUserList();
+      });
+    }
+  }
 }
 
 function ipLookUp () {
   $.ajax('http://ip-api.com/json')
   .then(
       function success(response) {
-          userCity = response.city;
+          clientCity = response.city;
           console.log("city: " + response.city);
           gotoPage("home-page");
       },
@@ -183,10 +234,36 @@ $(()=>{
 
   $("#syncButton").click(()=>{
     var syncPass = $("#viewerPass").val();
-    localStorage.setItem("syncPass", syncPass);
-    //emit through socket to sync lists
+    if (syncPass != "") {
+      localStorage.setItem("syncPass", syncPass);
+      socket.emit('syncList', JSON.stringify(localStorage));
+    }
   });
 
   //receive through socket any updates/sync
+  socket.on('syncList', function(userData) {
+    var userStorage = JSON.parse(userData);
+    if ((userStorage.syncPass === localStorage.getItem(syncPass)) && (userStorage.currentSchool === currentSchool)) {
+      if(!listSynced) {
+        listSynced = true;
+        for (var key in userStorage) {
+          localStorage.setItem(key, userStorage.key);
+        }
+        renderUserList();
+        socket.emit('syncList', JSON.stringify(localStorage));
+      }
+    }
+  });
+
+  socket.on('updateList', function(userStorage) {
+    var userStorage = JSON.parse(userData);
+    localStorage.clear();
+    if ((userStorage.syncPass === localStorage.getItem(syncPass)) && (userStorage.currentSchool === currentSchool)) {
+      for (var key in userStorage) {
+        localStorage.setItem(key, userStorage.key);
+      }
+    }
+    renderUserList();
+  });
 
 });
