@@ -5,7 +5,7 @@ var clientCity = "";
 var currentSchoolID;
 var currentFacultyID;
 var currentDepartmentID;
-var socket = io();
+//var socket = io();
 var listSynced = false;
 
 function gotoPage(page){
@@ -83,7 +83,7 @@ function renderFacultyGrid(requestData=null){
 function renderDeptGrid(requestData=null){
   $.post("/GetDepts", {
     city:clientCity,
-    schoolID:currentSchool,
+    schoolID:currentSchoolID,
     facultyID:currentFacultyID
   }).done((data)=>{
     var html = "";
@@ -126,7 +126,7 @@ function renderCourseGrid(requestData=null){
       html +=  '      <span><b class="course-'+data.rows[i].id+'" id="course-card-'+data.rows[i].id+'">'+data.rows[i].catalognumber+': </b></span>'
       html +=  '      <span id="course-card-'+data.rows[i].id+'">'+data.rows[i].description+'</span>'
       html +=  '    </div>'
-      html +=  '    <div id="courseNameGap"></div>'
+      //html +=  '    <div id="courseNameGap"></div>'
       html +=  '    <div class="oi oi-plus" title="plus" aria-hidden="true" id="course-add-'+data.rows[i].id+'" ></div>'
       html +=  '  </div>'
       html +=  '  <div class="courseInfo" id="course-info-'+data.rows[i].id+'">'+data.rows[i].topicdescription+'</div>'

@@ -133,6 +133,7 @@ li {
 .courseTopLine {
   display: flex;
   flex-flow: row;
+  position: relative;
 }
 .courseName {
   text-align: left;
@@ -159,6 +160,8 @@ li {
 }
 .oi-plus {
   padding-top: 4px;
+  position: absolute;
+  right: 15px;
 }
 #schoolCourses {
   display: none;
