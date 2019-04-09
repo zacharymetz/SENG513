@@ -42,7 +42,7 @@ router.post('/GetFaculties', (req, res) => {
   var city = req.body.city;
   var schoolID = req.body.schoolID;
   //dont have to do nothing lol
-  db.query("SELECT * FROM public.academicgroup",(err,result)=>{
+  db.query("SELECT * FROM public.faculty WHERE insitutionid = $1",[schoolID],(err,result)=>{
     if(err){
       //  if there is an error form the sql server with request
       res.send(JSON.stringify({
@@ -65,7 +65,7 @@ router.post('/GetDepts', (req, res) => {
   var schoolID = req.body.schoolID;
   var facultyID = req.body.facultyID;
 
-  db.query("SELECT * FROM public.subject",(err,result)=>{
+  db.query("SELECT * FROM public.department WHERE facultyid = $1",[facultyID],(err,result)=>{
     if(err){
       //  if there is an error form the sql server with request
       res.send(JSON.stringify({
@@ -83,7 +83,12 @@ router.post('/GetDepts', (req, res) => {
 });
 
 router.post('/GetCourses', (req, res) => {
-  db.query("SELECT * FROM public.course",(err,result)=>{
+  var city= req.body.clientCity;
+  var schoolID= req.body.schoolID;
+  var facultyID= req.body.facultyID;
+  var departmentID= req.body.departmentID;
+  console.log(departmentID);
+  db.query("SELECT * FROM public.course WHERE departmentid = $1",[departmentID],(err,result)=>{
     if(err){
       //  if there is an error form the sql server with request
       res.send(JSON.stringify({

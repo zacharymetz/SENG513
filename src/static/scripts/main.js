@@ -47,9 +47,9 @@ function renderSchoolGrid(requestData=null){
     }
     $("#schoolGrid").html(html);
     for(var i=0;i<data.rows.length;i++){
-      $("#school-card-"+data.rows[i].institutionid).click(()=>{
+      $("#school-card-"+data.rows[i].institutionid).click((e)=>{
         //go to school faculties
-        currentSchoolID = event.target.id;
+        currentSchoolID = e.target.id;
         navHistory.push(currentPage);
         gotoPage("faculty-page");
       });
@@ -64,14 +64,14 @@ function renderFacultyGrid(requestData=null){
     var html = "";
     data= JSON.parse(data);
     for(var i=0;i<data.rows.length;i++){
-      html +=  '<div class="collectItem" id="faculty-card-'+data.rows[i].academicgroupid+'">'
+      html +=  '<div class="collectItem" id="faculty-card-'+data.rows[i].facultyid+'">'
       html +=  '  <div id="collectImage" style="background-image:url('+"https://d2ai0ibaxpbki1.cloudfront.net/v2/images/collections/video-music-licensing-collection-optimistic.jpg"+');"></div>'
-      html +=  '  <div class ='+data.rows[i].academicgroupid+' class="collectName">'+data.rows[i].code+'</div>'
+      html +=  '  <div class ='+data.rows[i].facultyid+' class="collectName">'+data.rows[i].code+'</div>'
       html +=  '</div>'
     }
     $("#faculty-page").html(html);
     for(var i=0;i<data.rows.length;i++){
-      $("#faculty-card-"+data.rows[i].academicgroupid).click(()=>{
+      $("#faculty-card-"+data.rows[i].facultyid).click(()=>{
         //reload page with departments
         currentFacultyID = event.target.nextElementSibling.className;
         navHistory.push(currentPage);
@@ -89,14 +89,14 @@ function renderDeptGrid(requestData=null){
     var html = "";
     data= JSON.parse(data);
     for(var i=0;i<data.rows.length;i++){
-      html +=  '<div class="collectItem" id="dept-card-'+data.rows[i].subjectid+'">'
+      html +=  '<div class="collectItem" id="dept-card-'+data.rows[i].departmentid+'">'
       html +=  '  <div id="collectImage" style="background-image:url('+"https://pbs.twimg.com/profile_images/787764476078587904/vcAZZNg1_400x400.jpg"+');"></div>'
-      html +=  '  <div class ='+data.rows[i].subjectid+' class="collectName">'+data.rows[i].code+'</div>'
+      html +=  '  <div class ='+data.rows[i].departmentid+' class="collectName">'+data.rows[i].code+'</div>'
       html +=  '</div>'
     }
     $("#dept-page").html(html);
     for(var i=0;i<data.rows.length;i++){
-      $("#dept-card-"+data.rows[i].subjectid).click(()=>{
+      $("#dept-card-"+data.rows[i].departmentid).click(()=>{
         //load dept course list
         currentDepartmentID = event.target.nextElementSibling.className;
         navHistory.push(currentPage);
@@ -107,6 +107,7 @@ function renderDeptGrid(requestData=null){
 }
 
 function renderCourseGrid(requestData=null){
+  console.log(currentDepartmentID);
   $.post("/GetCourses",{
     city: clientCity,
     schoolID: currentSchoolID,
