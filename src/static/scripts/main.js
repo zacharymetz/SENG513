@@ -2,6 +2,11 @@ var currentSchool = 1;
 var currentPage = "home-page";
 var navHistory = [];
 var pages =["home-page","school-page","faculty-page","dept-page","course-page"];
+var clientCity = "";
+var currentSchoolID;
+var currentFacultyID;
+var currentDepartmentID;
+var currentCourseID;
 
 function gotoPage(page){
   for(var i=0;i<pages.length;i++){
@@ -28,21 +33,23 @@ function gotoPage(page){
 };
 
 function renderSchoolGrid(requestData=null){
-  $.post("/GetSchools",requestData).done((data)=>{
+  $.post("/GetSchools",{
+    city: clientCity
+  }).done((data)=>{
     var html = "";
-    console.log(data);
     data= JSON.parse(data);
-    for(var i=0;i<data.items.length;i++){
-      html +=  '<div class="collectItem" id="school-card-'+data.items[i].id+'">'
+    for(var i=0;i<data.rows.length;i++){
+      html +=  '<div class="collectItem" id="school-card-'+data.rows[i].institutionid+'">'
       html +=  '  <div>'
-      html +=  '    <img id="barLogo" src="/static/img/'+data.items[i].img+'">'
+      html +=  '    <img  id ='+data.rows[i].institutionid+' id="barLogo" src="/static/img/'+"UofC.png"+'">'
       html +=  '  </div>'
       html +=  '</div>'
     }
     $("#schoolGrid").html(html);
-    for(var i=0;i<data.items.length;i++){
-      $("#school-card-"+data.items[i].id).click(()=>{
+    for(var i=0;i<data.rows.length;i++){
+      $("#school-card-"+data.rows[i].institutionid).click(()=>{
         //go to school faculties
+        currentSchoolID = event.target.id;
         navHistory.push(currentPage);
         gotoPage("faculty-page");
       });
@@ -50,20 +57,23 @@ function renderSchoolGrid(requestData=null){
   })
 }
 function renderFacultyGrid(requestData=null){
-  $.post("/GetFaculties",requestData).done((data)=>{
+  $.post("/GetFaculties",{
+    city: clientCity,
+    schoolID: currentSchoolID
+  }).done((data)=>{
     var html = "";
-    console.log(data);
     data= JSON.parse(data);
-    for(var i=0;i<data.items.length;i++){
-      html +=  '<div class="collectItem" id="faculty-card-'+data.items[i].id+'">'
-      html +=  '  <div id="collectImage" style="background-image:url('+data.items[i].img+');"></div>'
-      html +=  '  <div class="collectName">'+data.items[i].name+'</div>'
+    for(var i=0;i<data.rows.length;i++){
+      html +=  '<div class="collectItem" id="faculty-card-'+data.rows[i].academicgroupid+'">'
+      html +=  '  <div id="collectImage" style="background-image:url('+"https://d2ai0ibaxpbki1.cloudfront.net/v2/images/collections/video-music-licensing-collection-optimistic.jpg"+');"></div>'
+      html +=  '  <div class ='+data.rows[i].academicgroupid+' class="collectName">'+data.rows[i].code+'</div>'
       html +=  '</div>'
     }
     $("#faculty-page").html(html);
-    for(var i=0;i<data.items.length;i++){
-      $("#faculty-card-"+data.items[i].id).click(()=>{
+    for(var i=0;i<data.rows.length;i++){
+      $("#faculty-card-"+data.rows[i].academicgroupid).click(()=>{
         //reload page with departments
+        currentFacultyID = event.target.nextElementSibling.className;
         navHistory.push(currentPage);
         gotoPage("dept-page");
       });
@@ -71,20 +81,24 @@ function renderFacultyGrid(requestData=null){
   })
 }
 function renderDeptGrid(requestData=null){
-  $.post("/GetDepts",requestData).done((data)=>{
+  $.post("/GetDepts",{
+    city:clientCity,
+    schoolID:currentSchool,
+    facultyID:currentFacultyID
+  }).done((data)=>{
     var html = "";
-    console.log(data);
     data= JSON.parse(data);
-    for(var i=0;i<data.items.length;i++){
-      html +=  '<div class="collectItem" id="dept-card-'+data.items[i].id+'">'
-      html +=  '  <div id="collectImage" style="background-image:url('+data.items[i].img+');"></div>'
-      html +=  '  <div class="collectName">'+data.items[i].name+'</div>'
+    for(var i=0;i<data.rows.length;i++){
+      html +=  '<div class="collectItem" id="dept-card-'+data.rows[i].subjectid+'">'
+      html +=  '  <div id="collectImage" style="background-image:url('+"https://pbs.twimg.com/profile_images/787764476078587904/vcAZZNg1_400x400.jpg"+');"></div>'
+      html +=  '  <div class ='+data.rows[i].subjectid+' class="collectName">'+data.rows[i].code+'</div>'
       html +=  '</div>'
     }
     $("#dept-page").html(html);
-    for(var i=0;i<data.items.length;i++){
-      $("#dept-card-"+data.items[i].id).click(()=>{
+    for(var i=0;i<data.rows.length;i++){
+      $("#dept-card-"+data.rows[i].subjectid).click(()=>{
         //load dept course list
+        currentDepartmentID = event.target.nextElementSibling.className;
         navHistory.push(currentPage);
         gotoPage("course-page");
       });
@@ -93,30 +107,35 @@ function renderDeptGrid(requestData=null){
 }
 
 function renderCourseGrid(requestData=null){
-  $.post("/GetCourses",requestData).done((data)=>{
+  $.post("/GetCourses",{
+    city: clientCity,
+    schoolID: currentSchoolID,
+    facultyID: currentFacultyID,
+    departmentID: currentDepartmentID
+  }).done((data)=>{
     var html = "";
-    console.log(data);
     data= JSON.parse(data);
-    for(var i=0;i<data.items.length;i++){
-      html +=  '<div class="listItem" id="course-card-'+data.items[i].id+'">'
+    for(var i=0;i<data.rows.length;i++){
+      html +=  '<div class="listItem" id="course-card-'+data.rows[i].id+'">'
       html +=  '  <div class="courseTopLine">'
-      html +=  '    <div class="courseName">'
+      html +=  '    <div class ='+data.rows[i].id+' class="courseName">'
       html +=  '      <span class="oi oi-chevron-right" title="chevron-right" aria-hidden="true" id="rightArrow"></span>'
       html +=  '      <span class="oi oi-chevron-bottom" title="chevron-bottom" aria-hidden="true" id="downArrow"></span>'
-      html +=  '      <span><b>'+data.items[i].course+': </b></span>'
-      html +=  '      <span>'+data.items[i].name+'</span>'
+      html +=  '      <span><b>'+data.rows[i].catalognumber+': </b></span>'
+      html +=  '      <span>'+data.rows[i].description+'</span>'
       html +=  '    </div>'
       html +=  '    <div class="oi oi-plus" title="plus" aria-hidden="true"></div>'
       html +=  '  </div>'
-      html +=  '  <div class="courseInfo">'+data.items[i].info+'</div>'
+      html +=  '  <div class="courseInfo">'+data.rows[i].topicdescription+'</div>'
       html +=  '  <div class="courseBottomLine"></div>'
       html +=  '</div>'
     }
     $("#course-page").html(html);
-    for(var i=0;i<data.items.length;i++){
-      $("#course-card-"+data.items[i].id).click(()=>{
+    for(var i=0;i<data.rows.length;i++){
+      $("#course-card-"+data.rows[i].id).click(()=>{
         //load dept course list
 
+        currentCourseID = event.target.parentElement.className;
       });
     };
   })
@@ -124,31 +143,38 @@ function renderCourseGrid(requestData=null){
 
 // runs after the page has been loaded
 $(()=>{
-  gotoPage("home-page");
-  //ipLookUp();
-  //console.log(localStorage.length);
-  $("#backButton").click(()=>{
-    console.log(navHistory);
-    var prevPage = navHistory.pop();
-    console.log("previous page: " + prevPage);
-    if (prevPage == "home-page") {
-      navHistory = [];
-    }
-    gotoPage(prevPage);
+  ipLookUp(()=>{
+    gotoPage("home-page");
+    $("#backButton").click(()=>{
+      console.log(navHistory);
+      var prevPage = navHistory.pop();
+      console.log("previous page: " + prevPage);
+      if (prevPage == "home-page") {
+        navHistory = [];
+      }
+      gotoPage(prevPage);
+
+    });
   });
+  //console.log(localStorage.length);
+
 });
 
-function ipLookUp () {
+function ipLookUp (callback) {
   $.ajax('http://ip-api.com/json')
   .then(
       function success(response) {
           console.log('User\'s Location Data is ', response);
           console.log('User\'s Country', response.country);
+          clientCity = response.city;
+          console.log(clientCity);
+          callback();
       },
 
       function fail(data, status) {
           console.log('Request failed.  Returned status of',
                       status);
+          callback();
       }
   );
 }
