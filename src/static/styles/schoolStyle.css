@@ -23,11 +23,11 @@ body {
 .collectItem {
   margin: 20px;
   text-align: center;
-  cursor: pointer;
 }
 .collectName {
   text-align: center;
   max-width: 60px;
+  cursor: none;
 }
 .topBar {
   background-color: red;
@@ -60,13 +60,14 @@ input {
   max-width: 60px;
   border-radius: 10px;
 }
-#collectImage {
+.collectImage {
   height: 60px;
   width: 60px;
   border-radius: 8px;
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
+  cursor: pointer;
 }
 #userList {
   margin: 15px 0px;
@@ -187,9 +188,6 @@ li {
 #buttonGap {
   width: 70%;
 }
-#courseNameGap {
-  width: 42%;
-}
 #viewListModalTitle {
   color: white;
   background-color: #007bff;
@@ -216,7 +214,7 @@ li {
   .collectName {
     max-width: 80px;
   }
-  #collectImage {
+  .collectImage {
     height: 80px;
     width: 80px;
   }
@@ -225,9 +223,6 @@ li {
   }
   #buttonGap {
     width: 77%;
-  }
-  #courseNameGap {
-    width: 55%;
   }
 }
 
@@ -243,7 +238,7 @@ li {
   .collectName {
     max-width: 100px;
   }
-  #collectImage {
+  .collectImage {
     height: 100px;
     width: 100px;
     border-radius: 10px;
@@ -279,7 +274,7 @@ li {
   .collectName {
     max-width: 120px;
   }
-  #collectImage {
+  .collectImage {
     height: 120px;
     width: 120px;
   }
@@ -312,11 +307,8 @@ li {
   .collectName {
     max-width: 125px;
   }
-  #collectImage {
+  .collectImage {
     height: 125px;
     width: 125px;
-  }
-  #courseNameGap {
-    width: 60%;
   }
 }

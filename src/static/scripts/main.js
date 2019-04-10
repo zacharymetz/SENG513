@@ -38,9 +38,9 @@ function renderSchoolGrid(requestData={city: clientCity}){
     //console.log(data);
     data= JSON.parse(data);
     for(var i=0;i<data.rows.length;i++){
-      html +=  '<div class="collectItem" id="school-card-'+data.rows[i].institutionid+'">'
+      html +=  '<div class="collectItem">'
       html +=  '  <div>'
-      html +=  '    <img id="school-card-'+data.rows[i].institutionid+'" class="barLogo" src="/static/img/'+"UofC.png"+'">'
+      html +=  '    <img id="school-card-'+data.rows[i].institutionid+'" class="barLogo" style="cursor:pointer;" src="/static/img/'+"UofC.png"+'">'
       html +=  '  </div>'
       html +=  '</div>'
     }
@@ -64,16 +64,29 @@ function renderFacultyGrid(requestData=null){
     //console.log(data);
     data= JSON.parse(data);
     for(var i=0;i<data.rows.length;i++){
-      html +=  '<div class="collectItem" id="faculty-card-'+data.rows[i].academicgroupid+'">'
-      html +=  '  <div id="collectImage" style="background-image:url('+"https://d2ai0ibaxpbki1.cloudfront.net/v2/images/collections/video-music-licensing-collection-optimistic.jpg"+');"></div>'
-      html +=  '  <div class='+data.rows[i].academicgroupid+' class="collectName">'+data.rows[i].code+'</div>'
+      var image_src;
+      $.getJSON("http://api.flickr.com/services/feeds/photos_public.gne?jsoncallback=?", {
+              tags: data.rows[i].longname,
+              tagmode: "any",
+              format: "json"
+            },
+            function(imgData) {
+              var rnd = Math.floor(Math.random() * imgData.items.length);
+              image_src = imgData.items[rnd]['media']['m'].replace("_m", "_b");
+            });
+
+      html +=  '<div class="collectItem">'
+      html +=  '  <div id="faculty-card-'+data.rows[i].facultyid+'" class="collectImage" style="background-image:url('+image_src+');"></div>'
+      html +=  '  <div id="faculty-card-'+data.rows[i].facultyid+'" class="collectName">'+data.rows[i].longname+'</div>'
       html +=  '</div>'
     }
     $("#faculty-page").html(html);
     for(var i=0;i<data.rows.length;i++){
-      $("#faculty-card-"+data.rows[i].academicgroupid).click(()=>{
+      $("#faculty-card-"+data.rows[i].facultyid).click(()=>{
         //reload page with departments
-        currentFacultyID = event.target.nextElementSibling.className;
+        var idStr = event.target.id;
+        var idParts = idStr.split('-', 3);
+        currentFacultyID = idParts[2];
         navHistory.push(currentPage);
         gotoPage("dept-page");
       });
@@ -90,16 +103,18 @@ function renderDeptGrid(requestData=null){
     //console.log(data);
     data= JSON.parse(data);
     for(var i=0;i<data.rows.length;i++){
-      html +=  '<div class="collectItem" id="dept-card-'+data.rows[i].subjectid+'">'
-      html +=  '  <div id="collectImage" style="background-image:url('+"https://pbs.twimg.com/profile_images/787764476078587904/vcAZZNg1_400x400.jpg"+');"></div>'
-      html +=  '  <div class ='+data.rows[i].subjectid+' class="collectName">'+data.rows[i].code+'</div>'
+      html +=  '<div class="collectItem">'
+      html +=  '  <div id="dept-card-'+data.rows[i].departmentid+'"  class="collectImage" style="background-image:url('+"https://pbs.twimg.com/profile_images/787764476078587904/vcAZZNg1_400x400.jpg"+');"></div>'
+      html +=  '  <div id="dept-card-'+data.rows[i].departmentid+'" class="collectName">'+data.rows[i].code+'</div>'
       html +=  '</div>'
     }
     $("#dept-page").html(html);
     for(var i=0;i<data.rows.length;i++){
-      $("#dept-card-"+data.rows[i].subjectid).click(()=>{
+      $("#dept-card-"+data.rows[i].departmentid).click(()=>{
         //load dept course list
-        currentDepartmentID = event.target.nextElementSibling.className;
+        var idStr = event.target.id;
+        var idParts = idStr.split('-', 3);
+        currentDepartmentID = idParts[2];
         navHistory.push(currentPage);
         gotoPage("course-page");
       });
@@ -123,13 +138,13 @@ function renderCourseGrid(requestData=null){
       html +=  '    <div class="courseName" id="course-card-'+data.rows[i].id+'">'
       html +=  '      <span class="oi oi-chevron-right" title="chevron-right" aria-hidden="true" id="right-Arrow-'+data.rows[i].id+'"></span>'
       html +=  '      <span class="oi oi-chevron-bottom" title="chevron-bottom" aria-hidden="true" id="down-Arrow-'+data.rows[i].id+'"></span>'
-      html +=  '      <span><b class="course-'+data.rows[i].id+'" id="course-card-'+data.rows[i].id+'">'+data.rows[i].catalognumber+': </b></span>'
-      html +=  '      <span id="course-card-'+data.rows[i].id+'">'+data.rows[i].description+'</span>'
+      html +=  '      <span><b class="course-'+data.rows[i].id+'" id="course-card-'+data.rows[i].id+'">'+data.rows[i].code+''+data.rows[i].catalognumber+': </b></span>'
+      html +=  '      <span id="course-card-'+data.rows[i].id+'">'+data.rows[i].topicdescription+'</span>'
       html +=  '    </div>'
-      //html +=  '    <div id="courseNameGap"></div>'
       html +=  '    <div class="oi oi-plus" title="plus" aria-hidden="true" id="course-add-'+data.rows[i].id+'" ></div>'
       html +=  '  </div>'
-      html +=  '  <div class="courseInfo" id="course-info-'+data.rows[i].id+'">'+data.rows[i].topicdescription+'</div>'
+      html +=  '  <div class="courseInfo" id="course-info-'+data.rows[i].id+'">'+data.rows[i].description+'</div>'
+      html +=  '  <div class="courseInfo" id="course-notes-'+data.rows[i].id+'">Notes: '+data.rows[i].notes+'</div>'
       html +=  '  <div class="courseBottomLine"></div>'
       html +=  '</div>'
     }
@@ -141,10 +156,12 @@ function renderCourseGrid(requestData=null){
         var courseID = idParts[2];
         if ($("#course-info-"+courseID).is(":visible")) {
           $("#course-info-"+courseID).hide();
+          $("#course-notes-"+courseID).hide();
           $("#right-Arrow-"+courseID).show();
           $("#down-Arrow-"+courseID).hide();
         }else{
           $("#course-info-"+courseID).show();
+          $("#course-notes-"+courseID).show();
           $("#down-Arrow-"+courseID).show();
           $("#right-Arrow-"+courseID).hide();
         }
@@ -238,6 +255,17 @@ $(()=>{
       socket.emit('syncList', localStorage);
     }
   });
+
+  // searching for cities in the database
+  $("#searchCityButton").click(() => {
+    console.log("sending request to get univeristies from cities");
+    $.post("/GetSchoolsByText",
+      { cityName: $("#searchCityText").val() })
+      .done((data) => {
+        console.log(data);
+        data = JSON.parse(data);
+      });
+  }); 
 
   //receive through socket any updates/sync
   socket.on('syncList', function(userStorage) {
