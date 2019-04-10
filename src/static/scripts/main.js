@@ -158,7 +158,34 @@ $(()=>{
   });
   //console.log(localStorage.length);
 
+
+  // searching for cities in the database
+  $("#searchCityButton").click(() => {
+    console.log("sending request to get univeristies from cities");
+    $.post("/GetSchoolsByText",
+      { cityName: $("#searchCityText").val() })
+      .done((data) => {
+        console.log(data);
+        data = JSON.parse(data);
+      });
+  });  
+
+  //searching for courses in the databae
+  $("#searchCoursesButton").click(()=>
+  {
+    console.log("sending request to get courses");
+    $.post("/searchCoursesByText",
+    { courseName: $("#searchCoursesText").val() })
+    .done((data) => {
+      console.log(data);
+      data = JSON.parse(data);
+    });
+  });
+
+
+
 });
+
 
 function ipLookUp (callback) {
   $.ajax('http://ip-api.com/json')
@@ -172,9 +199,13 @@ function ipLookUp (callback) {
       },
 
       function fail(data, status) {
+        data = JSON.parse(data);
+        
           console.log('Request failed.  Returned status of',
                       status);
           callback();
       }
   );
 }
+
+

@@ -102,4 +102,48 @@ router.post('/GetCourses', (req, res) => {
 });
 
 
+router.post('/GetSchoolsByText', (req, res) => {
+  console.log(req.body);
+
+  db.query("SELECT institutionid, name, shortname, streetnumber, streetname, postalcode, cityid, stateid, countryid, backgroundimage, brandcolor0, brandcolor1, inialized, created_at, logoimage FROM public.institution where cityid = (select cityid from geo.city where name like $1) or 	stateid = (select stateid from geo.state where statename like $2) or countryid = (select countryid from geo.country where name like $3);", [req.body.cityName, req.body.cityName, req.body.cityName], (err, result) => {
+    if (err) {
+      //  if there is an error form the sql server with request
+      res.send(JSON.stringify({
+        success: false,
+        message: "db error"
+      }));
+    } else {
+      res.send(JSON.stringify({
+        success: true,
+        rows: result.rows
+      }));
+    }
+
+  })
+
+});
+
+
+router.post('/searchCoursesByText', (req, res) => {
+console.log(req.body);
+  db.query("", [], (err, result) => {
+    if(err){
+      res.send(JSON.stringify({
+        success: false,
+        message: "db error"
+      }));
+    }else{
+      res.send(JSON.stringify({
+        success : true,
+        row: result.rows
+      }));
+    }
+  })
+});
+
+
+
+
+
+
 module.exports = router;
