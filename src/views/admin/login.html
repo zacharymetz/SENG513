@@ -9,17 +9,18 @@
 {% endblock %}
 
 {% block body %}
-<form class="login">
+<form class="login" action="/admin/login", method="POST">
+    {{ message }}
     <div class="logo login-logo"></div>
     <h3>Login</h3>
     <div class="form-group">
         
-        <input type="email" class="form-control text-center" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Email">
+        <input type="email" class="form-control text-center" id="exampleInputEmail1" aria-describedby="emailHelp" name="email" placeholder="Email">
         
     </div>
     <div class="form-group">
         
-        <input type="password" class="form-control text-center" id="exampleInputPassword1" placeholder="Password">
+        <input type="password" class="form-control text-center" id="exampleInputPassword1" name="password" placeholder="Password">
     </div>
 
     <button type="submit" class="btn btn-primary">Login</button><br>
