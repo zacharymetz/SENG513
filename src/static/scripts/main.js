@@ -47,9 +47,9 @@ function renderSchoolGrid(requestData=null){
     }
     $("#schoolGrid").html(html);
     for(var i=0;i<data.rows.length;i++){
-      $("#school-card-"+data.rows[i].institutionid).click(()=>{
+      $("#school-card-"+data.rows[i].institutionid).click((e)=>{
         //go to school faculties
-        currentSchoolID = event.target.id;
+        currentSchoolID = e.target.id;
         navHistory.push(currentPage);
         gotoPage("faculty-page");
       });
@@ -64,14 +64,14 @@ function renderFacultyGrid(requestData=null){
     var html = "";
     data= JSON.parse(data);
     for(var i=0;i<data.rows.length;i++){
-      html +=  '<div class="collectItem" id="faculty-card-'+data.rows[i].academicgroupid+'">'
+      html +=  '<div class="collectItem" id="faculty-card-'+data.rows[i].facultyid+'">'
       html +=  '  <div id="collectImage" style="background-image:url('+"https://d2ai0ibaxpbki1.cloudfront.net/v2/images/collections/video-music-licensing-collection-optimistic.jpg"+');"></div>'
-      html +=  '  <div class ='+data.rows[i].academicgroupid+' class="collectName">'+data.rows[i].code+'</div>'
+      html +=  '  <div class ='+data.rows[i].facultyid+' class="collectName">'+data.rows[i].longname+'</div>'
       html +=  '</div>'
     }
     $("#faculty-page").html(html);
     for(var i=0;i<data.rows.length;i++){
-      $("#faculty-card-"+data.rows[i].academicgroupid).click(()=>{
+      $("#faculty-card-"+data.rows[i].facultyid).click(()=>{
         //reload page with departments
         currentFacultyID = event.target.nextElementSibling.className;
         navHistory.push(currentPage);
@@ -89,14 +89,14 @@ function renderDeptGrid(requestData=null){
     var html = "";
     data= JSON.parse(data);
     for(var i=0;i<data.rows.length;i++){
-      html +=  '<div class="collectItem" id="dept-card-'+data.rows[i].subjectid+'">'
+      html +=  '<div class="collectItem" id="dept-card-'+data.rows[i].departmentid+'">'
       html +=  '  <div id="collectImage" style="background-image:url('+"https://pbs.twimg.com/profile_images/787764476078587904/vcAZZNg1_400x400.jpg"+');"></div>'
-      html +=  '  <div class ='+data.rows[i].subjectid+' class="collectName">'+data.rows[i].code+'</div>'
+      html +=  '  <div class ='+data.rows[i].departmentid+' class="collectName">'+data.rows[i].code+'</div>'
       html +=  '</div>'
     }
     $("#dept-page").html(html);
     for(var i=0;i<data.rows.length;i++){
-      $("#dept-card-"+data.rows[i].subjectid).click(()=>{
+      $("#dept-card-"+data.rows[i].departmentid).click(()=>{
         //load dept course list
         currentDepartmentID = event.target.nextElementSibling.className;
         navHistory.push(currentPage);
@@ -113,6 +113,7 @@ function renderCourseGrid(requestData=null){
     facultyID: currentFacultyID,
     departmentID: currentDepartmentID
   }).done((data)=>{
+    console.log(data);
     var html = "";
     data= JSON.parse(data);
     for(var i=0;i<data.rows.length;i++){
@@ -121,7 +122,7 @@ function renderCourseGrid(requestData=null){
       html +=  '    <div class ='+data.rows[i].id+' class="courseName">'
       html +=  '      <span class="oi oi-chevron-right" title="chevron-right" aria-hidden="true" id="rightArrow"></span>'
       html +=  '      <span class="oi oi-chevron-bottom" title="chevron-bottom" aria-hidden="true" id="downArrow"></span>'
-      html +=  '      <span><b>'+data.rows[i].catalognumber+': </b></span>'
+      html +=  '      <span><b>'+data.rows[i].code +' '+data.rows[i].catalognumber+': </b></span>'
       html +=  '      <span>'+data.rows[i].description+'</span>'
       html +=  '    </div>'
       html +=  '    <div class="oi oi-plus" title="plus" aria-hidden="true"></div>'
