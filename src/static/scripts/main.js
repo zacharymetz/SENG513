@@ -66,7 +66,7 @@ function renderFacultyGrid(requestData=null){
     for(var i=0;i<data.rows.length;i++){
       html +=  '<div class="collectItem" id="faculty-card-'+data.rows[i].facultyid+'">'
       html +=  '  <div id="collectImage" style="background-image:url('+"https://d2ai0ibaxpbki1.cloudfront.net/v2/images/collections/video-music-licensing-collection-optimistic.jpg"+');"></div>'
-      html +=  '  <div class ='+data.rows[i].facultyid+' class="collectName">'+data.rows[i].code+'</div>'
+      html +=  '  <div class ='+data.rows[i].facultyid+' class="collectName">'+data.rows[i].longname+'</div>'
       html +=  '</div>'
     }
     $("#faculty-page").html(html);
@@ -107,13 +107,13 @@ function renderDeptGrid(requestData=null){
 }
 
 function renderCourseGrid(requestData=null){
-  console.log(currentDepartmentID);
   $.post("/GetCourses",{
     city: clientCity,
     schoolID: currentSchoolID,
     facultyID: currentFacultyID,
     departmentID: currentDepartmentID
   }).done((data)=>{
+    console.log(data);
     var html = "";
     data= JSON.parse(data);
     for(var i=0;i<data.rows.length;i++){
@@ -122,7 +122,7 @@ function renderCourseGrid(requestData=null){
       html +=  '    <div class ='+data.rows[i].id+' class="courseName">'
       html +=  '      <span class="oi oi-chevron-right" title="chevron-right" aria-hidden="true" id="rightArrow"></span>'
       html +=  '      <span class="oi oi-chevron-bottom" title="chevron-bottom" aria-hidden="true" id="downArrow"></span>'
-      html +=  '      <span><b>'+data.rows[i].catalognumber+': </b></span>'
+      html +=  '      <span><b>'+data.rows[i].code +' '+data.rows[i].catalognumber+': </b></span>'
       html +=  '      <span>'+data.rows[i].description+'</span>'
       html +=  '    </div>'
       html +=  '    <div class="oi oi-plus" title="plus" aria-hidden="true"></div>'

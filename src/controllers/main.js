@@ -88,7 +88,7 @@ router.post('/GetCourses', (req, res) => {
   var facultyID= req.body.facultyID;
   var departmentID= req.body.departmentID;
   console.log(departmentID);
-  db.query("SELECT * FROM public.course WHERE departmentid = $1",[departmentID],(err,result)=>{
+  db.query("SELECT * FROM public.course INNER JOIN public.department ON public.course.departmentid = public.department.departmentid WHERE public.course.departmentid = $1",[departmentID],(err,result)=>{
     if(err){
       //  if there is an error form the sql server with request
       res.send(JSON.stringify({
