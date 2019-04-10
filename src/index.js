@@ -30,12 +30,10 @@ io.on('connection', function(socket){
   });
 
   socket.on('syncList', function(userStorage){
-    console.log(userStorage);
     io.emit('syncList', userStorage);
   });
 
   socket.on('updateList', function(userStorage){
-    console.log(userStorage);
     io.emit('updateList', userStorage);
   });
 });

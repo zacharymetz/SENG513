@@ -7,6 +7,7 @@ var currentFacultyID;
 var currentDepartmentID;
 var socket;
 var listSynced = false;
+var facultyImages;
 
 function gotoPage(page){
   for(var i=0;i<pages.length;i++){
@@ -40,7 +41,7 @@ function renderSchoolGrid(requestData={city: clientCity}){
     for(var i=0;i<data.rows.length;i++){
       html +=  '<div class="collectItem">'
       html +=  '  <div>'
-      html +=  '    <img id="school-card-'+data.rows[i].institutionid+'" class="barLogo" style="cursor:pointer;" src="/static/img/'+"UofC.png"+'">'
+      html +=  '    <img id="school-card-'+data.rows[i].institutionid+'" class="barLogo" style="cursor:pointer;" src="/static/img/UofC.png">'
       html +=  '  </div>'
       html +=  '</div>'
     }
@@ -64,19 +65,8 @@ function renderFacultyGrid(requestData=null){
     //console.log(data);
     data= JSON.parse(data);
     for(var i=0;i<data.rows.length;i++){
-      var image_src;
-      $.getJSON("http://api.flickr.com/services/feeds/photos_public.gne?jsoncallback=?", {
-              tags: data.rows[i].longname,
-              tagmode: "any",
-              format: "json"
-            },
-            function(imgData) {
-              var rnd = Math.floor(Math.random() * imgData.items.length);
-              image_src = imgData.items[rnd]['media']['m'].replace("_m", "_b");
-            });
-
       html +=  '<div class="collectItem">'
-      html +=  '  <div id="faculty-card-'+data.rows[i].facultyid+'" class="collectImage" style="background-image:url('+image_src+');"></div>'
+      html +=  '  <div id="faculty-card-'+data.rows[i].facultyid+'" class="collectImage" style="background-image:url('+"https://www.nbn.org.il/wp-content/uploads/2014/01/engineering_mechanical_3042380_cropped.jpg"+');"></div>'
       html +=  '  <div id="faculty-card-'+data.rows[i].facultyid+'" class="collectName">'+data.rows[i].longname+'</div>'
       html +=  '</div>'
     }
@@ -105,7 +95,7 @@ function renderDeptGrid(requestData=null){
     for(var i=0;i<data.rows.length;i++){
       html +=  '<div class="collectItem">'
       html +=  '  <div id="dept-card-'+data.rows[i].departmentid+'"  class="collectImage" style="background-image:url('+"https://pbs.twimg.com/profile_images/787764476078587904/vcAZZNg1_400x400.jpg"+');"></div>'
-      html +=  '  <div id="dept-card-'+data.rows[i].departmentid+'" class="collectName">'+data.rows[i].code+'</div>'
+      html +=  '  <div id="dept-card-'+data.rows[i].departmentid+'" class="collectName">'+data.rows[i].name+'</div>'
       html +=  '</div>'
     }
     $("#dept-page").html(html);
@@ -238,6 +228,7 @@ function ipLookUp () {
 $(()=>{
   localStorage.removeItem("syncPass");
   socket = io();
+
   ipLookUp();
 
   $("#backButton").click(()=>{
@@ -264,8 +255,21 @@ $(()=>{
       .done((data) => {
         console.log(data);
         data = JSON.parse(data);
+        var html = data.html;
+        $("#schoolGrid").html(html);
+        for(var i=0;i<data.rows.length;i++){
+          $("#school-card-"+data.rows[i].institutionid).click(()=>{
+            var idStr = event.target.id;
+            var idParts = idStr.split('-', 3);
+            currentSchoolID = idParts[2];
+            localStorage.setItem("currentSchoolID", currentSchoolID);
+            renderUserList();
+            navHistory.push(currentPage);
+            gotoPage("faculty-page");
+          });
+        };
       });
-  }); 
+  });
 
   //receive through socket any updates/sync
   socket.on('syncList', function(userStorage) {
