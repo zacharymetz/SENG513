@@ -44,11 +44,19 @@ checkFaculty("doesThisWork",(data)=>{
     console.log("CHECK DEPARTMENT------------------------------");
     //if there is something that already exists for this department with the corresponding faculty then I am returned the facultyID and the departmentID
     console.log(data);
+    console.log(data[0].subjectid);
     //if there isn't something then it inserts and returned the facultyID for the newest faculty added but has no academicgroupID associated with it
     console.log("CHECK DEPARTMENT------------------------------");
+
+    //call check course with the subject id which is department id in her csv
+    checkCourse(data[0].subjectid, "319", (data) => {
+      console.log("CHECK Course------------------------------");
+      console.log(data);
+
+      console.log("CHECK Course------------------------------");
+    });
+  
   });
-
-
 });
 
 /*
@@ -57,7 +65,7 @@ code =  Acad Group column so "SC" would be the FACULTY of science
 function checkFaculty (code,next) {
   var facQuery = "";
   //QUERY
-  facQuery += "SELECT academicgroupid";
+  facQuery += "SELECT academicgroupid"; //its academicgroupid for now until I repopulate the database and make it facultyid
   facQuery += "	FROM public.academicgroup WHERE code = $1;";
   //PARAMS
   facParams = [code];
@@ -87,27 +95,21 @@ function checkFaculty (code,next) {
     }
   });
 }
-//
-// /*department Callback function, data is the output from the query returned from check Depertment*/
-// checkDepartment("pauliscool12345", (data) =>{
-//   //if there is something that already exists for this department with the corresponding faculty then I am returned the facultyID and the departmentID
-//   console.log(data);
-//   //if there isn't something then it inserts and returned the facultyID for the newest faculty added but has no academicgroupID associated with it
-//   console.log("CHECK DEPARTMENT OVER------------------------------");
-// });
+
+
 
 /*
 code = subject column which is a 4 letter code "ITAL" would be the DEPARTMENT of italian
 facultyID = the corresponding facultyID to insert the department object for
 */
-function checkDepartment (academicgroupid, code, next){
+function checkDepartment (facultyID, code, next){
   var depQuery = "";
 
   //QUERY
   depQuery += "SELECT subjectid, academicgroupid";
   depQuery += "	FROM public.subject WHERE academicgroupid = $1;";
   //PARAMS
-  depParams = [academicgroupid];
+  depParams = [facultyID];
 
 
   db.query(depQuery, depParams, (err, result) => {
@@ -123,7 +125,7 @@ function checkDepartment (academicgroupid, code, next){
         depQuery += "(academicgroupid, code)";
         depQuery += "VALUES ($1 , $2) returning *;";
         //PARAMS
-        depParams = [academicgroupid, code];
+        depParams = [facultyID, code];
         db.query(depQuery, depParams, (err1, result1) => {
           if (err1) {
             console.log(err1);
@@ -136,6 +138,29 @@ function checkDepartment (academicgroupid, code, next){
   });
 }
 
+/**
+ * code = catalognumber column which is a 3  letter code like "201" for example
+ * facultyID will be the subjectID column which is the corresponding faculty for that course
+ */
+function checkCourse(subjectID, code, next){
+  console.log("enter checkcourse");
+  var courseQuery = ""; 
+  //QUERY
+  courseQuery += "SELECT subjectid, catalognumber";
+  courseQuery += "	FROM public.course WHERE catalognumber = $1;";  //$1 will be the subjectID which is departmentID in her csv
+  //PARAMS
+  courseParams = [subjectID];
+  db.query(courseQuery, courseParams, (err, result) => {
+    if(err) {
+      console.log(err);
+    } else {
+      if(result.rows.length > 0) {
+        next(result.rows);  //check course callback function
+      }
+    }
+  });
+
+}
 
 
 
