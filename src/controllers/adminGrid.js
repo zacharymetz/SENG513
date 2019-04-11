@@ -275,8 +275,19 @@ router.post('/GetInstitutions',(req,res)=>{
       });
 });
 
-
-
+//  will return the insitution features if the user has access to an insitution
+router.post('/GetInstitutionFeatures',(req,res)=>{
+    db.query("select * from insititution innerjoin accountinstitution on accountinstitution.institutionid institution.institutionid where accountinstitution.accountid = $1 ", [req.session.accountid] ,(err, result) => {
+        if (err) {
+          console.log(err.stack);
+          res.send(JSON.stringify({
+              d: false
+          }));
+        } else {
+          res.send(JSON.stringify(result.rows[0]));
+        }
+      });
+});
 
 
 //  routes pertaining too 

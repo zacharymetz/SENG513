@@ -97,6 +97,23 @@ function getStates(countryid){
     });
 
 }
+
+
+
+//  this function will get called on the cutomize click and populates all the feilds with the
+//  ones from you institution 
+function updateCutomizeFeilds(){
+    $.ajax({
+        type: 'POST',
+        url: "/adminGrid/GetInsitutionFeatures",
+        dataType: "json",
+    }).done(function(dataResult) {
+        //  lets fill up the select with countries
+        console.log(dataResult);
+        
+
+    });
+}
 </script>
 
 <small id="unishortHelp" class="form-text text-muted">The location of the institution</small>
