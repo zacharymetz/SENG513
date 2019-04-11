@@ -33,26 +33,24 @@ db = {
 
 
 //callback for check faculty here data is the output of the query returned from check faculty
-checkFaculty("doesThisWork",(data)=>{
+checkFaculty("paulsTest",(data)=>{
   console.log("CHECK FACULTY------------------------------");
   console.log(data);//returns all the rows that have the code we pass in them
   console.log("CHECK FACULTY------------------------------");
   //TODO call the check department now which will take the current faculty ID and based on that faculty ID  it will retrieve the department ID assoc with it
 
   /*department Callback function, data is the output from the query returned from check Depertment*/
-  checkDepartment(data[0].academicgroupid, "ARST",(data) =>{
+  checkDepartment(data[0].facultyid, "CPSC",(data) =>{
     console.log("CHECK DEPARTMENT------------------------------");
-    //if there is something that already exists for this department with the corresponding faculty then I am returned the facultyID and the departmentID
+    //if there is something that already exists for this department with the corresponding faculty then I am returned the facultyid and the departmentID
     console.log(data);
-    console.log(data[0].subjectid);
-    //if there isn't something then it inserts and returned the facultyID for the newest faculty added but has no academicgroupID associated with it
+    //if there isn't something then it inserts and returned the facultyid for the newest faculty added but has no academicgroupID associated with it
     console.log("CHECK DEPARTMENT------------------------------");
 
     //call check course with the subject id which is department id in her csv
-    checkCourse(data[0].subjectid, "319", (data) => {
+    checkCourse(data[0].departmentid, "696", (data) => {
       console.log("CHECK Course------------------------------");
       console.log(data);
-
       console.log("CHECK Course------------------------------");
     });
   
@@ -65,8 +63,8 @@ code =  Acad Group column so "SC" would be the FACULTY of science
 function checkFaculty (code,next) {
   var facQuery = "";
   //QUERY
-  facQuery += "SELECT academicgroupid"; //its academicgroupid for now until I repopulate the database and make it facultyid
-  facQuery += "	FROM public.academicgroup WHERE code = $1;";
+  facQuery += "SELECT facultyid"; 
+  facQuery += "	FROM public.faculty WHERE code = $1;";
   //PARAMS
   facParams = [code];
   db.query(facQuery,facParams ,(err, result) => {
@@ -79,7 +77,7 @@ function checkFaculty (code,next) {
         console.log("Faculty code " + code + "doesn't exist. Inserting");
         //QUERY
         facQuery = "";
-        facQuery += "INSERT INTO public.academicgroup";
+        facQuery += "INSERT INTO public.faculty";
         facQuery += "(code)";
         facQuery += "VALUES ($1) returning *;";
         //PARAMS
@@ -99,17 +97,17 @@ function checkFaculty (code,next) {
 
 
 /*
-code = subject column which is a 4 letter code "ITAL" would be the DEPARTMENT of italian
-facultyID = the corresponding facultyID to insert the department object for
+code = department column which is a 4 letter code "ITAL" would be the DEPARTMENT of italian
+facultyid = the corresponding facultyID to insert the department object for
 */
-function checkDepartment (facultyID, code, next){
+function checkDepartment (facultyid, code, next){
   var depQuery = "";
 
   //QUERY
-  depQuery += "SELECT subjectid, academicgroupid";
-  depQuery += "	FROM public.subject WHERE academicgroupid = $1;";
+  depQuery += "SELECT departmentid, facultyid";
+  depQuery += "	FROM public.department WHERE facultyid = $1;";
   //PARAMS
-  depParams = [facultyID];
+  depParams = [facultyid];
 
 
   db.query(depQuery, depParams, (err, result) => {
@@ -121,11 +119,11 @@ function checkDepartment (facultyID, code, next){
       } else {
         //QUERY
         depQuery = ""; //reset query string
-        depQuery += "INSERT INTO public.subject";
-        depQuery += "(academicgroupid, code)";
+        depQuery += "INSERT INTO public.department";
+        depQuery += "(facultyid, code)";
         depQuery += "VALUES ($1 , $2) returning *;";
         //PARAMS
-        depParams = [facultyID, code];
+        depParams = [facultyid, code];
         db.query(depQuery, depParams, (err1, result1) => {
           if (err1) {
             console.log(err1);
@@ -140,22 +138,37 @@ function checkDepartment (facultyID, code, next){
 
 /**
  * code = catalognumber column which is a 3  letter code like "201" for example
- * facultyID will be the subjectID column which is the corresponding faculty for that course
+ * departmentid will be the column which is the corresponding faculty for that course
  */
-function checkCourse(subjectID, code, next){
-  console.log("enter checkcourse");
+function checkCourse(departmentid, catalognumber, next){
   var courseQuery = ""; 
   //QUERY
-  courseQuery += "SELECT subjectid, catalognumber";
-  courseQuery += "	FROM public.course WHERE catalognumber = $1;";  //$1 will be the subjectID which is departmentID in her csv
+  courseQuery += "SELECT courseid, departmentid";
+  courseQuery += "	FROM public.course WHERE departmentid = $1;";  //$1 will be the subjectID which is departmentID in her csv
   //PARAMS
-  courseParams = [subjectID];
+  courseParams = [departmentid];
   db.query(courseQuery, courseParams, (err, result) => {
     if(err) {
       console.log(err);
     } else {
       if(result.rows.length > 0) {
         next(result.rows);  //check course callback function
+      } else {  //doesn't exist so add it
+        //QUERY
+        courseQuery = ""; //reset query
+        courseQuery += "INSERT INTO public.course";
+        courseQuery += "(departmentid, catalognumber)";
+        courseQuery += "VALUES ($1, $2) returning *;";
+        //PARAMS
+        courseParams = [departmentid, catalognumber];
+        db.query(courseQuery, courseParams, (err1, result1) => {
+          if (err1) {
+            console.log(err1);
+          } else {
+            next(result1.rows);
+          }
+        });
+
       }
     }
   });
