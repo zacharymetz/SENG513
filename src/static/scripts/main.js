@@ -100,7 +100,7 @@ function renderDeptGrid(requestData=null){
     facultyID:currentFacultyID
   }).done((data)=>{
     var html = "";
-    //console.log(data);
+
     data= JSON.parse(data);
     for(var i=0;i<data.rows.length;i++){
       html +=  '<div class="collectItem">'
@@ -265,7 +265,7 @@ $(()=>{
         console.log(data);
         data = JSON.parse(data);
       });
-  }); 
+  });
 
   //receive through socket any updates/sync
   socket.on('syncList', function(userStorage) {
