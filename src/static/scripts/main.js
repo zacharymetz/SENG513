@@ -105,7 +105,7 @@ function renderCourseGrid(requestData=null){
     var html = data.html;
     $("#course-page").html(html);
     for(var i=0;i<data.rows.length;i++){
-      $("#course-card-"+data.rows[i].id).click(()=>{
+      $("#course-card-"+data.rows[i].courseid).click(()=>{
         var idStr = event.target.id;
         var idParts = idStr.split('-', 3);
         var courseID = idParts[2];
@@ -121,7 +121,7 @@ function renderCourseGrid(requestData=null){
           $("#right-Arrow-"+courseID).hide();
         }
       });
-      $("#course-add-"+data.rows[i].id).click(()=>{
+      $("#course-add-"+data.rows[i].courseid).click(()=>{
         var idStr = event.target.id;
         var idParts = idStr.split('-', 3);
         var courseID = idParts[2];
