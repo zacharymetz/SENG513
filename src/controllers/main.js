@@ -130,10 +130,14 @@ router.post('/GetSchoolsByText', (req, res) => {
 });
 
 
-// searches for the courses
+
+
 router.post('/searchCoursesByText', (req, res) => {
 console.log(req.body);
-  db.query("", [], (err, result) => {
+  var description = "%" + req.body.courseName + "%";
+  console.log(description);
+  db.query("SELECT * FROM public.department INNER JOIN public.course ON public.department.departmentid = public.course.departmentid Where lower(code) like lower($1) or catalognumber like $2 or description like $3 or topicdescription like $4", [req.body.courseName, req.body.courseName, description, description],
+  (err, result) => {
     if(err){
       res.send(JSON.stringify({
         success: false,
