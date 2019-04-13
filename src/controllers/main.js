@@ -24,13 +24,25 @@ router.post('/GetSchools', (req, res) => {
         message : "db error"
       }));
     }else{
-      //
+      var html = "";
+      if (result.rows.length == 0) {
+        html = "<div class=\"info\">Sorry, no schools found :(</div>"
+      }
+      else {
+        for(var i=0;i<result.rows.length;i++){
+          html +=  '<div class="collectItem">'
+          html +=  '  <div>'
+          html +=  '    <img id="school-card-'+result.rows[i].institutionid+'" class="barLogo" style="cursor:pointer;" src="/static/img/UofC.png">'
+          html +=  '  </div>'
+          html +=  '</div>'
+        }
+      }
       res.send(JSON.stringify({
         success : true,
-        rows : result.rows
+        rows : result.rows,
+        html: html
       }));
     }
-
   })
 });
 
@@ -47,9 +59,22 @@ router.post('/GetFaculties', (req, res) => {
         message : "db error"
       }));
     }else{
+      var html = "";
+      if (result.rows.length == 0) {
+        html = "<div class=\"info\">Sorry, no faculties found :(</div>"
+      }
+      else {
+        for(var i=0;i<result.rows.length;i++){
+          html +=  '<div class="collectItem">'
+          html +=  '  <div id="faculty-card-'+result.rows[i].facultyid+'" class="collectImage" style="background-image:url('+"https://www.nbn.org.il/wp-content/uploads/2014/01/engineering_mechanical_3042380_cropped.jpg"+');"></div>'
+          html +=  '  <div id="faculty-card-'+result.rows[i].facultyid+'" class="collectName">'+result.rows[i].longname+'</div>'
+          html +=  '</div>'
+        }
+      }
       res.send(JSON.stringify({
         success : true,
-        rows : result.rows
+        rows : result.rows,
+        html: html
       }));
     }
 
@@ -70,9 +95,22 @@ router.post('/GetDepts', (req, res) => {
         message : "db error"
       }));
     }else{
+      var html = "";
+      if (result.rows.length == 0) {
+        html = "<div class=\"info\">Sorry, no departments found :(</div>"
+      }
+      else {
+        for(var i=0;i<result.rows.length;i++){
+          html +=  '<div class="collectItem">'
+          html +=  '  <div id="dept-card-'+result.rows[i].departmentid+'"  class="collectImage" style="background-image:url('+"https://pbs.twimg.com/profile_images/787764476078587904/vcAZZNg1_400x400.jpg"+');"></div>'
+          html +=  '  <div id="dept-card-'+result.rows[i].departmentid+'" class="collectName">'+result.rows[i].name+'</div>'
+          html +=  '</div>'
+        }
+      }
       res.send(JSON.stringify({
         success : true,
-        rows : result.rows
+        rows : result.rows,
+        html: html
       }));
     }
 
@@ -93,14 +131,35 @@ router.post('/GetCourses', (req, res) => {
         message : "db error"
       }));
     }else{
+      var html = "";
+      if (result.rows.length == 0) {
+        html = "<div class=\"info\" style=\"color:#4D4D4D;\">Sorry, no courses found :(</div>"
+      }
+      else {
+        for(var i=0;i<result.rows.length;i++){
+          html +=  '<div class="listItem">'
+          html +=  '  <div class="courseTopLine">'
+          html +=  '    <div class="courseName" id="course-card-'+result.rows[i].id+'">'
+          html +=  '      <span class="oi oi-chevron-right" title="chevron-right" aria-hidden="true" id="right-Arrow-'+result.rows[i].id+'"></span>'
+          html +=  '      <span class="oi oi-chevron-bottom" title="chevron-bottom" aria-hidden="true" id="down-Arrow-'+result.rows[i].id+'"></span>'
+          html +=  '      <span><b class="course-'+result.rows[i].id+'" id="course-card-'+result.rows[i].id+'">'+result.rows[i].code+''+result.rows[i].catalognumber+': </b></span>'
+          html +=  '      <span id="course-card-'+result.rows[i].id+'">'+result.rows[i].topicdescription+'</span>'
+          html +=  '    </div>'
+          html +=  '    <div class="oi oi-plus" title="plus" aria-hidden="true" id="course-add-'+result.rows[i].id+'" ></div>'
+          html +=  '  </div>'
+          html +=  '  <div class="courseInfo" id="course-info-'+result.rows[i].id+'">'+result.rows[i].description+'</div>'
+          html +=  '  <div class="courseInfo" id="course-notes-'+result.rows[i].id+'">Notes: '+result.rows[i].notes+'</div>'
+          html +=  '  <div class="courseBottomLine"></div>'
+          html +=  '</div>'
+        }
+      }
       res.send(JSON.stringify({
         success : true,
-        rows : result.rows
+        rows : result.rows,
+        html: html
       }));
     }
-
   })
-
 });
 
 router.post('/GetSchoolsByText', (req, res) => {

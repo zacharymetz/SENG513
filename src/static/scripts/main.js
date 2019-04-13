@@ -35,16 +35,9 @@ function gotoPage(page){
 
 function renderSchoolGrid(requestData={city: clientCity}){
   $.post("/GetSchools",requestData).done((data)=>{
-    var html = "";
     //console.log(data);
     data= JSON.parse(data);
-    for(var i=0;i<data.rows.length;i++){
-      html +=  '<div class="collectItem">'
-      html +=  '  <div>'
-      html +=  '    <img id="school-card-'+data.rows[i].institutionid+'" class="barLogo" style="cursor:pointer;" src="/static/img/UofC.png">'
-      html +=  '  </div>'
-      html +=  '</div>'
-    }
+    var html = data.html;
     $("#schoolGrid").html(html);
     for(var i=0;i<data.rows.length;i++){
       $("#school-card-"+data.rows[i].institutionid).click(()=>{
@@ -61,15 +54,9 @@ function renderSchoolGrid(requestData={city: clientCity}){
 }
 function renderFacultyGrid(requestData=null){
   $.post("/GetFaculties",{city: clientCity, schoolID: currentSchoolID}).done((data)=>{
-    var html = "";
     //console.log(data);
     data= JSON.parse(data);
-    for(var i=0;i<data.rows.length;i++){
-      html +=  '<div class="collectItem">'
-      html +=  '  <div id="faculty-card-'+data.rows[i].facultyid+'" class="collectImage" style="background-image:url('+"https://www.nbn.org.il/wp-content/uploads/2014/01/engineering_mechanical_3042380_cropped.jpg"+');"></div>'
-      html +=  '  <div id="faculty-card-'+data.rows[i].facultyid+'" class="collectName">'+data.rows[i].longname+'</div>'
-      html +=  '</div>'
-    }
+    var html = data.html;
     $("#faculty-page").html(html);
     for(var i=0;i<data.rows.length;i++){
       $("#faculty-card-"+data.rows[i].facultyid).click(()=>{
@@ -89,15 +76,9 @@ function renderDeptGrid(requestData=null){
     schoolID:currentSchoolID,
     facultyID:currentFacultyID
   }).done((data)=>{
-    var html = "";
     //console.log(data);
     data= JSON.parse(data);
-    for(var i=0;i<data.rows.length;i++){
-      html +=  '<div class="collectItem">'
-      html +=  '  <div id="dept-card-'+data.rows[i].departmentid+'"  class="collectImage" style="background-image:url('+"https://pbs.twimg.com/profile_images/787764476078587904/vcAZZNg1_400x400.jpg"+');"></div>'
-      html +=  '  <div id="dept-card-'+data.rows[i].departmentid+'" class="collectName">'+data.rows[i].name+'</div>'
-      html +=  '</div>'
-    }
+    var html = data.html;
     $("#dept-page").html(html);
     for(var i=0;i<data.rows.length;i++){
       $("#dept-card-"+data.rows[i].departmentid).click(()=>{
@@ -119,25 +100,9 @@ function renderCourseGrid(requestData=null){
     facultyID: currentFacultyID,
     departmentID: currentDepartmentID
   }).done((data)=>{
-    var html = "";
     //console.log(data);
     data= JSON.parse(data);
-    for(var i=0;i<data.rows.length;i++){
-      html +=  '<div class="listItem">'
-      html +=  '  <div class="courseTopLine">'
-      html +=  '    <div class="courseName" id="course-card-'+data.rows[i].id+'">'
-      html +=  '      <span class="oi oi-chevron-right" title="chevron-right" aria-hidden="true" id="right-Arrow-'+data.rows[i].id+'"></span>'
-      html +=  '      <span class="oi oi-chevron-bottom" title="chevron-bottom" aria-hidden="true" id="down-Arrow-'+data.rows[i].id+'"></span>'
-      html +=  '      <span><b class="course-'+data.rows[i].id+'" id="course-card-'+data.rows[i].id+'">'+data.rows[i].code+''+data.rows[i].catalognumber+': </b></span>'
-      html +=  '      <span id="course-card-'+data.rows[i].id+'">'+data.rows[i].topicdescription+'</span>'
-      html +=  '    </div>'
-      html +=  '    <div class="oi oi-plus" title="plus" aria-hidden="true" id="course-add-'+data.rows[i].id+'" ></div>'
-      html +=  '  </div>'
-      html +=  '  <div class="courseInfo" id="course-info-'+data.rows[i].id+'">'+data.rows[i].description+'</div>'
-      html +=  '  <div class="courseInfo" id="course-notes-'+data.rows[i].id+'">Notes: '+data.rows[i].notes+'</div>'
-      html +=  '  <div class="courseBottomLine"></div>'
-      html +=  '</div>'
-    }
+    var html = data.html;
     $("#course-page").html(html);
     for(var i=0;i<data.rows.length;i++){
       $("#course-card-"+data.rows[i].id).click(()=>{
