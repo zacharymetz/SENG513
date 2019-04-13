@@ -129,6 +129,7 @@ router.post('/GetSchoolsByText', (req, res) => {
 });
 
 
+// searches for the courses
 router.post('/searchCoursesByText', (req, res) => {
 console.log(req.body);
   db.query("", [], (err, result) => {
