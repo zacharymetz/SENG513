@@ -68,9 +68,10 @@ $.ajax({
             html = html + "<option onclick='getStates("+dataResult.data[i].countryid+")>"+dataResult.data[i].name+"</option>";
             
         }
-        console.log(html);
+     
         $("#country_select").html(html);
-        console.log(dataResult);
+     
+
 
     });
 //  get the associated states 
@@ -84,15 +85,15 @@ function getStates(countryid){
         pageSize: 300,}
     }).done(function(dataResult) {
         //  lets fill up the select with countries
-        console.log(dataResult);
+       
         var html = "";
         for(var i=0;i<dataResult.data.length;i++){
             html = html + "<option onclick='getCities("+dataResult.data[i].stateid+")>"+dataResult.data[i].name+"</option>";
             
         }
-        console.log(html);
+       
         $("#state_select").html(html);
-        console.log(dataResult);
+    
 
     });
 
@@ -102,7 +103,7 @@ function getStates(countryid){
 
 //  this function will get called on the cutomize click and populates all the feilds with the
 //  ones from you institution 
-function updateCutomizeFeilds(){
+function requestCutomizeFeilds(){
     $.ajax({
         type: 'POST',
         url: "/adminGrid/GetInsitutionFeatures",
@@ -110,9 +111,50 @@ function updateCutomizeFeilds(){
     }).done(function(dataResult) {
         //  lets fill up the select with countries
         console.log(dataResult);
+        //  fill all of the form feilds 
+        $("#univeristyname").val(dataResult.name);
+        $("#univeristyshortname").val(dataResult.shortname);
+        
+
+
+        //  set up the location thing 
+        $("#new_cust_number").val(dataResult.streetnumber);
+        $("#new_cust_street").val(dataResult.streetname);
+        $("#new_cust_postal").val(dataResult.postalcode);
+
+        //  set up the color things 
+
+        $("#brand-color-1").css({'background':toColor(dataResult.brandcolor0)})
+        $("#brand-color-2").css({'background':toColor(dataResult.brandcolor1)})
+
         
 
     });
+}
+$(requestCutomizeFeilds);
+function getCustomizeFeilds(){
+    return {
+        name : $("#univeristyname").val(),
+        shortname : $("#univeristyshortname").val(),
+        streetnum : $("#univeristyshortname").val(),
+        streetname : $("#univeristyshortname").val(),
+        postalcode: $("#univeristyshortname").val(),
+        cityid : $("#univeristyshortname").val(),
+        stateid : $("#univeristyshortname").val(),
+        countryid : $("#univeristyshortname").val(),
+        logo : null,
+        background : null,
+        color0 : $("#univeristyshortname").val(),
+        color1 : $("#univeristyshortname").val()
+    }
+}
+function toColor(num) {
+    num >>>= 0;
+    var b = num & 0xFF,
+        g = (num & 0xFF00) >>> 8,
+        r = (num & 0xFF0000) >>> 16,
+        a = ( (num & 0xFF000000) >>> 24 ) / 255 ;
+    return "rgba(" + [r, g, b, 1].join(",") + ")";
 }
 </script>
 
@@ -140,10 +182,18 @@ function updateCutomizeFeilds(){
 </div>
     <label >Brand Colors</label>
     <div class="brand-colors">
-    <div class="brand-color-selector"></div>
-    <div class="brand-color-selector"></div>
+    <div class="brand-color-selector" id="brand-color-1"></div>
+    <div class="brand-color-selector" id="brand-color-2"></div>
 </div>
 <input id="Customize-submit-button" class="btn btn-success" type="submit" value="Save">
 
-
+<script>
+$("#Customize-submit-button").click(()=>{
+    $.post("/adminGrid/SetInsitutionFeatures",
+    getCustomizeFeilds())
+    .done((data)=>{
+        console.log(data);
+    });
+})
+</script>
           

@@ -18,7 +18,7 @@ router.post('/GetFaculty', (req, res) => {
     //  to stop sql injections we need to check the feilds
     var validSortFeilds = ["code","longname"];
 
-    var queryOptions = queryBuilder.jsGridQueryBuilder("academicgroup", query, validSortFeilds);
+    var queryOptions = queryBuilder.jsGridQueryBuilder("faculty", query, validSortFeilds);
     db.query(queryOptions[0],queryOptions[1] ,(err, result) => {
 
         if (err) {
@@ -39,6 +39,35 @@ router.post('/GetFaculty', (req, res) => {
       });
     
 });
+router.post('/UpdateFaculty', (req, res) => {
+  //dont have to do nothing lol
+  var query = req.body;
+
+  //  need to add sorts up here since can do sql injections if not
+  //  to stop sql injections we need to check the feilds
+  var validSortFeilds = ["code","longname"];
+
+  var queryOptions = queryBuilder.jsGridQueryBuilder("faculty", query, validSortFeilds);
+  db.query(queryOptions[0],queryOptions[1] ,(err, result) => {
+
+      if (err) {
+        console.log(err.stack);
+        res.send(JSON.stringify({
+            d: false
+        }));
+      } else {
+        var numberOfItems = 0;
+        if(result.rows[0]){
+          numberOfItems = result.rows[0].itemsnumber
+        }
+        res.send(JSON.stringify({
+            data: result.rows,
+            itemsCount: numberOfItems
+        }));
+      }
+    });
+  
+});
 router.post('/GetDepartment', (req, res) => {
     //dont have to do nothing lol
     var query = req.body;
@@ -50,11 +79,11 @@ router.post('/GetDepartment', (req, res) => {
         columns : [
           "longname"
         ],
-        query: " inner join academicgroup on subject.academicgroupid = academicgroup.academicgroupid "
+        query: " inner join faculty on department.facultyid = faculty.facultyid "
       };
     
 
-    var queryOptions = queryBuilder.jsGridQueryBuilder("subject", query, validSortFeilds,innerJoin);
+    var queryOptions = queryBuilder.jsGridQueryBuilder("department", query, validSortFeilds,innerJoin);
     db.query(queryOptions[0],queryOptions[1] ,(err, result) => {
 
         if (err) {
@@ -74,6 +103,118 @@ router.post('/GetDepartment', (req, res) => {
         }
       });
     
+});
+router.post('/UpdateDepartment', (req, res) => {
+  //dont have to do nothing lol
+  var query = req.body;
+
+  //  need to add sorts up here since can do sql injections if not
+  //  to stop sql injections we need to check the feilds
+  var validSortFeilds = ["code","name"];
+  var innerJoin = {  // inner join on the departments table so we can display the name of the department instead o fhte id 
+      columns : [
+        "longname"
+      ],
+      query: " inner join faculty on department.facultyid = faculty.facultyid "
+    };
+  
+
+  var queryOptions = queryBuilder.jsGridQueryBuilder("department", query, validSortFeilds,innerJoin);
+  db.query(queryOptions[0],queryOptions[1] ,(err, result) => {
+
+      if (err) {
+        console.log(err.stack);
+        res.send(JSON.stringify({
+            d: false
+        }));
+      } else {
+        var numberOfItems = 0;
+        if(result.rows[0]){
+          numberOfItems = result.rows[0].itemsnumber
+        }
+        res.send(JSON.stringify({
+            data: result.rows,
+            itemsCount: numberOfItems
+        }));
+      }
+    });
+  
+});
+
+router.post('/GetCourses', (req, res) => {
+  //dont have to do nothing lol
+  var query = req.body;
+
+  //  need to add sorts up here since can do sql injections if not
+  //  to stop sql injections we need to check the feilds
+  var validSortFeilds = ["code","name"];
+  var innerJoin = {  // inner join on the departments table so we can display the name of the department instead o fhte id 
+      columns : [
+        "longname"
+      ],
+      query: " inner join department on department.departmentid = course.departmentid "
+    };
+  
+
+  var queryOptions = queryBuilder.jsGridQueryBuilder("course", query, validSortFeilds,innerJoin);
+  console.log(queryOptions);
+  db.query(queryOptions[0],queryOptions[1] ,(err, result) => {
+
+      if (err) {
+        console.log(err.stack);
+        res.send(JSON.stringify({
+            d: false
+        }));
+      } else {
+        var numberOfItems = 0;
+        if(result.rows[0]){
+          numberOfItems = result.rows[0].itemsnumber
+        }
+        res.send(JSON.stringify({
+            data: result.rows,
+            itemsCount: numberOfItems
+        }));
+      }
+    });
+  
+});
+
+router.post('/UpdateCourse', (req, res) => {
+  //dont have to do nothing lol
+  var query = req.body;
+
+  //  need to add sorts up here since can do sql injections if not
+  //  to stop sql injections we need to check the feilds
+  var validSortFeilds = ["code","name"];
+  var innerJoin = {  // inner join on the departments table so we can display the name of the department instead o fhte id 
+      columns : [
+        "longname"
+      ],
+      query: " inner join department on department.departmentid = course.departmentid "
+    };
+  
+
+  var queryOptions = queryBuilder.jsGridQueryBuilder("course", query, validSortFeilds,innerJoin);
+  console.log(queryOptions);
+  db.query(queryOptions[0],queryOptions[1] ,(err, result) => {
+
+      if (err) {
+        console.log(err.stack);
+        res.send(JSON.stringify({
+            d: false
+        }));
+      } else {
+        var numberOfItems = 0;
+        if(result.rows[0]){
+          numberOfItems = result.rows[0].itemsnumber
+        }
+        res.send(JSON.stringify({
+            data: result.rows,
+            itemsCount: numberOfItems
+        }));
+      }
+    });
+  
 });
 
 
@@ -196,10 +337,10 @@ router.post('/NewInstitution',(req,res)=>{
           var premissionsString = "INSERT INTO public.accountinstitution(accountid, institutionid) VALUES ( $1, $2);"
           
           var premissionParams = [result1.rows[0].accountid,result.rows[0].institutionid];
-          console.log(premissionParams);
+        
           db.query(premissionsString,premissionParams ,(err2, result2) => { 
             if (err2) {
-              console.log(err1.stack);
+           
               res.send(JSON.stringify({
                   success : false,
                   message : "Insitution and account was created but permissions could not be initalized, please go to accounts and create a new one there"
@@ -226,9 +367,14 @@ router.post('/NewInstitution',(req,res)=>{
 router.post('/GetAccounts',(req,res)=>{
   var query = req.body;
   var validSortFeilds = ["firstname","lastname"];
-  
+  var innerJoin = {  // inner join on the departments table so we can display the name of the department instead o fhte id 
+    columns : [
+      "*"
+    ],
+    query: " inner join accountinstitution on accountinstitution.accountid = account.accountid where accountinstitution.institutionid = (Select institutionid from accountinstitution where accountid = " + req.session.accountid.toString() + ")  "
+  };
 
-  var queryOptions = queryBuilder.jsGridQueryBuilder("account", query, validSortFeilds,null);
+  var queryOptions = queryBuilder.jsGridQueryBuilder("account", query, validSortFeilds,innerJoin);
     db.query(queryOptions[0],queryOptions[1] ,(err, result) => {
         if (err) {
           console.log(err.stack);
@@ -236,11 +382,44 @@ router.post('/GetAccounts',(req,res)=>{
               d: false
           }));
         } else {
+          console.log(result);
           var numberOfItems = 0;
           if(result.rows[0]){
             numberOfItems = result.rows[0].itemsnumber
           }
-          console.log(result.rows);
+   
+          res.send(JSON.stringify({
+              data: result.rows,
+              itemsCount: numberOfItems
+          }));
+        }
+      });
+});
+
+router.post('/CreateAccount',(req,res)=>{
+  var query = req.body;
+  var validSortFeilds = ["firstname","lastname"];
+  var innerJoin = {  // inner join on the departments table so we can display the name of the department instead o fhte id 
+    columns : [
+      "*"
+    ],
+    query: " inner join accountinstitution on accountinstitution.accountid = account.accountid where accountinstitution.institutionid = (Select institutionid from accountinstitution where accountid = " + req.session.accountid.toString() + ")  "
+  };
+
+  var queryOptions = queryBuilder.jsGridQueryBuilder("account", query, validSortFeilds,innerJoin);
+    db.query(queryOptions[0],queryOptions[1] ,(err, result) => {
+        if (err) {
+          console.log(err.stack);
+          res.send(JSON.stringify({
+              d: false
+          }));
+        } else {
+          console.log(result);
+          var numberOfItems = 0;
+          if(result.rows[0]){
+            numberOfItems = result.rows[0].itemsnumber
+          }
+   
           res.send(JSON.stringify({
               data: result.rows,
               itemsCount: numberOfItems
@@ -255,7 +434,7 @@ router.post('/GetInstitutions',(req,res)=>{
   
  
   var queryOptions = queryBuilder.jsGridQueryBuilder("institution", query, validSortFeilds,null);
-  console.log(queryOptions);
+
     db.query(queryOptions[0],queryOptions[1] ,(err, result) => {
         if (err) {
           console.log(err.stack);
@@ -276,8 +455,8 @@ router.post('/GetInstitutions',(req,res)=>{
 });
 
 //  will return the insitution features if the user has access to an insitution
-router.post('/GetInstitutionFeatures',(req,res)=>{
-    db.query("select * from insititution innerjoin accountinstitution on accountinstitution.institutionid institution.institutionid where accountinstitution.accountid = $1 ", [req.session.accountid] ,(err, result) => {
+router.post('/GetInsitutionFeatures',(req,res)=>{
+    db.query("select * from institution inner join accountinstitution on accountinstitution.institutionid = institution.institutionid where accountinstitution.accountid = $1 ", [req.session.accountid] ,(err, result) => {
         if (err) {
           console.log(err.stack);
           res.send(JSON.stringify({
@@ -287,6 +466,10 @@ router.post('/GetInstitutionFeatures',(req,res)=>{
           res.send(JSON.stringify(result.rows[0]));
         }
       });
+});
+
+router.post('/SetInsitutionFeatures',(req,res)=>{
+  res.send(JSON.stringify(req.body));
 });
 
 

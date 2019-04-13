@@ -15,7 +15,7 @@ function requiresLogin(req, res, next) {
     if (req.session && req.session.accountid) {
       return next();
     } else {
-        return res.redirect('login');
+        return res.redirect('admin/login');
         
     }
   }
