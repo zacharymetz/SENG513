@@ -16,7 +16,7 @@ router.post('/GetFaculty', (req, res) => {
 
     //  need to add sorts up here since can do sql injections if not
     //  to stop sql injections we need to check the feilds
-    var validSortFeilds = ["code","longname"];
+    var validSortFeilds = ["facultycode","longname"];
 
     var queryOptions = queryBuilder.jsGridQueryBuilder("faculty", query, validSortFeilds);
     db.query(queryOptions[0],queryOptions[1] ,(err, result) => {
@@ -43,9 +43,9 @@ router.post('/UpdateFaculty', (req, res) => {
   //dont have to do nothing lol
   var query = req.body;
   console.log([query.code,query.longname,query.facultyid]);
- var sql_query = "UPDATE public.faculty SET code=$1, longname=$2 WHERE facultyid=$3"
+ var sql_query = "UPDATE public.faculty SET facultycode=$1, longname=$2 WHERE facultyid=$3"
   
-  db.query(sql_query,[query.code,query.longname,query.facultyid] ,(err, result) => {
+  db.query(sql_query,[query.facultycode,query.longname,query.facultyid] ,(err, result) => {
       if (err) {
         console.log(err.stack);
         res.send(JSON.stringify({
@@ -70,10 +70,13 @@ router.post('/GetDepartment', (req, res) => {
 
     //  need to add sorts up here since can do sql injections if not
     //  to stop sql injections we need to check the feilds
-    var validSortFeilds = ["code","name"];
+    var validSortFeilds = ["code","name","facultyid"];
+    query.facultyid = '';
+    console.log("THIS IS THE PORBLEMS", query);
+    
     var innerJoin = {  // inner join on the departments table so we can display the name of the department instead o fhte id 
         columns : [
-          "longname"
+          "*"
         ],
         query: " inner join faculty on department.facultyid = faculty.facultyid "
       };

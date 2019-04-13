@@ -82,6 +82,7 @@
     });
  
   
+var facultyList = []
   //  create the grids 
   $("#facultyGrid").jsGrid({
         width: "100%",
@@ -95,8 +96,8 @@
                pageLoading:true,
               pageButtonCount: 7,
               fields: [
-            { name: "code", type: "text", width: 100 },
-            { name: "longname", type: "text", width: 100 },
+            { title: "ID", name: "facultycode", type: "text", width: 100 },
+            { title: "Name", name: "longname", type: "text", width: 100 },
             {type: "control"}
         ],
 
@@ -104,6 +105,7 @@
           loadData: function(filter) {
                 var d = $.Deferred();
                 console.log(filter);
+                
                 $.ajax({
                   type: 'POST',
                     url: "/adminGrid/GetFaculty",
@@ -113,6 +115,8 @@
                   console.log(dataResult);
                     d.resolve(dataResult);
                 });
+
+                
                 return d.promise();
             },
             updateItem: function(item) {
@@ -126,49 +130,60 @@
           }
  
     });
-    $("#departmentGrid").jsGrid({
-        width: "100%",
-        filtering: true,
-               editing: true,
-               sorting: true,
-               paging: true,
-               autoload: true,
-               pageSize: 20,
-               pageLoading:true,
-              pageButtonCount: 7,
- 
-        fields: [
-            { name: "name", type: "text", width: 100 },
-            { name: "code", type: "text", width: 50 },
-            { name: "longname", type: "text", width: 50 },
-            
-            { type: "control" }
-        ],
- 
-        controller: {
-          loadData: function(filter) {
-                var d = $.Deferred();
-                $.ajax({
-                  type: 'POST',
-                    url: "/adminGrid/GetDepartment",
-                    dataType: "json",
-                    data: filter
-                }).done(function(dataResult) {
-                  console.log("fdsafdasfdsa",dataResult);
-                  
-                    d.resolve(dataResult);
-                });
-                return d.promise();
-            },
-            updateItem: function(item) {
-                return $.ajax({
-                    type: "POST",
-                    url: "/adminGrid/UpdateDepartment",
-                    data: item
-                }).done(function(dataResult) {
-                  console.log(dataResult)});
-            },
-          }
+    $.ajax({
+      type: 'POST',
+        url: "/adminGrid/GetFaculty",
+        dataType: "json",
+        data: {
+          pageIndex: '1',
+          pageSize: '100'
+        }
+    }).done(function(data) {
+      console.log("FIrst request",data)
+      facultyList = data.data;
+      $("#departmentGrid").jsGrid({
+          width: "100%",
+          filtering: true,
+                editing: true,
+                sorting: true,
+                paging: true,
+                autoload: true,
+                pageSize: 20,
+                pageLoading:true,
+                pageButtonCount: 7,
+  
+          fields: [
+              { title: "Dept Name", name: "name", type: "text", width: 100 },
+              { title: "Depit Code", name: "code", type: "text", width: 50 },
+              { title: "Faculty", name: "facultyid", type: "select", items: facultyList, valueField: "facultyid", textField: "longname"},
+              { type: "control" }
+          ],
+  
+          controller: {
+            loadData: function(filter) {
+                  var d = $.Deferred();
+                  $.ajax({
+                    type: 'POST',
+                      url: "/adminGrid/GetDepartment",
+                      dataType: "json",
+                      data: filter
+                  }).done(function(dataResult) {
+                    console.log("fdsafdasfdsa",dataResult);
+                    
+                      d.resolve(dataResult);
+                  });
+                  return d.promise();
+              },
+              updateItem: function(item) {
+                  return $.ajax({
+                      type: "POST",
+                      url: "/adminGrid/UpdateDepartment",
+                      data: item
+                  }).done(function(dataResult) {
+                    console.log(dataResult)});
+              },
+            }
+      });
     });
 </script>
 
