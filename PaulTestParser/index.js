@@ -48,7 +48,7 @@ checkFaculty("paulsTest",(data)=>{
     console.log("CHECK DEPARTMENT------------------------------");
 
     //call check course with the subject id which is department id in her csv
-    checkCourse(data[0].departmentid, "696", (data) => {
+    checkCourse(data[0].departmentid, "331", (data) => {
       console.log("CHECK Course------------------------------");
       console.log(data);
       console.log("CHECK Course------------------------------");
