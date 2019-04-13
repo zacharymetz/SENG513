@@ -130,7 +130,11 @@ router.post('/GetSchoolsByText', (req, res) => {
 });
 
 
-
+// This query will search for courses, it will search for ALL courses in our database:
+// examples that will return in our current db
+// search for:
+// 211 , introduction, techniques, math 
+// so will look for keywords in the description
 
 router.post('/searchCoursesByText', (req, res) => {
 console.log(req.body);
