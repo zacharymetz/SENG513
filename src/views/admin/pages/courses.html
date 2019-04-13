@@ -120,7 +120,8 @@
                     type: "POST",
                     url: "/adminGrid/UpdateFaculty",
                     data: item
-                });
+                }).done(function(dataResult) {
+                  console.log(dataResult)});
             },
           }
  
@@ -139,7 +140,9 @@
         fields: [
             { name: "name", type: "text", width: 100 },
             { name: "code", type: "text", width: 50 },
-            { name: "longname", type: "text", width: 50 }
+            { name: "longname", type: "text", width: 50 },
+            
+            { type: "control" }
         ],
  
         controller: {
@@ -162,7 +165,8 @@
                     type: "POST",
                     url: "/adminGrid/UpdateDepartment",
                     data: item
-                });
+                }).done(function(dataResult) {
+                  console.log(dataResult)});
             },
           }
     });

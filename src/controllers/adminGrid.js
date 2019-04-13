@@ -42,14 +42,10 @@ router.post('/GetFaculty', (req, res) => {
 router.post('/UpdateFaculty', (req, res) => {
   //dont have to do nothing lol
   var query = req.body;
-
-  //  need to add sorts up here since can do sql injections if not
-  //  to stop sql injections we need to check the feilds
-  var validSortFeilds = ["code","longname"];
-
-  var queryOptions = queryBuilder.jsGridQueryBuilder("faculty", query, validSortFeilds);
-  db.query(queryOptions[0],queryOptions[1] ,(err, result) => {
-
+  console.log([query.code,query.longname,query.facultyid]);
+ var sql_query = "UPDATE public.faculty SET code=$1, longname=$2 WHERE facultyid=$3"
+  
+  db.query(sql_query,[query.code,query.longname,query.facultyid] ,(err, result) => {
       if (err) {
         console.log(err.stack);
         res.send(JSON.stringify({
@@ -105,23 +101,11 @@ router.post('/GetDepartment', (req, res) => {
     
 });
 router.post('/UpdateDepartment', (req, res) => {
-  //dont have to do nothing lol
+
   var query = req.body;
-
-  //  need to add sorts up here since can do sql injections if not
-  //  to stop sql injections we need to check the feilds
-  var validSortFeilds = ["code","name"];
-  var innerJoin = {  // inner join on the departments table so we can display the name of the department instead o fhte id 
-      columns : [
-        "longname"
-      ],
-      query: " inner join faculty on department.facultyid = faculty.facultyid "
-    };
-  
-
-  var queryOptions = queryBuilder.jsGridQueryBuilder("department", query, validSortFeilds,innerJoin);
-  db.query(queryOptions[0],queryOptions[1] ,(err, result) => {
-
+  console.log([query.facultyid,query.code,query.name,query.departmentid]);
+  var sql_string = "UPDATE public.department SET facultyid=$1, code=$2, name=$3 WHERE departmentid=$4 returning *;";
+  db.query(sql_string,[query.facultyid,query.code,query.name,query.departmentid] ,(err, result) => {
       if (err) {
         console.log(err.stack);
         res.send(JSON.stringify({
@@ -138,7 +122,6 @@ router.post('/UpdateDepartment', (req, res) => {
         }));
       }
     });
-  
 });
 
 router.post('/GetCourses', (req, res) => {

@@ -43,16 +43,18 @@ router.post('/login', (req, res) => {
     //dont have to do nothing lol
     // get from the db here and see if the user is good 
     console.log("login",req.body);
-    db.query("SELECT accountid, email FROM public.account where email = $1 or passworddigest = $2;" , [req.body.emai,req.body.password],(err,result)=>{
+    db.query("SELECT * FROM public.account inner join accountinstitution on accountinstitution.accountid = account.accountid where email = $1 or passworddigest = $2;" , [req.body.emai,req.body.password],(err,result)=>{
         //  get the 
-        console.log(result.rows);
+        
         if(err){
+            console.log(err)
             //  
             res.render('admin/login.html', { error : "Error loggin in , please contact support if issue exists" });
         }else{
             if(result.rows.length > 0){
                 //  user has been logged in sucessfully
                 req.session.accountid = result.rows[0].accountid;
+                req.session.insitutionid = result.rows[0].insitutionid;
                 return res.redirect('/admin');
             }else{
                 //  not correct 
