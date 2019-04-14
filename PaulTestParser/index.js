@@ -53,7 +53,8 @@ checkFaculty("paulsTest",(data)=>{
       console.log(data);
       console.log("CHECK Course------------------------------");
     });
-  
+
+
   });
 });
 
@@ -63,7 +64,7 @@ code =  Acad Group column so "SC" would be the FACULTY of science
 function checkFaculty (code,next) {
   var facQuery = "";
   //QUERY
-  facQuery += "SELECT facultyid"; 
+  facQuery += "SELECT facultyid";
   facQuery += "	FROM public.faculty WHERE code = $1;";
   //PARAMS
   facParams = [code];
@@ -141,7 +142,7 @@ function checkDepartment (facultyid, code, next){
  * departmentid will be the column which is the corresponding faculty for that course
  */
 function checkCourse(departmentid, catalognumber, next){
-  var courseQuery = ""; 
+  var courseQuery = "";
   //QUERY
   courseQuery += "SELECT courseid, departmentid";
   courseQuery += "	FROM public.course WHERE departmentid = $1;";  //$1 will be the subjectID which is departmentID in her csv
@@ -174,7 +175,6 @@ function checkCourse(departmentid, catalognumber, next){
   });
 
 }
-
 
 
 

@@ -4,6 +4,7 @@ const nunjucks = require('nunjucks');
 const bodyParser = require('body-parser');
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
+var session = require('client-sessions');
 
 app.use('/static', express.static(__dirname + '/static'));
 app.use(bodyParser.json());
@@ -13,6 +14,15 @@ nunjucks.configure('views', {
   autoescape: true,
   express: app
 });
+app.use(bodyParser.urlencoded({ extended: true }));
+
+
+app.use(session({
+  cookieName: 'session',
+  secret: 'random_string_goes_here',
+  duration: 30 * 60 * 1000,
+  activeDuration: 5 * 60 * 1000
+}));
 
 var adminGrid = require('./controllers/adminGrid');
 var admin = require('./controllers/admin');
