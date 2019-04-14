@@ -1,3 +1,4 @@
+<script src="/static/scripts/jscolor.js"></script>
 <h2>Customize</h2>
 <p>Please check the details and if any of the information is innacurate, edit the details and click the submit button.</p>
 <div class="form-group">
@@ -16,19 +17,19 @@
     <div id="address_row" class="row">
     <div class="form-group col-sm-3">
         <label for="exampleFormControlInput1">Number</label>
-        <input type="text" class="form-control" id="new_cust_number">
+        <input type="text" class="form-control" id="my_street_num">
     </div>
     <div class="form-group col-sm-6">
         <label for="exampleFormControlInput1">Street</label>
-        <input type="text" class="form-control" id="new_cust_street">
+        <input type="text" class="form-control" id="my_street_name">
     </div>
     <div class="form-group col-sm-3">
         <label for="exampleFormControlInput1">Postal Code</label>
-        <input type="text" class="form-control" id="new_cust_postal">
+        <input type="text" class="form-control" id="my_postal_code">
     </div>
     <div class="form-group col-sm-4">
         <label for="city_select">City</label>
-        <select class="form-control" id="city_select">
+        <select class="form-control" id="cutomize_city_select">
         <option>Calgary</option>
         <option>Edmonton</option>
         <option>Vancouver</option>
@@ -38,7 +39,7 @@
     </div>
     <div class="form-group col-sm-4">
         <label for="state_select">Province/State</label>
-        <select class="form-control" id="state_select">
+        <select class="form-control" id="cutomize_state_select">
         <option>Alberta</option>
         <option>BC</option>
 
@@ -46,7 +47,7 @@
     </div>
     <div class="form-group col-sm-4">
         <label for="country_select">Country</label>
-        <select class="form-control" id="country_select">
+        <select class="form-control" id="cutomize_country_select">
         <option>Canada</option>
         <option>USA</option>
         </select>
@@ -104,6 +105,7 @@ function getStates(countryid){
 //  this function will get called on the cutomize click and populates all the feilds with the
 //  ones from you institution 
 function requestCutomizeFeilds(){
+    
     $.ajax({
         type: 'POST',
         url: "/adminGrid/GetInsitutionFeatures",
@@ -111,6 +113,12 @@ function requestCutomizeFeilds(){
     }).done(function(dataResult) {
         //  lets fill up the select with countries
         console.log(dataResult);
+        //  inialize the location selectors with parameters
+        initLocationSelect("cutomize_",{
+            countryid : dataResult.countryid,
+            stateid : dataResult.stateid,
+            cityid : dataResult.cityid
+        });
         //  fill all of the form feilds 
         $("#univeristyname").val(dataResult.name);
         $("#univeristyshortname").val(dataResult.shortname);
@@ -125,8 +133,9 @@ function requestCutomizeFeilds(){
         //  set up the color things 
 
         $("#brand-color-1").css({'background':toColor(dataResult.brandcolor0)})
+        $("#color-picker-1").val(dataResult.brandcolor0.toString(16));
         $("#brand-color-2").css({'background':toColor(dataResult.brandcolor1)})
-
+        $("#color-picker-2").val(dataResult.brandcolor1.toString(16));
         
 
     });
@@ -136,16 +145,16 @@ function getCustomizeFeilds(){
     return {
         name : $("#univeristyname").val(),
         shortname : $("#univeristyshortname").val(),
-        streetnum : $("#univeristyshortname").val(),
-        streetname : $("#univeristyshortname").val(),
-        postalcode: $("#univeristyshortname").val(),
-        cityid : $("#univeristyshortname").val(),
-        stateid : $("#univeristyshortname").val(),
-        countryid : $("#univeristyshortname").val(),
+        streetnum : $("#my_street_num").val(),
+        streetname : $("#my_street_name").val(),
+        postalcode: $("#my_postal_code").val(),
+        cityid : $("#cutomize_city_select").val(),
+        stateid : $("#cutomize_state_select").val(),
+        countryid : $("#cutomize_country_select").val(),
         logo : null,
         background : null,
-        color0 : $("#univeristyshortname").val(),
-        color1 : $("#univeristyshortname").val()
+        color0 : parseInt($("#color-picker-1").val(),16),
+        color1 : parseInt($("#color-picker-2").val(),16)
     }
 }
 function toColor(num) {
@@ -180,15 +189,42 @@ function toColor(num) {
 </div>
     
 </div>
-    <label >Brand Colors</label>
-    <div class="brand-colors">
+<label >Brand Colors</label>
+<div style="display:flex;">
+    
+    <div style="margin-right:2rem;">
+           
+   
     <div class="brand-color-selector" id="brand-color-1"></div>
-    <div class="brand-color-selector" id="brand-color-2"></div>
+    <input id="color-picker-1" class="jscolor {styleElement:'styleSpan',value:'DF068C'}" >
+    
 </div>
-<input id="Customize-submit-button" class="btn btn-success" type="submit" value="Save">
+<div class="">
+       
+
+<div class="brand-color-selector" id="brand-color-2"></div>
+<input id="color-picker-2" class="jscolor {styleElement:'styleSpan',value:'DF068C'}" >
+
+</div>
+</div>
+<button id="Customize-submit-button " class="btn btn-success"  >Save</button>
 
 <script>
+    $("#brand-color-1").click(()=>{
+        document.getElementById("color-picker-1").jscolor.show();
+    })
+    $("#color-picker-1").on("change",function(){
+        console.log(parseInt($("#color-picker-1").val(),16));
+        $("#brand-color-1").css({'background': "#"+$("#color-picker-1").val()});
+    });
+    $("#brand-color-2").click(()=>{
+        document.getElementById("color-picker-2").jscolor.show();
+    })
+    $("#color-picker-2").on("change",function(){
+        $("#brand-color-2").css({"background" :  "#"+$("#color-picker-2").val()});
+    });
 $("#Customize-submit-button").click(()=>{
+    console.log("clicled");
     $.post("/adminGrid/SetInsitutionFeatures",
     getCustomizeFeilds())
     .done((data)=>{

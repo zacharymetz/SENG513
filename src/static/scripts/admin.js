@@ -127,7 +127,7 @@ function goToPage(id){
 
 
 
-function initLocationSelect(prefix){
+function initLocationSelect(prefix,predata={}){
   $.ajax({
       type: 'POST',
       url: "/adminGrid/GetCountries",
@@ -142,8 +142,15 @@ function initLocationSelect(prefix){
           html = html + "<option value="+dataResult.data[i].countryid+" >"+dataResult.data[i].name+"</option>";
           
       }
+      //  if there is a value set it to that value 
+      
       console.log(html);
       $("#"+prefix+"country_select").html(html);
+      if(predata.countryid){
+        document.getElementById(prefix+"country_select").value = predata.countryid;
+        getStates(predata.countryid,prefix,predata.stateid);
+        getCities(predata.stateid,prefix,predata.cityid);
+      }
       //  create an onclick change functron 
       $("#"+prefix+"country_select").change(()=>{
         getStates($("#"+prefix+"country_select").val(),prefix);
@@ -156,7 +163,7 @@ function initLocationSelect(prefix){
 }
 
 //  get the associated states 
-function getStates(countryid,prefix){
+function getStates(countryid,prefix,selected=null){
   //  load states
     $.ajax({
         type: 'POST',
@@ -175,6 +182,9 @@ function getStates(countryid,prefix){
         }
         console.log(html);
         $("#"+prefix+"state_select").html(html);
+        if(selected != null){
+          $("#"+prefix+"state_select").val(selected);
+        }
         $("#"+prefix+"state_select").change(()=>{
           getCities($("#"+prefix+"state_select").val(),prefix);
         });
@@ -203,7 +213,7 @@ function getStates(countryid,prefix){
     });
 
 }
-function getCities(stateid,prefix){
+function getCities(stateid,prefix,selected=null){
   $.ajax({
         type: 'POST',
         url: "/adminGrid/GetCities",
@@ -215,12 +225,15 @@ function getCities(stateid,prefix){
         //  lets fill up the select with countries
         var html = "";
         for(var i=0;i<dataResult.data.length;i++){
-            html = html + "<option >"+dataResult.data[i].name+"</option>";
+            html = html + "<option value="+dataResult.data[i].cityid+" >"+dataResult.data[i].name+"</option>";
             
         }
         console.log(html);
         $("#"+prefix+"city_select").html(html);
-        console.log(dataResult);
+        if(selected != null){
+          $("#"+prefix+"city_select").val(selected);
+        }
+        
 
     });
 }

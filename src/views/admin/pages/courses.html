@@ -33,9 +33,9 @@
   } );
 
   $("#coursesGrid").jsGrid({
-        height: "80%",
+        
         width: "100%",
- 
+
         filtering: true,
         editing: false,
         sorting: true,
@@ -67,6 +67,8 @@
                     type: "POST",
                     url: "/adminGrid/UpdateCourse",
                     data: item
+                }).done(()=>{
+                  $("#coursesGrid").jsGrid("loadData");
                 });
             },
           },
@@ -74,8 +76,8 @@
         fields: [
             { name:"topicdescription" , title: "Course Name", type: "text", width: 100 },
             { name:"catalognumber" ,title: "Level", type: "text", width: 50 },
-            { name:"code" ,title: "Department", type: "text", width: 150 },
-            { name:"name" ,title: "DeptName", type: "text" ,width: 150},
+            { name:"code" , readOnly: true,title: "Department", type: "text", width: 150 },
+            { name:"name" , readOnly: true,title: "DeptName", type: "text" ,width: 150},
             
             { type: "control" }
         ]
@@ -125,7 +127,9 @@ var facultyList = []
                     url: "/adminGrid/UpdateFaculty",
                     data: item
                 }).done(function(dataResult) {
-                  console.log(dataResult)});
+                 
+                  $("#facultyGrid").jsGrid("loadData");
+                });
             },
           }
  
@@ -179,8 +183,10 @@ var facultyList = []
                       type: "POST",
                       url: "/adminGrid/UpdateDepartment",
                       data: item
-                  }).done(function(dataResult) {
-                    console.log(dataResult)});
+                  }).done(()=>{
+                    console.log("refefer dept ")
+                  $("#departmentGrid").jsGrid("loadData");
+                });
               },
             }
       });

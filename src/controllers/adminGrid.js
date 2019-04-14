@@ -75,6 +75,33 @@ router.post('/UpdateFaculty', (req, res) => {
     });
 
 });
+
+router.post('/CreateFaculty', (req, res) => {
+  //dont have to do nothing lol
+  var query = req.body;
+
+  //  need to add sorts up here since can do sql injections if not
+  //  to stop sql injections we need to check the feilds
+  
+  var sqlQurey = "INSERT INTO public.faculty(facultycode, longname, insitutionid) VALUES ($1, $2, $3) retuning *;";
+  db.query(sqlQurey,[query.facultycode,query.longname,query.institutionid],(err, result) => {
+
+      if (err) {
+        console.log(err.stack);
+        res.send(JSON.stringify({
+            d: false
+        }));
+      } else {
+        if(query.image != null){
+
+        }
+        res.send(JSON.stringify({
+            data: result.rows
+        }));
+      }
+    });
+
+});
 router.post('/GetDepartment', (req, res) => {
     //dont have to do nothing lol
     var query = req.body;
