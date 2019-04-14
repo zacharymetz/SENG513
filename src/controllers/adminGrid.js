@@ -379,7 +379,11 @@ router.post('/GetAccounts',(req,res)=>{
               d: false
           }));
         } else {
-          console.log(result);
+          // console.log("#######################################");
+          // console.log(result.rows[0].accountinstitutionid);
+          // console.log("#######################################");
+          console.log(result);  //result here is the response object containing the accountinstitutionid of the logged in guy
+          //so if i call check institution with result.rows[0].accountinstitutionid I should be able to get the results of the user that I want from here
           var numberOfItems = 0;
           if(result.rows[0]){
             numberOfItems = result.rows[0].itemsnumber
@@ -532,7 +536,13 @@ checkFaculty("paulsTest",(data)=>{
 });
 
 
+/**
+accountid = id of the currently logged in user
+institutionid = id of the institution this user belongs too
+*/
+function checkAccountInstitution() {
 
+}
 
 
 /*
