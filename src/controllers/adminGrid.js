@@ -538,13 +538,12 @@ function readCSVPassedIn(filePath) {
 
 
 
+
 //callback for check faculty here data is the output of the query returned from check faculty
 checkFaculty("paulsTest",(data)=>{
   console.log("CHECK FACULTY------------------------------");
   console.log(data);//returns all the rows that have the code we pass in them
   console.log("CHECK FACULTY------------------------------");
-  //TODO call the check department now which will take the current faculty ID and based on that faculty ID  it will retrieve the department ID assoc with it
-
   /*department Callback function, data is the output from the query returned from check Depertment*/
   checkDepartment(data[0].facultyid, "CPSC",(data) =>{
     console.log("CHECK DEPARTMENT------------------------------");
@@ -559,17 +558,35 @@ checkFaculty("paulsTest",(data)=>{
       console.log(data);
       console.log("CHECK Course------------------------------");
     });
-
   });
+});
+
+checkAccountInstitution('18', (data) => {
+  console.log("CHECK checkAccountInstitution------------------------------");
+  console.log(data);//returns all the rows that have the code we pass in them
+  console.log("CHECK checkAccountInstitution------------------------------");
 });
 
 
 /**
 accountid = id of the currently logged in user
-institutionid = id of the institution this user belongs too
 */
-function checkAccountInstitution() {
-
+function checkAccountInstitution(accountid, next) {
+  var checkAccountInstitutionQuery = "";
+  //QUERY
+  checkAccountInstitutionQuery += "SELECT accountinstitutionid";
+  checkAccountInstitutionQuery += "	FROM public.accountinstitution WHERE accountid = $1;";
+  //PARAMS
+  checkAccountInstitutionParams = [accountid];
+  db.query(checkAccountInstitutionQuery,checkAccountInstitutionParams ,(err, result) => {
+    if (err) {
+      console.log(err);
+    } else {
+      if(result.rows.length > 0){
+        next(result.rows) //data is now result.rows
+      }
+    }
+  });
 }
 
 
