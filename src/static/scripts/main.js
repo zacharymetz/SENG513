@@ -2,6 +2,7 @@ var currentPage = "home-page";
 var navHistory = [];
 var pages =["home-page","school-page","faculty-page","dept-page","course-page"];
 var clientCity = "";
+var currentSchoolName;
 var currentSchoolID;
 var currentFacultyID;
 var currentDepartmentID;
@@ -56,6 +57,8 @@ function renderFacultyGrid(requestData=null){
   $.post("/GetFaculties",{city: clientCity, schoolID: currentSchoolID}).done((data)=>{
     //console.log(data);
     data= JSON.parse(data);
+    var schoolName = "<b>" + $("#school-name-"+currentSchoolID).html() + "</b>";
+    $("#schoolName").html(schoolName);
     var html = data.html;
     $("#faculty-page").html(html);
     for(var i=0;i<data.rows.length;i++){

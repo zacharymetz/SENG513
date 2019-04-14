@@ -27,7 +27,7 @@ body {
 .collectName {
   text-align: center;
   max-width: 60px;
-  cursor: none;
+  cursor: default;
 }
 .topBar {
   background-color: red;
@@ -202,7 +202,7 @@ li {
 
 @media (min-width: 580px) {
   .header{
-    font-size: 38px;
+    font-size: 35px;
   }
   .barLogo {
     max-height: 80px;
@@ -228,7 +228,7 @@ li {
 
 @media (min-width: 740px) {
   .header{
-    font-size: 50px;
+    font-size: 45px;
   }
   .barLogo {
     max-height: 100px;
@@ -261,7 +261,7 @@ li {
     flex-flow: row;
   }
   .header{
-    font-size: 62px;
+    font-size: 55px;
   }
   .barLogo {
     max-height: 120px;
@@ -298,7 +298,7 @@ li {
 
 @media (min-width: 1200px) {
   .header{
-    font-size: 68px;
+    font-size: 65px;
   }
   .barLogo {
     max-height: 125px;

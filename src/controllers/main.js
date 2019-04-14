@@ -30,9 +30,11 @@ router.post('/GetSchools', (req, res) => {
       }
       else {
         for(var i=0;i<result.rows.length;i++){
+          console.log(result.rows[i].name);
           html +=  '<div class="collectItem">'
           html +=  '  <div>'
           html +=  '    <img id="school-card-'+result.rows[i].institutionid+'" class="barLogo" style="cursor:pointer;" src="/static/img/UofC.png">'
+          html +=  '  <div id="school-name-'+result.rows[i].institutionid+'" style="display:none;">'+result.rows[i].name+'</div>'
           html +=  '  </div>'
           html +=  '</div>'
         }
@@ -218,7 +220,7 @@ router.post('/GetSchoolsByText', (req, res) => {
 router.post('/searchCoursesByText', (req, res) => {
   var description = "%" + req.body.courseName + "%";
   //console.log(description);
-  db.query("SELECT * FROM public.department INNER JOIN public.course ON public.department.departmentid = public.course.departmentid Where lower(code) like lower($1) or catalognumber like $2 or description like $3 or topicdescription like $4", [req.body.courseName, req.body.courseName, description, description],
+  db.query("SELECT * FROM public.department INNER JOIN public.course ON public.department.departmentid = public.course.departmentid Where lower(code) like lower($1) or catalognumber like $2 or description like $3 or topicdescription like $4", [description, req.body.courseName, description, description],
   (err, result) => {
     if(err){
       res.send(JSON.stringify({
