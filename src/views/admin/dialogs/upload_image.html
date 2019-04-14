@@ -1,0 +1,86 @@
+
+
+<div id="upload_image_dialogue"  style="display:none;width:600px;" title="New Account">
+        <input type="file" id="new-image-upload" name="myFile">
+    <div>
+    <button type="button" class="btn btn-success" onclick="uploadImage()" id="upload-image-btn" style="float:right;">Upload Image</button>
+  </div>
+</div>
+
+<script>
+//  here are some gloabl variables for the upload image idalogue box 
+var afterImageUpload;
+var targetUploadID;
+function openUploadImageDialog(id,next){
+    $( "#upload_image_dialogue" ).dialog({
+    width: 600,
+    height: 675
+    });
+    afterImageUpload = next;
+    targetUploadID = id;
+    $( "#upload_image_dialogue" ).show();
+
+    
+}
+function closeUploadImageDialog(){
+    $( "#upload_image_dialogue" ).dialog("close");
+}
+
+function uploadImage(){
+    
+        var data, xhr;
+
+        data = new FormData();
+        data.append( 'file', $( '#new-image-upload' )[0].files[0] );
+
+        xhr = new XMLHttpRequest();
+
+        xhr.open( 'POST', '/adminGrid/UploadImage', true );
+        xhr.onload = function () {
+
+        // Process our return data
+        var response = JSON.parse(xhr.responseText);
+        if (xhr.status >= 200 && xhr.status < 300) {
+            // Runs when the request is successful
+            console.log(xhr.responseText);
+            afterImageUpload(response);
+            closeUploadImageDialog();
+        } else {
+            // Runs when it's not
+            console.log(xhr.responseText);
+        }
+
+        };
+        
+        xhr.send( data );
+
+    
+    
+    
+  
+}
+
+//  function to add an insitution to the list that this account has permissions over 
+function addInstitutionPolicy(name,id){
+
+}
+
+
+//  initalize the date selector  
+$(document).ready(()=>{
+    $("#upload-image-btn").click(()=>{
+
+    });
+  
+  //  
+});
+
+
+
+</script>
+<style>
+.form-check{
+  padding-left:3.5rem!important;
+  display: inline-block;
+}
+</style>

@@ -6,6 +6,7 @@ const express = require('express');
 var queryBuilder = require('./helpers/queryBuilder');
 var router = express.Router();
 
+
 /*
 
 */
@@ -18,6 +19,7 @@ const path = require('path'); //poth for connecting
 const csv1 = require('csv-parser');
 const createCsvWriter = require('csv-writer').createObjectCsvWriter;
 const upload = multer({ dest: 'tmp/csv/' });
+const uploadImage = multer({ dest: 'static/uploaded/' });
 router.use(express.static(path.join(__dirname, 'public')));
 
 
@@ -482,7 +484,31 @@ router.post('/GetInstitutions',(req,res)=>{
         }
       });
 });
+router.post('/GetImage',(req,res)=>{
+  var query = req.body;
+  var sqlString = "Select * from file where fileid = $1;"
+  var sqlParams = [query.fileid];
 
+
+  
+    db.query(sqlString,sqlParams ,(err, result) => {
+        if (err) {
+          console.log(err.stack);
+          res.send(JSON.stringify({
+              d: false
+          }));
+        } else {
+          var numberOfItems = 0;
+          if(result.rows[0]){
+            numberOfItems = result.rows[0].itemsnumber
+          }
+          res.send(JSON.stringify({
+              data: result.rows[0],
+              itemsCount: numberOfItems
+          }));
+        }
+      });
+});
 //  will return the insitution features if the user has access to an insitution
 router.post('/GetInsitutionFeatures',(req,res)=>{
     db.query("select * from institution inner join accountinstitution on accountinstitution.institutionid = institution.institutionid where accountinstitution.accountid = $1 ", [req.session.accountid] ,(err, result) => {
@@ -498,7 +524,58 @@ router.post('/GetInsitutionFeatures',(req,res)=>{
 });
 
 router.post('/SetInsitutionFeatures',(req,res)=>{
-  res.send(JSON.stringify(req.body));
+  var body = req.body;
+  sqlStirng = "";
+  sqlStirng += "UPDATE public.institution  ";
+  sqlStirng += "SET  name=$1, shortname=$2, streetnumber=$3, streetname=$4, postalcode=$5, cityid=$6, stateid=$7, countryid=$8,  brandcolor0=$9, brandcolor1=$10, logoimage=$11, backgroundimage=$12  ";
+  sqlStirng += "WHERE institutionid = (select institutionid from accountinstitution where accountid = $13);  ";
+  sqlParams = [body.name,body.shortname,body.streetnumber,body.streetname,body.postalcode,body.cityid,body.stateid,body.countryid,body.color0,body.color1,parseInt(body.logo),parseInt( body.background),req.session.accountid];
+  db.query(sqlStirng,sqlParams,(err,result)=>{
+    if(err){
+      console.log(err);
+      res.send(JSON.stringify({
+        success : false,
+        message : "There was an error updating the selected feilds"
+      }));
+    }else{
+      res.send(JSON.stringify({
+        success : true,
+        message : "Your Feilds have been updated"
+      }));
+    }
+  })
+  console.log(sqlParams);
+ 
+});
+router.post('/UploadImage', uploadImage.any(), (req, res) => {
+  const fileRows = [];
+  var files = req.files[0];
+  console.log(files);
+  var newPath = files.path +".png";
+  fs.rename(files.path,newPath,()=>{
+    var sqlString = "INSERT INTO public.file( filename, location) VALUES ($1, $2) returning *;";
+    var sqlParam =  [files.originalname,newPath];
+    db.query(sqlString,sqlParam,(err,result)=>{
+      //  
+      if(err){
+        console.log(err);
+        res.send(JSON.stringify({
+          success : false,
+          data : null
+        }));
+      }else{
+        console.log(result.rows);
+        res.send(JSON.stringify({
+          success : true,
+          data : result.rows[0]
+        }));
+      }
+    });
+  })
+  //  first we need to save the file in static 
+  
+  
+ 
 });
 
 

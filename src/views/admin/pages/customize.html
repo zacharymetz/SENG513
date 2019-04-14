@@ -126,9 +126,9 @@ function requestCutomizeFeilds(){
 
 
         //  set up the location thing 
-        $("#new_cust_number").val(dataResult.streetnumber);
-        $("#new_cust_street").val(dataResult.streetname);
-        $("#new_cust_postal").val(dataResult.postalcode);
+        $("#my_street_num").val(dataResult.streetnumber);
+        $("#my_street_name").val(dataResult.streetname);
+        $("#my_postal_code").val(dataResult.postalcode);
 
         //  set up the color things 
 
@@ -136,7 +136,29 @@ function requestCutomizeFeilds(){
         $("#color-picker-1").val(dataResult.brandcolor0.toString(16));
         $("#brand-color-2").css({'background':toColor(dataResult.brandcolor1)})
         $("#color-picker-2").val(dataResult.brandcolor1.toString(16));
-        
+
+        //  now we need to snag the 2 images that belong here 
+        $.post("/adminGrid/GetImage",{
+            fileid : dataResult.backgroundimage
+        }).done((dataR1)=>{
+            dataR1 = JSON.parse(dataR1);
+            //  this is where we show what iamges those are 
+            $("#background-image-id").val(dataR1.data.fileid);
+                //  change the image src to the one in data
+            $("#background-image").attr('src',dataR1.data.location);
+        });
+
+        $.post("/adminGrid/GetImage",{
+            fileid : dataResult.logoimage
+        }).done((dataR1)=>{
+            dataR1 = JSON.parse(dataR1);
+            //  this is where we show what iamges those are 
+            $("#logo-image-id").val(dataR1.data.fileid);
+                //  change the image src to the one in data
+            $("#logo-image").attr('src',dataR1.data.location);
+        });
+
+
 
     });
 }
@@ -151,8 +173,8 @@ function getCustomizeFeilds(){
         cityid : $("#cutomize_city_select").val(),
         stateid : $("#cutomize_state_select").val(),
         countryid : $("#cutomize_country_select").val(),
-        logo : null,
-        background : null,
+        logo : $("#logo-image-id").val(),
+        background : $("#background-image-id").val(),
         color0 : parseInt($("#color-picker-1").val(),16),
         color1 : parseInt($("#color-picker-2").val(),16)
     }
@@ -172,23 +194,46 @@ function toColor(num) {
 <div class="brand-images">
 <div class="form-group">
     <div style="    margin-bottom: .5rem;">Logo</div>
-    <div class="custom-file "  >
-        <input type="file" class="custom-file-input" id="customFile" name="filename">
-        <label class="custom-file-label" for="customFile">Choose file</label>
-        <small  class="form-text text-muted">The location of the institution</small>
-    </div>
+    <img src="" id="logo-image" style="height:10rem;width:10rem;">
+    <button class="btn btn-success" id="change-logo-image">Change Image</button>
+    <input id="logo-image-id" type="hidden">
+    <script>
+        $("#change-logo-image").click(()=>{
+            openUploadImageDialog("fads",(data)=>{
+                //  this code will run 
+                console.log(data);
+                //  so we wanna change the image id in the hidden feild 
+                $("#logo-image-id").val(data.data.fileid);
+                //  change the image src to the one in data
+                $("#logo-image").attr('src',data.data.location);
+                
+            });
+        });
+    </script>
 </div>
     
-    <div class="form-group">
-    <div style="margin-bottom: 0.5rem;" >Background</div>
-    <div class="custom-file "  >
-        <input type="file" class="custom-file-input" id="customFile" name="filename">
-        <label class="custom-file-label" for="customFile">Choose file</label>
-        <small  class="form-text text-muted">The location of the institution</small>
-    </div>
+   <div class="form-group">
+    <div style="    margin-bottom: .5rem;">Background</div>
+    <img src="" id="background-image" style="height:10rem;width:10rem;">
+    <button class="btn btn-success" id="change-background-image">Change Image</button>
+    <input id="background-image-id" type="hidden">
+    <script>
+        $("#change-background-image").click(()=>{
+            openUploadImageDialog("fads",(data)=>{
+                //  this code will run 
+                
+                //  so we wanna change the image id in the hidden feild 
+                $("#background-image-id").val(data.data.fileid);
+                //  change the image src to the one in data
+                $("#background-image").attr('src',data.data.location);
+                
+            });
+        });
+    </script>
+</div>
 </div>
     
-</div>
+
 <label >Brand Colors</label>
 <div style="display:flex;">
     
@@ -207,7 +252,7 @@ function toColor(num) {
 
 </div>
 </div>
-<button id="Customize-submit-button " class="btn btn-success"  >Save</button>
+<button id="cust-sub-btn" class="btn btn-success"  >Save</button>
 
 <script>
     $("#brand-color-1").click(()=>{
@@ -223,13 +268,20 @@ function toColor(num) {
     $("#color-picker-2").on("change",function(){
         $("#brand-color-2").css({"background" :  "#"+$("#color-picker-2").val()});
     });
-$("#Customize-submit-button").click(()=>{
-    console.log("clicled");
-    $.post("/adminGrid/SetInsitutionFeatures",
-    getCustomizeFeilds())
-    .done((data)=>{
-        console.log(data);
-    });
+
+$(()=>{
+    console.log("making");
+    $("#cust-sub-btn").click(()=>{
+        console.log("clicled");
+        $.post("/adminGrid/SetInsitutionFeatures",
+        getCustomizeFeilds())
+        .done((data)=>{
+            console.log(data);
+        });
+    })
 })
+
 </script>
+
+{% include "admin/dialogs/upload_image.html" %}
           
