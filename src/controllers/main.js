@@ -30,7 +30,6 @@ router.post('/GetSchools', (req, res) => {
       }
       else {
         for(var i=0;i<result.rows.length;i++){
-          console.log(result.rows[i].name);
           html +=  '<div class="collectItem">'
           html +=  '  <div>'
           html +=  '    <img id="school-card-'+result.rows[i].institutionid+'" class="barLogo" style="cursor:pointer;" src="/static/img/UofC.png">'
@@ -78,7 +77,7 @@ router.post('/GetFaculties', (req, res) => {
           else if (facName.includes("veterinary")) facImg = "https://blogs.ufv.ca/science/files/2016/10/WestGen-2016-Awards.png";
           else if (facName.includes("medicine")) facImg = "https://www.intercleanshow.com/-/media/websites/interclean/isa/images/news/isa2018-healthcare-cleaning-1100x400.ashx";
           else if (facName.includes("education")) facImg = "https://cdn20.patchcdn.com/users/22896301/20180813/011024/styles/T800x600/public/processed_images/school_4-1534180194-2580.jpg";
-          else if (facName.includes("arts")) facImg = "https://sloanreview.mit.edu/content/uploads/2017/04/Gen-Michelman-End-of-Corporate-Culture-1200-1200x627.jpg";
+          else if (facName.includes("art")) facImg = "https://sloanreview.mit.edu/content/uploads/2017/04/Gen-Michelman-End-of-Corporate-Culture-1200-1200x627.jpg";
           else if (facName.includes("nursing")) facImg = "https://demedbook.com/images/2/how-do-clinical-trials-work-and-who-can-participate_7.jpg";
           else if (facName.includes("environmental")) facImg = "https://ariahesaraki.files.wordpress.com/2014/01/skygardenhouse01.jpg";
           else if (facName.includes("social")) facImg = "https://blogs.ufv.ca/swhs/files/2018/03/Hand-tree-purchased-image-from-Marcom-Copy.jpg";
@@ -199,6 +198,7 @@ router.post('/GetSchoolsByText', (req, res) => {
         html +=  '<div class="collectItem">'
         html +=  '  <div>'
         html +=  '    <img id="school-card-'+result.rows[i].institutionid+'" class="barLogo" style="cursor:pointer;" src="/static/img/UofC.png">'
+        html +=  '  <div id="school-name-'+result.rows[i].institutionid+'" style="display:none;">'+result.rows[i].name+'</div>'
         html +=  '  </div>'
         html +=  '</div>'
       }
