@@ -526,10 +526,35 @@ function readCSVPassedIn(filePath) {
   // console.log(filePath);
   fs.createReadStream(filePath)
   .pipe(csv1())
-  .on('data', function(data){
+  .on('data', function(csvData){
       try {       //perform the operation
-        console.log(data);
-        
+        // console.log(Object.keys(data));  //this prints out everything you can call on a JS object
+        console.log(csvData['Acad Group']);
+
+        //callback for check faculty here data is the output of the query returned from check faculty
+        checkFaculty(csvData['Acad Group'], 18,(data)=>{
+          console.log("CHECK FACULTY------------------------------");
+          console.log(data);//returns all the rows that have the code we pass in them
+          console.log("CHECK FACULTY------------------------------");
+          /*department Callback function, data is the output from the query returned from check Depertment*/
+          checkDepartment(data[0].facultyid, data[0].Subject,(data) =>{
+            console.log("CHECK DEPARTMENT------------------------------");
+            //if there is something that already exists for this department with the corresponding faculty then I am returned the facultyid and the departmentID
+            console.log(data);
+            //if there isn't something then it inserts and returned the facultyid for the newest faculty added but has no academicgroupID associated with it
+            console.log("CHECK DEPARTMENT------------------------------");
+            //call check course with the subject id which is department id in her csv
+
+            console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+            console.log(data[0].departmentid);
+            console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+            checkCourse(data[0].departmentid,csvData['Course Catalog Nbr'],csvData['Course Descr'],csvData['Topic Description'],csvData['Class Notes'],csvData['Crse Units'],csvData['Course ID'], (data) => {
+              console.log("CHECK Course------------------------------");
+              console.log(data);
+              console.log("CHECK Course------------------------------");
+            });
+          });
+        });
       }
       catch(err) { //error handler
           console.log("This row is empty for this column");
@@ -540,33 +565,12 @@ function readCSVPassedIn(filePath) {
 
 
 
-//callback for check faculty here data is the output of the query returned from check faculty
-checkFaculty("AR", 18,(data)=>{
-  console.log("CHECK FACULTY------------------------------");
-  console.log(data);//returns all the rows that have the code we pass in them
-  console.log("CHECK FACULTY------------------------------");
-  /*department Callback function, data is the output from the query returned from check Depertment*/
-  checkDepartment(data[0].facultyid, "CPSC",(data) =>{
-    console.log("CHECK DEPARTMENT------------------------------");
-    //if there is something that already exists for this department with the corresponding faculty then I am returned the facultyid and the departmentID
-    console.log(data);
-    //if there isn't something then it inserts and returned the facultyid for the newest faculty added but has no academicgroupID associated with it
-    console.log("CHECK DEPARTMENT------------------------------");
 
-    //call check course with the subject id which is department id in her csv
-    checkCourse(data[0].departmentid, "331", (data) => {
-      console.log("CHECK Course------------------------------");
-      console.log(data);
-      console.log("CHECK Course------------------------------");
-    });
-  });
-});
-
-checkAccountInstitution('18', (data) => {
-  console.log("CHECK checkAccountInstitution------------------------------");
-  console.log(data);//returns all the rows that have the code we pass in them
-  console.log("CHECK checkAccountInstitution------------------------------");
-});
+// checkAccountInstitution('18', (data) => {
+//   console.log("CHECK checkAccountInstitution------------------------------");
+//   console.log(data);//returns all the rows that have the code we pass in them
+//   console.log("CHECK checkAccountInstitution------------------------------");
+// });
 
 
 /**
@@ -580,6 +584,7 @@ function checkAccountInstitution(accountid, next) {
   //PARAMS
   checkAccountInstitutionParams = [accountid];
   db.query(checkAccountInstitutionQuery,checkAccountInstitutionParams ,(err, result) => {
+    
     if (err) {
       console.log(err);
     } else {
@@ -606,8 +611,11 @@ function checkFaculty (facultycode,accountid,next) {
   facParams = [accountid, facultycode];
 
   db.query(facQuery,facParams ,(err, result) => {
+    console.log("===============================================");
     console.log("query: " + facQuery);
     console.log("params: " + facParams);
+    console.log("===============================================");
+    
 
     if (err) {
       console.log(err);
@@ -618,12 +626,16 @@ function checkFaculty (facultycode,accountid,next) {
         console.log("Faculty code " + facultycode + "doesn't exist. Inserting");
         //QUERY
         facQuery = "";
-        facQuery += "INSERT INTO public.faculty";
-        facQuery += "(facultycode,insitutionid)";
+        facQuery += "INSERT INTO public.faculty ";
+        facQuery += "(facultycode, insitutionid) ";
         facQuery += "VALUES ($1, (SELECT institutionid FROM accountinstitution WHERE accountid = $2)) returning *;";
         //PARAMS
         facParams = [facultycode, accountid];  //these paramaters will be read in from the csv file "Acad Group" column
         db.query(facQuery,facParams ,(err1, result1) => {
+        console.log("===============================================");
+        console.log("query: " + facQuery);
+        console.log("params: " + facParams);
+        console.log("===============================================");
           if (err1) {
             console.log(err1);
           } else {
@@ -677,11 +689,19 @@ function checkDepartment (facultyid, code, next){
   });
 }
 
+//departmentid, catalognumber, description, topicdescription, notes, untis, ucalgarycourseid
+
 /**
- * code = catalognumber column which is a 3  letter code like "201" for example
+ * catalognumber = catalognumber column which is a 3  letter code like "201" for example
  * departmentid will be the column which is the corresponding faculty for that course
+ * description = course description column
+ * topic description = topic description column
+ * notes = class notes column
+ * untis = course units column
+ * ucalgarycourseid = course id column
+ * 
  */
-function checkCourse(departmentid, catalognumber, next){
+function checkCourse(departmentid, catalognumber, description, topicdescription, classnotes, units, ucalgaryCourseID, next){
   var courseQuery = "";
   //QUERY
   courseQuery += "SELECT courseid, departmentid";
@@ -698,10 +718,10 @@ function checkCourse(departmentid, catalognumber, next){
         //QUERY
         courseQuery = ""; //reset query
         courseQuery += "INSERT INTO public.course";
-        courseQuery += "(departmentid, catalognumber)";
-        courseQuery += "VALUES ($1, $2) returning *;";
+        courseQuery += "(departmentid, catalognumber, description, topicdescription, notes, untis, ucalgarycourseid)";
+        courseQuery += "VALUES ($1, $2, $3, $4, $5, $6, $7) returning *;";
         //PARAMS
-        courseParams = [departmentid, catalognumber];
+        courseParams = [departmentid, catalognumber, description, topicdescription, classnotes, parseFloat(units), ucalgaryCourseID];
         db.query(courseQuery, courseParams, (err1, result1) => {
           if (err1) {
             console.log(err1);
