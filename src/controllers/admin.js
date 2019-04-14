@@ -165,13 +165,13 @@ checkFaculty("paulsTest",(data)=>{
 /*
 code =  Acad Group column so "SC" would be the FACULTY of science
 */
-function checkFaculty (code,next) {
+function checkFaculty (facultycode,next) {
   var facQuery = "";
   //QUERY
   facQuery += "SELECT facultyid";
-  facQuery += "	FROM public.faculty WHERE code = $1;";
+  facQuery += "	FROM public.faculty WHERE facultycode = $1;";
   //PARAMS
-  facParams = [code];
+  facParams = [facultycode];
   db.query(facQuery,facParams ,(err, result) => {
     if (err) {
       console.log(err);
@@ -179,14 +179,14 @@ function checkFaculty (code,next) {
       if(result.rows.length > 0){
         next(result.rows) //data is now result.rows
       }else{
-        console.log("Faculty code " + code + "doesn't exist. Inserting");
+        console.log("Faculty code " + facultycode + "doesn't exist. Inserting");
         //QUERY
         facQuery = "";
         facQuery += "INSERT INTO public.faculty";
-        facQuery += "(code)";
+        facQuery += "(facultycode)";
         facQuery += "VALUES ($1) returning *;";
         //PARAMS
-        facParams = [code];  //these paramaters will be read in from the csv file "Acad Group" column
+        facParams = [facultycode];  //these paramaters will be read in from the csv file "Acad Group" column
         db.query(facQuery,facParams ,(err1, result1) => {
           if (err1) {
             console.log(err1);
