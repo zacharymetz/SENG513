@@ -57,7 +57,7 @@
                     dataType: "json",
                     data: filter
                 }).done(function(dataResult) {
-                  console.log(dataResult);
+                  console.log("COURSES DATA",dataResult);
                     d.resolve(dataResult);
                 });
                 return d.promise();
@@ -72,10 +72,10 @@
           },
  
         fields: [
-            { name:"" , title: "Course Name", type: "text", width: 100 },
-            { name:"" ,title: "Level", type: "number", width: 50 },
-            { name:"" ,title: "Department", type: "text", width: 150 },
-            { name:"" ,title: "Faculty", type: "text" ,width: 150},
+            { name:"topicdescription" , title: "Course Name", type: "text", width: 100 },
+            { name:"catalognumber" ,title: "Level", type: "text", width: 50 },
+            { name:"code" ,title: "Department", type: "text", width: 150 },
+            { name:"name" ,title: "DeptName", type: "text" ,width: 150},
             
             { type: "control" }
         ]
