@@ -529,29 +529,29 @@ function readCSVPassedIn(filePath) {
   .on('data', function(csvData){
       try {       //perform the operation
         // console.log(Object.keys(data));  //this prints out everything you can call on a JS object
-        console.log(csvData['Acad Group']);
+        // console.log(csvData['Acad Group']);
 
         //callback for check faculty here data is the output of the query returned from check faculty
         checkFaculty(csvData['Acad Group'], 18,(data)=>{
-          console.log("CHECK FACULTY------------------------------");
-          console.log(data);//returns all the rows that have the code we pass in them
-          console.log("CHECK FACULTY------------------------------");
+          // console.log("CHECK FACULTY------------------------------");
+          // console.log(data);//returns all the rows that have the code we pass in them
+          // console.log("CHECK FACULTY------------------------------");
           /*department Callback function, data is the output from the query returned from check Depertment*/
           checkDepartment(data[0].facultyid, data[0].Subject,(data) =>{
-            console.log("CHECK DEPARTMENT------------------------------");
-            //if there is something that already exists for this department with the corresponding faculty then I am returned the facultyid and the departmentID
-            console.log(data);
-            //if there isn't something then it inserts and returned the facultyid for the newest faculty added but has no academicgroupID associated with it
-            console.log("CHECK DEPARTMENT------------------------------");
+            // console.log("CHECK DEPARTMENT------------------------------");
+            // //if there is something that already exists for this department with the corresponding faculty then I am returned the facultyid and the departmentID
+            // console.log(data);
+            // //if there isn't something then it inserts and returned the facultyid for the newest faculty added but has no academicgroupID associated with it
+            // console.log("CHECK DEPARTMENT------------------------------");
             //call check course with the subject id which is department id in her csv
 
-            console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
-            console.log(data[0].departmentid);
-            console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+            // console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+            // console.log(data[0].departmentid);
+            // console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
             checkCourse(data[0].departmentid,csvData['Course Catalog Nbr'],csvData['Course Descr'],csvData['Topic Description'],csvData['Class Notes'],csvData['Crse Units'],csvData['Course ID'], (data) => {
-              console.log("CHECK Course------------------------------");
-              console.log(data);
-              console.log("CHECK Course------------------------------");
+              // console.log("CHECK Course------------------------------");
+              // console.log(data);
+              // console.log("CHECK Course------------------------------");
             });
           });
         });
@@ -611,10 +611,10 @@ function checkFaculty (facultycode,accountid,next) {
   facParams = [accountid, facultycode];
 
   db.query(facQuery,facParams ,(err, result) => {
-    console.log("===============================================");
-    console.log("query: " + facQuery);
-    console.log("params: " + facParams);
-    console.log("===============================================");
+    // console.log("===============================================");
+    // console.log("query: " + facQuery);
+    // console.log("params: " + facParams);
+    // console.log("===============================================");
     
 
     if (err) {
@@ -632,10 +632,10 @@ function checkFaculty (facultycode,accountid,next) {
         //PARAMS
         facParams = [facultycode, accountid];  //these paramaters will be read in from the csv file "Acad Group" column
         db.query(facQuery,facParams ,(err1, result1) => {
-        console.log("===============================================");
-        console.log("query: " + facQuery);
-        console.log("params: " + facParams);
-        console.log("===============================================");
+        // console.log("===============================================");
+        // console.log("query: " + facQuery);
+        // console.log("params: " + facParams);
+        // console.log("===============================================");
           if (err1) {
             console.log(err1);
           } else {
