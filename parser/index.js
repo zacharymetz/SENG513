@@ -31,10 +31,6 @@ fs.createReadStream("classdata.csv")
       getLocation(data);
       getClass(data);
 
-
-
-
-
     }
     catch(err) {
         //error handler

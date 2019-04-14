@@ -54,6 +54,7 @@ checkFaculty("paulsTest",(data)=>{
       console.log("CHECK Course------------------------------");
     });
 
+
   });
 });
 
@@ -174,7 +175,6 @@ function checkCourse(departmentid, catalognumber, next){
   });
 
 }
-
 
 
 

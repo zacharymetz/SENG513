@@ -1,3 +1,4 @@
+
 $form.on('submit', function(e) {
   if ($form.hasClass('is-uploading')) return false;
 
@@ -22,3 +23,4 @@ $form.on('submit', function(e) {
     // ajax for legacy browsers
   }
 });
+
