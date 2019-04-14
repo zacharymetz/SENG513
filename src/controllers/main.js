@@ -67,9 +67,9 @@ router.post('/GetFaculties', (req, res) => {
         for(var i=0;i<result.rows.length;i++){
           var facName = result.rows[i].longname.toLowerCase();
           var facImg;
-          if (facName.includes("engineering")) facImg = "https://www.nbn.org.il/wp-content/uploads/2014/01/engineering_mechanical_3042380_cropped.jpg";
+          if (facName.includes("engineer")) facImg = "https://www.nbn.org.il/wp-content/uploads/2014/01/engineering_mechanical_3042380_cropped.jpg";
           else if (facName.includes("science")) facImg = "https://d2ai0ibaxpbki1.cloudfront.net/v2/images/collections/video-music-licensing-collection-optimistic.jpg";
-          else if (facName.includes("fine arts")) facImg = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQwFhPeuIV3Yytxh8z-tkvYDsfYuQcaXG-hYaKR76bl715RBUkw";
+          else if (facName.includes("fine")) facImg = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQwFhPeuIV3Yytxh8z-tkvYDsfYuQcaXG-hYaKR76bl715RBUkw";
           else if (facName.includes("kinesiology")) facImg = "https://pbs.twimg.com/profile_images/787764476078587904/vcAZZNg1_400x400.jpg";
           else if (facName.includes("law")) facImg = "http://village.photos/images/user/9b3ad69f-d70d-4835-aeaa-9ee70e7bef36/24981801-a56b-4284-a4cd-21204c2d7422.jpg";
           else if (facName.includes("business")) facImg = "https://images.freeimages.com/images/large-previews/adf/sun-burst-1478549.jpg";
@@ -159,7 +159,7 @@ router.post('/GetCourses', (req, res) => {
           html +=  '    <div class="courseName" id="course-card-'+result.rows[i].courseid+'">'
           html +=  '      <span class="oi oi-chevron-right" title="chevron-right" aria-hidden="true" id="right-Arrow-'+result.rows[i].courseid+'"></span>'
           html +=  '      <span class="oi oi-chevron-bottom" title="chevron-bottom" aria-hidden="true" id="down-Arrow-'+result.rows[i].courseid+'"></span>'
-          html +=  '      <span><b class="course-'+result.rows[i].courseid+'" id="course-card-'+result.rows[i].courseid+'">'+result.rows[i].code+''+result.rows[i].catalognumber+': </b></span>'
+          html +=  '      <span><b class="course-'+result.rows[i].courseid+'" id="course-card-'+result.rows[i].courseid+'">'+result.rows[i].code+' '+result.rows[i].catalognumber+': </b></span>'
           html +=  '      <span id="course-card-'+result.rows[i].courseid+'">'+result.rows[i].topicdescription+'</span>'
           html +=  '    </div>'
           html +=  '    <div class="oi oi-plus" title="plus" aria-hidden="true" id="course-add-'+result.rows[i].courseid+'" ></div>'
@@ -202,6 +202,54 @@ router.post('/GetSchoolsByText', (req, res) => {
       }
       res.send(JSON.stringify({
         success: true,
+        rows: result.rows,
+        html: html
+      }));
+    }
+  })
+});
+
+// This query will search for courses, it will search for ALL courses in our database:
+// examples that will return in our current db
+// search for:
+// 211 , introduction, techniques, math
+// so will look for keywords in the description
+
+router.post('/searchCoursesByText', (req, res) => {
+  var description = "%" + req.body.courseName + "%";
+  //console.log(description);
+  db.query("SELECT * FROM public.department INNER JOIN public.course ON public.department.departmentid = public.course.departmentid Where lower(code) like lower($1) or catalognumber like $2 or description like $3 or topicdescription like $4", [req.body.courseName, req.body.courseName, description, description],
+  (err, result) => {
+    if(err){
+      res.send(JSON.stringify({
+        success: false,
+        message: "db error"
+      }));
+    }else{
+      var html = "";
+      if (result.rows.length === 0) {
+        html = "<div class=\"info\" style=\"color:#4D4D4D;\">Sorry, no courses found :(</div>"
+      }
+      else {
+        for(var i=0;i<result.rows.length;i++){
+          html +=  '<div class="listItem">'
+          html +=  '  <div class="courseTopLine">'
+          html +=  '    <div class="courseName" id="course-card-'+result.rows[i].courseid+'">'
+          html +=  '      <span class="oi oi-chevron-right" title="chevron-right" aria-hidden="true" id="right-Arrow-'+result.rows[i].courseid+'"></span>'
+          html +=  '      <span class="oi oi-chevron-bottom" title="chevron-bottom" aria-hidden="true" id="down-Arrow-'+result.rows[i].courseid+'"></span>'
+          html +=  '      <span><b class="course-'+result.rows[i].courseid+'" id="course-card-'+result.rows[i].courseid+'">'+result.rows[i].code+' '+result.rows[i].catalognumber+': </b></span>'
+          html +=  '      <span id="course-card-'+result.rows[i].courseid+'">'+result.rows[i].topicdescription+'</span>'
+          html +=  '    </div>'
+          html +=  '    <div class="oi oi-plus" title="plus" aria-hidden="true" id="course-add-'+result.rows[i].courseid+'" ></div>'
+          html +=  '  </div>'
+          html +=  '  <div class="courseInfo" id="course-info-'+result.rows[i].courseid+'">'+result.rows[i].description+'</div>'
+          html +=  '  <div class="courseInfo" id="course-notes-'+result.rows[i].courseid+'">Notes: '+result.rows[i].notes+'</div>'
+          html +=  '  <div class="courseBottomLine"></div>'
+          html +=  '</div>'
+        }
+      }
+      res.send(JSON.stringify({
+        success : true,
         rows: result.rows,
         html: html
       }));

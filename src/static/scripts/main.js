@@ -50,7 +50,7 @@ function renderSchoolGrid(requestData={city: clientCity}){
         gotoPage("faculty-page");
       });
     };
-  })
+  });
 }
 function renderFacultyGrid(requestData=null){
   $.post("/GetFaculties",{city: clientCity, schoolID: currentSchoolID}).done((data)=>{
@@ -68,7 +68,7 @@ function renderFacultyGrid(requestData=null){
         gotoPage("dept-page");
       });
     };
-  })
+  });
 }
 function renderDeptGrid(requestData=null){
   $.post("/GetDepts", {
@@ -90,7 +90,7 @@ function renderDeptGrid(requestData=null){
         gotoPage("course-page");
       });
     };
-  })
+  });
 }
 
 function renderCourseGrid(requestData=null){
@@ -130,7 +130,7 @@ function renderCourseGrid(requestData=null){
         updateUserList();
       });
     };
-  })
+  });
 }
 
 function updateUserList() {
@@ -234,6 +234,50 @@ $(()=>{
           });
         };
       });
+  });
+
+  //searching for courses in the databae
+  $("#searchCoursesButton").click(()=>
+  {
+    //console.log("sending request to get courses");
+    $.post("/searchCoursesByText",
+    { courseName: $("#searchCoursesText").val() })
+    .done((data) => {
+      data = JSON.parse(data);
+      //console.log(data.html);
+      var html = data.html;
+      $("#course-page").html(html);
+      if (navHistory[navHistory.length - 1] !== currentPage) navHistory.push(currentPage);
+      $("#faculty-page").hide();
+      $("#dept-page").hide();
+      $("#course-page").show();
+      for(var i=0;i<data.rows.length;i++){
+        $("#course-card-"+data.rows[i].courseid).click(()=>{
+          var idStr = event.target.id;
+          var idParts = idStr.split('-', 3);
+          var courseID = idParts[2];
+          if ($("#course-info-"+courseID).is(":visible")) {
+            $("#course-info-"+courseID).hide();
+            $("#course-notes-"+courseID).hide();
+            $("#right-Arrow-"+courseID).show();
+            $("#down-Arrow-"+courseID).hide();
+          }else{
+            $("#course-info-"+courseID).show();
+            $("#course-notes-"+courseID).show();
+            $("#down-Arrow-"+courseID).show();
+            $("#right-Arrow-"+courseID).hide();
+          }
+        });
+        $("#course-add-"+data.rows[i].courseid).click(()=>{
+          var idStr = event.target.id;
+          var idParts = idStr.split('-', 3);
+          var courseID = idParts[2];
+          var nameParts = $(".course-"+courseID).html().split(":", 2);
+          localStorage.setItem(courseID, nameParts[0]);
+          updateUserList();
+        });
+      };
+    });
   });
 
   //receive through socket any updates/sync
