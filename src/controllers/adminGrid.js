@@ -529,6 +529,7 @@ function readCSVPassedIn(filePath) {
   .on('data', function(data){
       try {       //perform the operation
         console.log(data);
+        
       }
       catch(err) { //error handler
           console.log("This row is empty for this column");
@@ -540,7 +541,7 @@ function readCSVPassedIn(filePath) {
 
 
 //callback for check faculty here data is the output of the query returned from check faculty
-checkFaculty("paulsTest",(data)=>{
+checkFaculty("AR", 18,(data)=>{
   console.log("CHECK FACULTY------------------------------");
   console.log(data);//returns all the rows that have the code we pass in them
   console.log("CHECK FACULTY------------------------------");
@@ -593,14 +594,21 @@ function checkAccountInstitution(accountid, next) {
 /*
 code =  Acad Group column so "SC" would be the FACULTY of science
 */
-function checkFaculty (facultycode,next) {
+function checkFaculty (facultycode,accountid,next) {
   var facQuery = "";
   //QUERY
-  facQuery += "SELECT facultyid";
-  facQuery += "	FROM public.faculty WHERE facultycode = $1;";
+  facQuery += "SELECT facultyid, facultycode";
+  facQuery += "	FROM public.faculty ";
+  facQuery += "INNER JOIN accountinstitution ";
+  facQuery += "on faculty.insitutionid = accountinstitution.institutionid ";
+  facQuery += "WHERE accountid = $1 and facultycode= $2;";
   //PARAMS
-  facParams = [facultycode];
+  facParams = [accountid, facultycode];
+
   db.query(facQuery,facParams ,(err, result) => {
+    console.log("query: " + facQuery);
+    console.log("params: " + facParams);
+
     if (err) {
       console.log(err);
     } else {
@@ -611,10 +619,10 @@ function checkFaculty (facultycode,next) {
         //QUERY
         facQuery = "";
         facQuery += "INSERT INTO public.faculty";
-        facQuery += "(facultycode)";
-        facQuery += "VALUES ($1) returning *;";
+        facQuery += "(facultycode,insitutionid)";
+        facQuery += "VALUES ($1, (SELECT institutionid FROM accountinstitution WHERE accountid = $2)) returning *;";
         //PARAMS
-        facParams = [facultycode];  //these paramaters will be read in from the csv file "Acad Group" column
+        facParams = [facultycode, accountid];  //these paramaters will be read in from the csv file "Acad Group" column
         db.query(facQuery,facParams ,(err1, result1) => {
           if (err1) {
             console.log(err1);
