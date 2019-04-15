@@ -25,10 +25,11 @@ function requiresLogin(req, res, next) {
 router.get('/',requiresLogin, (req, res) => {
   //    do an inital db hit to
   console.log(req.session.accountid);
-  db.query("Select * from account where accountid=$1",[req.session.accountid],(err,result)=>{
+  db.query("Select *  from account inner join accountinstitution on account.accountid = accountinstitution.accountid  where account.accountid=$1",[req.session.accountid],(err,result)=>{
     if(err){
-        res.render('error/500.html');
+        console.log(err);
     }else{
+        console.log(result.rows[0]);
         res.render('admin/index.html' , result.rows[0]);
     }
   });
