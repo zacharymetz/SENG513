@@ -11,6 +11,11 @@ var router = express.Router();
 
 */
 
+// Configure AWS SDK for JavaScript
+var AWS = require('aws-sdk');
+AWS.config.update({accessKeyId: 'akid', secretAccessKey: 'EzdhQMKgZW7ilM7/1NHmKvJ47TLZQymze935vBM/'});
+
+
 //Paul
 const fs = require('fs');
 const multer = require('multer');
@@ -389,6 +394,24 @@ router.post('/NewInstitution',(req,res)=>{
 
 });
 
+router.post('/testLambda', (req,res) => {
+  var lambda = new AWS.Lambda();
+  var params = {
+    FunctionName: 'myEmailSendFunction', /* required */
+    Payload: JSON.stringify({
+      "type": "reponse",
+      "email": "Paul.dan@ucalgary.ca",
+      "firstName": "Paul",
+      "lastName": "Dan",
+      "template": "<html><head></head><body><h1>TITLE</h1><p>This email was sent with</p></body></html>",
+      "inquiry": "How the fuck does this work"
+    })
+  };
+  lambda.invoke(params, function(err, data) {
+    if (err) console.log(err, err.stack); // an error occurred
+    else     console.log(data);           // successful response
+  });
+});
 
 
 router.post('/GetAccounts',(req,res)=>{
@@ -436,6 +459,9 @@ router.post('/CreateAccount',(req,res)=>{
     ],
     query: " inner join accountinstitution on accountinstitution.accountid = account.accountid where accountinstitution.institutionid = (Select institutionid from accountinstitution where accountid = " + req.session.accountid.toString() + ")  "
   };
+
+
+
 
   var queryOptions = queryBuilder.jsGridQueryBuilder("account", query, validSortFeilds,innerJoin);
     db.query(queryOptions[0],queryOptions[1] ,(err, result) => {
@@ -809,9 +835,9 @@ function checkCourse(departmentid, catalognumber, description, topicdescription,
   var courseQuery = "";
   //QUERY
   courseQuery += "SELECT courseid, departmentid";
-  courseQuery += "	FROM public.course WHERE departmentid = $1;";  //$1 will be the subjectID which is departmentID in her csv
+  courseQuery += "	FROM public.course WHERE departmentid = $1 AND catalognumber = $2;";  //$1 will be the subjectID which is departmentID in her csv
   //PARAMS
-  courseParams = [departmentid];
+  courseParams = [departmentid,catalognumber];
   db.query(courseQuery, courseParams, (err, result) => {
     if(err) {
       console.log(err);
