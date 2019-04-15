@@ -330,4 +330,18 @@ router.post('/inquireform', (req, res) => {
 });
 
 
+router.post('/emailList', (req, res) => {
+  var lambda = new AWS.Lambda();
+  var params = {
+    FunctionName: 'myEmailListSendFunction', /* required */
+    Payload: JSON.stringify({
+      "email": req.body.email;
+      "message": req.body.message;
+    })
+  };
+  lambda.invoke(params, function(err, data) {
+    if (err) console.log(err, err.stack); // an error occurred
+    else     console.log(data);           // successful response
+  });
+});
 module.exports = router;

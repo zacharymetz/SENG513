@@ -1,2 +1,2 @@
-# SENG513 Project
-this is the repository for the application
+# Prerequisit Free
+Help you find uni options without any prerequisits 
