@@ -173,7 +173,7 @@ router.post('/GetCourses', (req, res) => {
 
   //  need to add sorts up here since can do sql injections if not
   //  to stop sql injections we need to check the feilds
-  var validSortFeilds = ["courseid","level","topicdescription","code", "catalognumber"];
+  var validSortFeilds = ["courseid","level","description","code", "catalognumber"];
   var innerJoin = {  // inner join on the departments table so we can display the name of the department instead o fhte id 
 
       columns : [
