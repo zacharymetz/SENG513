@@ -335,8 +335,8 @@ router.post('/emailList', (req, res) => {
   var params = {
     FunctionName: 'myEmailListSendFunction', /* required */
     Payload: JSON.stringify({
-      "email": req.body.email;
-      "message": req.body.message;
+      "email": req.body.email,
+      "message": req.body.message
     })
   };
   lambda.invoke(params, function(err, data) {
