@@ -835,9 +835,9 @@ function checkCourse(departmentid, catalognumber, description, topicdescription,
   var courseQuery = "";
   //QUERY
   courseQuery += "SELECT courseid, departmentid";
-  courseQuery += "	FROM public.course WHERE departmentid = $1 AND catalognumber = $2;";  //$1 will be the subjectID which is departmentID in her csv
+  courseQuery += "	FROM public.course WHERE departmentid = $1;";  //$1 will be the subjectID which is departmentID in her csv
   //PARAMS
-  courseParams = [departmentid,catalognumber];
+  courseParams = [departmentid];
   db.query(courseQuery, courseParams, (err, result) => {
     if(err) {
       console.log(err);
