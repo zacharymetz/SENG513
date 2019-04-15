@@ -220,6 +220,17 @@ $(()=>{
     }
   });
 
+  $("#sendCourseList").click(()=>{
+    var listStr = "";
+    for (var i = 0; i < localStorage.length; i++) {
+      var storageKey = localStorage.key(i);
+      if ((storageKey === "syncPass") || (storageKey === "currentSchoolID")) continue;
+      listStr +=  localStorage.getItem(storageKey) + "\n";
+    }
+    $.post("/emailList", {email: $("#viewerEmail").val(),message: listStr});
+
+  });
+
   // searching for cities in the database
   $("#searchCityButton").click(() => {
     console.log("sending request to get univeristies from cities");

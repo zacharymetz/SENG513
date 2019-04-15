@@ -67,17 +67,17 @@ router.post('/login', (req, res) => {
 });
 router.post('/logout', (req, res) => {
     //dont have to do nothing lol
+    
     if (req.session) {
     // delete session object
-        req.session.destroy(function(err) {
-            if(err) {
-                res.redirect('/admin');
-                console.log(err)
-
-            } else {
-                return res.redirect('/admin');
-            }
-        });
+    req.session.accountid = null
+            
+             
+    console.log("deleted");
+    return res.redirect('/admin');
+        
+    }else{
+        return res.redirect('/admin');
     }
 
 
