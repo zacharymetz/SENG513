@@ -199,6 +199,12 @@ li {
   min-height: 54px;
   margin-top: 25px;
 }
+.deptName {
+  text-align: center;
+  font-size: 15px;
+  color: #4D4D4D;
+  padding-top: 30%;
+}
 
 @media (min-width: 580px) {
   .header{
@@ -223,6 +229,9 @@ li {
   }
   #buttonGap {
     width: 77%;
+  }
+  .deptName {
+    font-size: 20px;
   }
 }
 
@@ -252,6 +261,9 @@ li {
   }
   #modalListContent {
     width: 26%;
+  }
+  .deptName {
+    font-size: 25px;
   }
 }
 
@@ -294,6 +306,9 @@ li {
   #myListPopup {
     display: none;
   }
+  .deptName {
+    font-size: 30px;
+  }
 }
 
 @media (min-width: 1200px) {
@@ -310,5 +325,8 @@ li {
   .collectImage {
     height: 125px;
     width: 125px;
+  }
+  .deptName {
+    font-size: 35px;
   }
 }
