@@ -59,6 +59,9 @@ function renderFacultyGrid(requestData=null){
     data= JSON.parse(data);
     var schoolName = "<b>" + $("#school-name-"+currentSchoolID).html() + "</b>";
     $("#schoolName").html(schoolName);
+    var schoolColor = $("#school-color-"+currentSchoolID).html();
+    schoolColor = "#" + parseInt(schoolColor).toString(16)
+    $(".topBar").css("background-color",schoolColor);
     var html = data.html;
     $("#faculty-page").html(html);
     for(var i=0;i<data.rows.length;i++){
