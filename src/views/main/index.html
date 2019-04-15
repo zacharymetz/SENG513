@@ -20,8 +20,8 @@
       <center>
         <div class="header" id="homeHdr"><b>Prerequisites Free</b></div>
         <div class="info">Find your option courses, no prerequisites attached!</div>
-        <div><input type="text" class="userinput" placeholder="Calgary, AB"/></div>
-        <div><button type="button" class="btn btn-primary btn-sm">search</button></div>
+        <div><input id="searchCityText" type="text" class="userinput" placeholder="Calgary, AB"/></div>
+        <div><button id="searchCityButton" type="button" class="btn btn-primary btn-sm">search</button></div>
         <div class="info">Schools available in your city:</div>
         <div class="row collection" id="schoolGrid"></div>
 
@@ -65,9 +65,9 @@
 
     <div id="school-page">
       <div class="row topBar">
-        <div class="header"><b>University of Calgary</b></div>
+        <div class="header" id="schoolName"></div>
         <div class="img">
-          <img src="/static/img/UofCLogo.png" id="barLogo">
+          <img src="/static/img/UofCLogo.png" class="barLogo">
         </div>
       </div>
       <div>
@@ -85,17 +85,15 @@
               <img src="/static/styles/icons/logo.png" id="preReqsLogo">
               <a href="http://localhost:3000" class="info" id="homeLink">Prerequisites Free</a>
             </div>
-            <div><input type="text" placeholder="search courses" id="courseSearch"/></div>
-            <div><button type="button" class="btn btn-primary btn-sm">search</button></div>
+            <div><input type="text" placeholder="search courses" id="searchCoursesText"/></div>
+            <div><button type="button" class="btn btn-primary btn-sm" id="searchCoursesButton">search</button></div>
             <center><div class="info">Build a list of courses you might be interested in! Make
               a password and share it with other students to sync your lists! </div></center>
             <div><input type="text" placeholder="password" id="viewerPass"/></div>
-            <div><button type="button" class="btn btn-primary btn-sm">sync</button></div>
+            <div><button type="button" class="btn btn-primary btn-sm" id="syncButton">sync</button></div>
             <center><div id="userList">
               <div class="info" id="listTitle">My List</div>
               <div><ul id="courseList" class="info">
-                <li><div class="courseInList">SENG513 </div> <div class="oi oi-trash" title="trash" aria-hidden="true"></div></li>
-                <li><div class="courseInList">SENG513 </div> <div class="oi oi-trash" title="trash" aria-hidden="true"></div></li>
               </ul></div>
             </div></center>
             <center><div class="info">Send list to your email!</div></center>
@@ -116,9 +114,7 @@
               </button>
             </div>
             <div class="modal-body" style="padding:2px;padding-top:0px;">
-                <div><ul id="courseList" class="info">
-                  <li><div class="courseInList">SENG513 </div> <div class="oi oi-trash" title="trash" aria-hidden="true"></div></li>
-                  <li><div class="courseInList">SENG513 </div> <div class="oi oi-trash" title="trash" aria-hidden="true"></div></li>
+                <div><ul id="courseList-modal" class="info">
                 </ul></div>
             </div>
           </div></center>
@@ -126,6 +122,6 @@
       </div>
 
     </div>
-
+    <script src="/socket.io/socket.io.js"></script>
   </body>
 </html>
