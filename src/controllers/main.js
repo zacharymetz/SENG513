@@ -6,7 +6,8 @@ const express = require('express');
 var queryBuilder = require('./helpers/queryBuilder');
 var router = express.Router();
 var deptColors = ["#feffd1","#cfd5e2","#cefbf8","#c0a3c4","#d3ffce","#ffb90f","#87cefa","#eeaeee","#cdcd00","#fffafa"]
-
+var AWS = require('aws-sdk');
+AWS.config.update({accessKeyId: 'akid', secretAccessKey: 'EzdhQMKgZW7ilM7/1NHmKvJ47TLZQymze935vBM/'});
 router.get('/', (req, res) => {
   res.render('main/index.html');
 });
@@ -309,34 +310,21 @@ router.post('/searchCoursesByText', (req, res) => {
 
 router.post('/inquireform', (req, res) => {
 
-  // send call to aws lambda
-  var lambda = new AWS.Lambda({region: REGION, apiVersion: '2015-03-31'});
-  // create JSON object for parameters for invoking Lambda function
-  var pullParams = {
-    FunctionName : 'appDataAccess',
-    InvocationType : 'RequestResponse',
-    LogType : 'None',
-    payload : {
-      //  this is where all the form data to send to aws will go
-    }
+  var lambda = new AWS.Lambda();
+  var params = {
+    FunctionName: 'myEmailSendFunction', /* required */
+    Payload: JSON.stringify({
+      "type": "reponse",
+      "email": "paul.dan@ucalgary.ca",
+      "firstName": "paul",
+      "lastName": "dan",
+      "template": "<html><head></head><body><h1>TITLE</h1><p>This email was sent with</p></body></html>",
+      "inquiry": req.body
+    })
   };
-  // create variable to hold data returned by the Lambda function
-
-  lambda.invoke(pullParams, function(error, data) {
-    if (error) {
-      prompt(error);
-      res.send(JSON.stringify({
-        //  this will run if aws lambda returns an error to us and we can let the front end know
-        success : false,
-        message : ""
-      }));
-    } else {
-      var pullResults = JSON.parse(data.Payload);
-      res.send(JSON.stringify({
-        //  the json that gets send back to front when it was sucessful
-        success : true
-      }));
-    }
+  lambda.invoke(params, function(err, data) {
+    if (err) console.log(err, err.stack); // an error occurred
+    else     console.log(data);           // successful response
   });
 
 });
