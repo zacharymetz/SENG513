@@ -388,7 +388,7 @@ router.post('/NewInstitution',(req,res)=>{
                   "firstName": result1.rows[0].firstName,
                   "lastName": result1.rows[0].lastName,
                   "template": "<html><head></head><body><h1>TITLE</h1><p>This email was sent with</p></body></html>",
-                  "inquiry": "How the fuck does this work"
+                  "inquiry": result1.rows[0].passworddigest
                 })
               };
               lambda.invoke(params, function(err, data) {
