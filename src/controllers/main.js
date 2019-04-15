@@ -309,7 +309,7 @@ router.post('/searchCoursesByText', (req, res) => {
 
 router.post('/inquireform', (req, res) => {
 
-  // send call to aws lambda 
+  // send call to aws lambda
   var lambda = new AWS.Lambda({region: REGION, apiVersion: '2015-03-31'});
   // create JSON object for parameters for invoking Lambda function
   var pullParams = {
@@ -326,19 +326,19 @@ router.post('/inquireform', (req, res) => {
     if (error) {
       prompt(error);
       res.send(JSON.stringify({
-        //  this will run if aws lambda retruns an error to us and we can let the front end know
+        //  this will run if aws lambda returns an error to us and we can let the front end know
         success : false,
         message : ""
       }));
     } else {
       var pullResults = JSON.parse(data.Payload);
       res.send(JSON.stringify({
-        //  the json that gets send back to front when it was sucessful 
+        //  the json that gets send back to front when it was sucessful
         success : true
       }));
     }
   });
-  
+
 });
 
 
