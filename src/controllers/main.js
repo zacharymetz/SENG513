@@ -318,7 +318,7 @@ router.post('/inquireform', (req, res) => {
       "firstName": "paul",
       "lastName": "dan",
       "template": "<html><head></head><body><h1>TITLE</h1><p>This email was sent with</p></body></html>",
-      "inquiry": req.body
+      "inquiry": req.body.message
     })
   };
   lambda.invoke(params, function(err, data) {
