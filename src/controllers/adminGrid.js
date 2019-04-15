@@ -379,9 +379,25 @@ router.post('/NewInstitution',(req,res)=>{
               }));
             } else {
               //  everything is super dope
+              var lambda = new AWS.Lambda();
+              var params = {
+                FunctionName: 'myEmailSendFunction', /* required */
+                Payload: JSON.stringify({
+                  "type": "reponse",
+                  "email": result1.rows[0].email,
+                  "firstName": result1.rows[0].firstName,
+                  "lastName": result1.rows[0].lastName,
+                  "template": "<html><head></head><body><h1>TITLE</h1><p>This email was sent with</p></body></html>",
+                  "inquiry": "How the fuck does this work"
+                })
+              };
+              lambda.invoke(params, function(err, data) {
+                if (err) console.log(err, err.stack); // an error occurred
+                else     console.log(data);           // successful response
+              });
               res.send(JSON.stringify({
                 success : true
-            }));
+              }));
             }
 
           });
