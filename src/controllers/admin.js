@@ -71,7 +71,9 @@ router.post('/logout', (req, res) => {
     // delete session object
         req.session.destroy(function(err) {
             if(err) {
-                return next(err);
+                res.redirect('/admin');
+                console.log(err)
+
             } else {
                 return res.redirect('/admin');
             }

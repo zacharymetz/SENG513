@@ -11,6 +11,11 @@ var router = express.Router();
 
 */
 
+// Configure AWS SDK for JavaScript
+var AWS = require('aws-sdk');
+AWS.config.update({accessKeyId: 'akid', secretAccessKey: 'EzdhQMKgZW7ilM7/1NHmKvJ47TLZQymze935vBM/'});
+
+
 //Paul
 const fs = require('fs');
 const multer = require('multer');
@@ -173,7 +178,7 @@ router.post('/GetCourses', (req, res) => {
 
   //  need to add sorts up here since can do sql injections if not
   //  to stop sql injections we need to check the feilds
-  var validSortFeilds = ["courseid","level","topicdescription","code", "catalognumber"];
+  var validSortFeilds = ["courseid","level","description","code", "catalognumber"];
   var innerJoin = {  // inner join on the departments table so we can display the name of the department instead o fhte id 
 
       columns : [
@@ -389,6 +394,24 @@ router.post('/NewInstitution',(req,res)=>{
 
 });
 
+router.post('/testLambda', (req,res) => {
+  var lambda = new AWS.Lambda();
+  var params = {
+    FunctionName: 'myEmailSendFunction', /* required */
+    Payload: JSON.stringify({
+      "type": "reponse",
+      "email": "Paul.dan@ucalgary.ca",
+      "firstName": "Paul",
+      "lastName": "Dan",
+      "template": "<html><head></head><body><h1>TITLE</h1><p>This email was sent with</p></body></html>",
+      "inquiry": "How the fuck does this work"
+    })
+  };
+  lambda.invoke(params, function(err, data) {
+    if (err) console.log(err, err.stack); // an error occurred
+    else     console.log(data);           // successful response
+  });
+});
 
 
 router.post('/GetAccounts',(req,res)=>{
@@ -436,6 +459,9 @@ router.post('/CreateAccount',(req,res)=>{
     ],
     query: " inner join accountinstitution on accountinstitution.accountid = account.accountid where accountinstitution.institutionid = (Select institutionid from accountinstitution where accountid = " + req.session.accountid.toString() + ")  "
   };
+
+
+
 
   var queryOptions = queryBuilder.jsGridQueryBuilder("account", query, validSortFeilds,innerJoin);
     db.query(queryOptions[0],queryOptions[1] ,(err, result) => {

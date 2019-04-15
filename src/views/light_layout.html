@@ -25,6 +25,17 @@
       </div>
       <div class="current-user">
         {{ email }}
+        {% if email %}
+          <button class="btn btn-danger" id="logout">logout</button>
+          <script>
+
+            $("#logout").click(()=>{
+              $.post("/admin/logout").done(()=>{
+                window.location = "/admin";
+              });
+            });
+          </script>
+        {% endif %}
       </div>
     </div>
     
