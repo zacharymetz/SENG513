@@ -288,6 +288,14 @@ $(()=>{
     });
   });
 
+  $("#registerFormbtn").click(()=>{
+    var name = $("#inputNmae").val();
+    var email = $("#inputEmail").val()
+    var info = $("#clientInformation").val();
+    var x = name + " "+ email + " "+info;
+    $.post("/inquireform", {message:x});
+  });
+
   //receive through socket any updates/sync
   socket.on('syncList', function(userStorage) {
     console.log(userStorage.syncPass);
