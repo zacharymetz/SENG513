@@ -300,10 +300,10 @@ $(()=>{
   });
 
   $("#registerFormbtn").click(()=>{
-    var name = $("#inputNmae").val();
-    var email = $("#inputEmail").val()
-    var info = $("#clientInformation").val();
-    var x = name + " "+ email + " "+info;
+    var name = "name: " + $("#inputNmae").val() + "\n";
+    var email = "email: " + $("#inputEmail").val() + "\n";
+    var info = "info: " + $("#clientInformation").val() + "\n";
+    var x = name + email + info;
     $.post("/inquireform", {message:x});
   });
 
