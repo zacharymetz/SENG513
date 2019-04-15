@@ -25,7 +25,7 @@ router.post('/GetSchools', (req, res) => {
         message : "db error"
       }));
     }else{
-      console.log(result.rows);
+      //console.log(result.rows);
       var html = "";
       if (result.rows.length === 0) {
         html = "<div class=\"info\">Sorry, no schools found :(</div>"
@@ -115,6 +115,10 @@ router.post('/GetFaculties', (req, res) => {
             facName = "Social Work";
             facImg = "https://blogs.ufv.ca/swhs/files/2018/03/Hand-tree-purchased-image-from-Marcom-Copy.jpg";
           }
+          else if (facName.includes("RO")) {
+            facName = "Research";
+            facImg = "https://sloanreview.mit.edu/content/uploads/2018/09/GEN-Faro-Marketing-Market-Research-Big-Data-Analysis-1200.jpg";
+          }
           else facImg = "https://www.fincastleherald.com/wp-content/uploads/2017/08/school_icon_1501655097.png";
 
           html +=  '<div class="collectItem">'
@@ -156,7 +160,7 @@ router.post('/GetDepts', (req, res) => {
         for(var i=0;i<result.rows.length;i++){
           html +=  '<div class="collectItem">'
           html +=  '  <div id="dept-card-'+result.rows[i].departmentid+'"  class="collectImage" style="background-color:'+deptColors[colorIndex]+';">'
-          html +=  '    <div id="dept-card-'+result.rows[i].departmentid+'" class="deptName"><b>'+result.rows[i].code+'</b></div>'
+          html +=  '    <div id="dept-name-'+result.rows[i].departmentid+'" class="deptName"><b id="dept-text-'+result.rows[i].departmentid+'">'+result.rows[i].code+'</b></div>'
           html +=  '  </div>'
           html +=  '</div>'
           colorIndex++;
@@ -192,23 +196,28 @@ router.post('/GetCourses', (req, res) => {
         html = "<div class=\"info\" style=\"color:#4D4D4D;\">Sorry, no courses found :(</div>"
       }
       else {
+        //console.log(result.rows.length);
+        var coursesDisplayed = [];
         for(var i=0;i<result.rows.length;i++){
+          if (coursesDisplayed.includes(result.rows[i].catalognumber)) continue;
+          else coursesDisplayed.push(result.rows[i].catalognumber);
           html +=  '<div class="listItem">'
           html +=  '  <div class="courseTopLine">'
           html +=  '    <div class="courseName" id="course-card-'+result.rows[i].courseid+'">'
           html +=  '      <span class="oi oi-chevron-right" title="chevron-right" aria-hidden="true" id="right-Arrow-'+result.rows[i].courseid+'"></span>'
           html +=  '      <span class="oi oi-chevron-bottom" title="chevron-bottom" aria-hidden="true" id="down-Arrow-'+result.rows[i].courseid+'"></span>'
           html +=  '      <span><b class="course-'+result.rows[i].courseid+'" id="course-card-'+result.rows[i].courseid+'">'+result.rows[i].code+' '+result.rows[i].catalognumber+': </b></span>'
-          html +=  '      <span id="course-card-'+result.rows[i].courseid+'">'+result.rows[i].topicdescription+'</span>'
+          html +=  '      <span id="course-card-'+result.rows[i].courseid+'">'+result.rows[i].description+'</span>'
           html +=  '    </div>'
           html +=  '    <div class="oi oi-plus" title="plus" aria-hidden="true" id="course-add-'+result.rows[i].courseid+'" ></div>'
           html +=  '  </div>'
-          html +=  '  <div class="courseInfo" id="course-info-'+result.rows[i].courseid+'">'+result.rows[i].description+'</div>'
+          html +=  '  <div class="courseInfo" id="course-info-'+result.rows[i].courseid+'">'+result.rows[i].topicdescription+'</div>'
           html +=  '  <div class="courseInfo" id="course-notes-'+result.rows[i].courseid+'">Notes: '+result.rows[i].notes+'</div>'
           html +=  '  <div class="courseBottomLine"></div>'
           html +=  '</div>'
         }
       }
+      console.log(result.rows);
       res.send(JSON.stringify({
         success : true,
         rows : result.rows,
@@ -235,8 +244,9 @@ router.post('/GetSchoolsByText', (req, res) => {
       for(var i=0;i<result.rows.length;i++){
         html +=  '<div class="collectItem">'
         html +=  '  <div>'
-        html +=  '    <img id="school-card-'+result.rows[i].institutionid+'" class="barLogo" style="cursor:pointer;" src="/static/img/UofC.png">'
-        html +=  '  <div id="school-name-'+result.rows[i].institutionid+'" style="display:none;">'+result.rows[i].name+'</div>'
+        html +=  '    <img id="school-card-'+result.rows[i].institutionid+'" class="barLogo" style="cursor:pointer;" src="'+result.rows[i].logo+'">'
+        html +=  '    <div id="school-name-'+result.rows[i].institutionid+'" style="display:none;">'+result.rows[i].name+'</div>'
+        html +=  '    <div id="school-color-'+result.rows[i].institutionid+'" style="display:none;">'+result.rows[i].brandcolor0+'</div>'
         html +=  '  </div>'
         html +=  '</div>'
       }
@@ -278,11 +288,11 @@ router.post('/searchCoursesByText', (req, res) => {
           html +=  '      <span class="oi oi-chevron-right" title="chevron-right" aria-hidden="true" id="right-Arrow-'+result.rows[i].courseid+'"></span>'
           html +=  '      <span class="oi oi-chevron-bottom" title="chevron-bottom" aria-hidden="true" id="down-Arrow-'+result.rows[i].courseid+'"></span>'
           html +=  '      <span><b class="course-'+result.rows[i].courseid+'" id="course-card-'+result.rows[i].courseid+'">'+result.rows[i].code+' '+result.rows[i].catalognumber+': </b></span>'
-          html +=  '      <span id="course-card-'+result.rows[i].courseid+'">'+result.rows[i].topicdescription+'</span>'
+          html +=  '      <span id="course-card-'+result.rows[i].courseid+'">'+result.rows[i].description+'</span>'
           html +=  '    </div>'
           html +=  '    <div class="oi oi-plus" title="plus" aria-hidden="true" id="course-add-'+result.rows[i].courseid+'" ></div>'
           html +=  '  </div>'
-          html +=  '  <div class="courseInfo" id="course-info-'+result.rows[i].courseid+'">'+result.rows[i].description+'</div>'
+          html +=  '  <div class="courseInfo" id="course-info-'+result.rows[i].courseid+'">'+result.rows[i].topicdescription+'</div>'
           html +=  '  <div class="courseInfo" id="course-notes-'+result.rows[i].courseid+'">Notes: '+result.rows[i].notes+'</div>'
           html +=  '  <div class="courseBottomLine"></div>'
           html +=  '</div>'
@@ -296,5 +306,40 @@ router.post('/searchCoursesByText', (req, res) => {
     }
   })
 });
+
+router.post('/inquireform', (req, res) => {
+
+  // send call to aws lambda 
+  var lambda = new AWS.Lambda({region: REGION, apiVersion: '2015-03-31'});
+  // create JSON object for parameters for invoking Lambda function
+  var pullParams = {
+    FunctionName : 'appDataAccess',
+    InvocationType : 'RequestResponse',
+    LogType : 'None',
+    payload : {
+      //  this is where all the form data to send to aws will go
+    }
+  };
+  // create variable to hold data returned by the Lambda function
+
+  lambda.invoke(pullParams, function(error, data) {
+    if (error) {
+      prompt(error);
+      res.send(JSON.stringify({
+        //  this will run if aws lambda retruns an error to us and we can let the front end know
+        success : false,
+        message : ""
+      }));
+    } else {
+      var pullResults = JSON.parse(data.Payload);
+      res.send(JSON.stringify({
+        //  the json that gets send back to front when it was sucessful 
+        success : true
+      }));
+    }
+  });
+  
+});
+
 
 module.exports = router;

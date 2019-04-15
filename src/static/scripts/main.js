@@ -93,6 +93,7 @@ function renderDeptGrid(requestData=null){
         var idParts = idStr.split('-', 3);
         currentDepartmentID = idParts[2];
         navHistory.push(currentPage);
+
         gotoPage("course-page");
       });
     };
@@ -203,6 +204,7 @@ $(()=>{
   ipLookUp();
 
   $("#backButton").click(()=>{
+    //console.log("goingback");
     var prevPage = navHistory.pop();
     if (prevPage == "home-page") {
       navHistory = [];
