@@ -583,10 +583,12 @@ router.post('/UploadImage', uploadImage.any(), (req, res) => {
 
 /*PAULS STUFF*/
 router.post('/uploadCSV', upload.single('files[]'), (req, res) => {
+  
   const fileRows = [];
   // open uploaded file
   csv.fromPath(req.file.path)
     .on("data", function (data) {
+      
       fileRows.push(data); // push each row
       //TODO check here whether row exists or not in database first
     })
@@ -604,17 +606,20 @@ function readCSVPassedIn(filePath) {
   fs.createReadStream(filePath)
   .pipe(csv1())
   .on('data', function(csvData){
+    
       try {       //perform the operation
+        
         // console.log(Object.keys(data));  //this prints out everything you can call on a JS object
         // console.log(csvData['Acad Group']);
 
         //callback for check faculty here data is the output of the query returned from check faculty
         checkFaculty(csvData['Acad Group'], 18,(data)=>{
+          
           // console.log("CHECK FACULTY------------------------------");
           // console.log(data);//returns all the rows that have the code we pass in them
           // console.log("CHECK FACULTY------------------------------");
           /*department Callback function, data is the output from the query returned from check Depertment*/
-          checkDepartment(data[0].facultyid, data[0].Subject,(data) =>{
+          checkDepartment(data[0].facultyid, csvData.Subject,(data) =>{
             // console.log("CHECK DEPARTMENT------------------------------");
             // //if there is something that already exists for this department with the corresponding faculty then I am returned the facultyid and the departmentID
             // console.log(data);
@@ -688,16 +693,26 @@ function checkFaculty (facultycode,accountid,next) {
   facParams = [accountid, facultycode];
 
   db.query(facQuery,facParams ,(err, result) => {
-    // console.log("===============================================");
-    // console.log("query: " + facQuery);
-    // console.log("params: " + facParams);
-    // console.log("===============================================");
+    //  console.log("===============================================");
+    //  console.log("query: " + facQuery);
+    //  console.log("params: " + facultycode,accountid);
+    //  console.log("row :" ,result.rows  )
+    //  console.log("===============================================");
     
 
     if (err) {
-      console.log(err);
+      console.log("#######" + err);
+      db.query(depQuery, depParams, (err, result3) => {
+        if(err){
+          console.log("########",err);
+        }else{
+          next(result3.rows);
+        }
+       });
+
     } else {
       if(result.rows.length > 0){
+        console.log("Faculty exists so no need to inset it")
         next(result.rows) //data is now result.rows
       }else{
         console.log("Faculty code " + facultycode + "doesn't exist. Inserting");
@@ -734,15 +749,27 @@ function checkDepartment (facultyid, code, next){
   var depQuery = "";
 
   //QUERY
-  depQuery += "SELECT departmentid, facultyid";
-  depQuery += "	FROM public.department WHERE facultyid = $1;";
+  depQuery += "SELECT *";
+  depQuery += "	FROM public.department WHERE facultyid = $1 AND code = $2;";
   //PARAMS
-  depParams = [facultyid];
+  depParams = [facultyid,code];
 
 
   db.query(depQuery, depParams, (err, result) => {
+    // console.log("=====================")
+    // console.log("department code;",code)
+    // console.log("=====================")
     if (err){
-      console.log("this is where the error" + err);
+      console.log("@@@@@" + err);
+      db.query(depQuery, depParams, (err, result2) => {
+        if(err){
+          console.log("@@@@@",err);
+        }else{
+          next(result2.rows);
+        }
+       });
+
+
     } else {
       if (result.rows.length > 0) {
         next(result.rows) //give it to the checkDepartment callback function
