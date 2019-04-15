@@ -308,7 +308,6 @@ router.post('/searchCoursesByText', (req, res) => {
 });
 
 router.post('/inquireform', (req, res) => {
-
   // send call to aws lambda 
   var lambda = new AWS.Lambda({region: REGION, apiVersion: '2015-03-31'});
   // create JSON object for parameters for invoking Lambda function
@@ -321,7 +320,6 @@ router.post('/inquireform', (req, res) => {
     }
   };
   // create variable to hold data returned by the Lambda function
-
   lambda.invoke(pullParams, function(error, data) {
     if (error) {
       prompt(error);
@@ -338,8 +336,8 @@ router.post('/inquireform', (req, res) => {
       }));
     }
   });
-  
 });
+
 
 
 module.exports = router;
