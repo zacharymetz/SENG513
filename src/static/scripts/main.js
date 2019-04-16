@@ -299,6 +299,14 @@ $(()=>{
     });
   });
 
+  $("#registerFormbtn").click(()=>{
+    var name = "name: " + $("#inputNmae").val() + "\n";
+    var email = "email: " + $("#inputEmail").val() + "\n";
+    var info = "info: " + $("#clientInformation").val() + "\n";
+    var x = name + email + info;
+    $.post("/inquireform", {message:x});
+  });
+
   //receive through socket any updates/sync
   socket.on('syncList', function(userStorage) {
     console.log(userStorage.syncPass);
