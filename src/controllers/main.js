@@ -231,7 +231,7 @@ router.post('/GetCourses', (req, res) => {
 
 router.post('/GetSchoolsByText', (req, res) => {
 
-  db.query("SELECT institutionid, name, shortname, streetnumber, streetname, postalcode, cityid, stateid, countryid, backgroundimage, brandcolor0, brandcolor1, inialized, created_at, logoimage FROM public.institution where cityid = (select cityid from geo.city where lower (name) like lower ($1)) or stateid = (select stateid from geo.state where lower (statename) like lower($2)) or countryid = (select countryid from geo.country where lower(name) like lower($3));", [req.body.cityName, req.body.cityName, req.body.cityName], (err, result) => {
+  db.query("SELECT institutionid, name, shortname, streetnumber, streetname, postalcode, cityid, stateid, countryid, backgroundimage, brandcolor0, brandcolor1, inialized, created_at, (select location from file where fileid=logoimage) as \"logo\",(select location from file where fileid=backgroundimage) FROM public.institution where cityid = (select cityid from geo.city where lower (name) like lower ($1)) or stateid = (select stateid from geo.state where lower (statename) like lower($2)) or countryid = (select countryid from geo.country where lower(name) like lower($3));", [req.body.cityName, req.body.cityName, req.body.cityName], (err, result) => {
     if (err) {
       //  if there is an error form the sql server with request
       res.send(JSON.stringify({
@@ -311,7 +311,7 @@ router.post('/searchCoursesByText', (req, res) => {
 
 router.post('/inquireform', (req, res) => {
   //console.log(req.body);
-  
+
   var lambda = new AWS.Lambda();
   var params = {
     FunctionName: 'myEmailSendFunction', /* required */

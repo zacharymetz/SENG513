@@ -834,10 +834,10 @@ function checkDepartment (facultyid, code, next){
 function checkCourse(departmentid, catalognumber, description, topicdescription, classnotes, units, ucalgaryCourseID, next){
   var courseQuery = "";
   //QUERY
-  courseQuery += "SELECT courseid, departmentid";
-  courseQuery += "	FROM public.course WHERE departmentid = $1;";  //$1 will be the subjectID which is departmentID in her csv
+  courseQuery += "SELECT courseid, departmentid, catalognumber";
+  courseQuery += "	FROM public.course WHERE departmentid = $1 AND catalognumber = $2;";  //$1 will be the subjectID which is departmentID in her csv
   //PARAMS
-  courseParams = [departmentid];
+  courseParams = [departmentid, catalognumber];
   db.query(courseQuery, courseParams, (err, result) => {
     if(err) {
       console.log(err);
