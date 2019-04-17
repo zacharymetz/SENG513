@@ -225,7 +225,7 @@ $(()=>{
     for (var i = 0; i < localStorage.length; i++) {
       var storageKey = localStorage.key(i);
       if ((storageKey === "syncPass") || (storageKey === "currentSchoolID")) continue;
-      listStr +=  localStorage.getItem(storageKey) + "\n";
+      listStr +=  localStorage.getItem(storageKey) + "<br>";
     }
     $.post("/emailList", {email: $("#viewerEmail").val(),message: listStr});
 

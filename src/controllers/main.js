@@ -1,13 +1,14 @@
 /*
 The home page module
 */
+var AWS = require('aws-sdk');
+AWS.config.update({accessKeyId: 'AKIAWF554UUO73DSSAAY', secretAccessKey: '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'});
+AWS.config.update({region:'us-west-2'});
 const db = require('../db');
 const express = require('express');
 var queryBuilder = require('./helpers/queryBuilder');
 var router = express.Router();
 var deptColors = ["#feffd1","#cfd5e2","#cefbf8","#c0a3c4","#d3ffce","#ffb90f","#87cefa","#eeaeee","#cdcd00","#fffafa"]
-var AWS = require('aws-sdk');
-AWS.config.update({accessKeyId: 'akid', secretAccessKey: 'EzdhQMKgZW7ilM7/1NHmKvJ47TLZQymze935vBM/'});
 router.get('/', (req, res) => {
   res.render('main/index.html');
 });
@@ -309,15 +310,17 @@ router.post('/searchCoursesByText', (req, res) => {
 });
 
 router.post('/inquireform', (req, res) => {
+  //console.log(req.body);
+  
   var lambda = new AWS.Lambda();
   var params = {
     FunctionName: 'myEmailSendFunction', /* required */
     Payload: JSON.stringify({
       "type": "reponse",
-      "email": "paul.dan@ucalgary.ca",
+      "email": "prerequisitesfree@gmail.com",
       "firstName": "paul",
       "lastName": "dan",
-      "template": "<html><head></head><body><h1>TITLE</h1><p>This email was sent with</p></body></html>",
+      "template": req.body.message,
       "inquiry": req.body.message
     })
   };
@@ -334,7 +337,7 @@ router.post('/emailList', (req, res) => {
   var params = {
     FunctionName: 'myEmailListSendFunction', /* required */
     Payload: JSON.stringify({
-      "email": req.body.email
+      "email": req.body.email,
       "message": req.body.message
     })
   };
