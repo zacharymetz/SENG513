@@ -354,11 +354,11 @@ router.post('/NewInstitution',(req,res)=>{
     } else {
       //  i think it was created so now we can create teh started account for the person and generate a password
       //  ( which for now will be returned )
-      var accountString = "INSERT INTO public.account( email, passworddigest, firstname, lastname, phonenumber, created_at) VALUES ($1, $2, $3, $4,  $5,now()) returning accountid";
-      var accountParams = [body.email,"test123",body.firstName,body.lastName,0];
+      var accountString = "INSERT INTO public.account( email, passworddigest, firstname, lastname, phonenumber, created_at) VALUES ($1, $2, $3, $4,  $5,now()) returning *";
+      var accountParams = [body.email,makeid(16),body.firstName,body.lastName,0];
       db.query(accountString,accountParams ,(err1, result1) => {
         if (err1) {
-          console.log(err1.stack);
+          console.log(err1);
           res.send(JSON.stringify({
               success : false,
               message : "Insitution was created but inital account was not, please go to accounts and create a new one there"
@@ -378,16 +378,18 @@ router.post('/NewInstitution',(req,res)=>{
                   message : "Insitution and account was created but permissions could not be initalized, please go to accounts and create a new one there"
               }));
             } else {
+              console.log(result1.rows[0].email);
+             
               //  everything is super dope
               var lambda = new AWS.Lambda();
               var params = {
-                FunctionName: 'myEmailSendFunction', /* required */
+                FunctionName: 'myCredFunction', /* required */
                 Payload: JSON.stringify({
                   "type": "reponse",
                   "email": result1.rows[0].email,
-                  "firstName": result1.rows[0].firstName,
-                  "lastName": result1.rows[0].lastName,
-                  "template": "<html><head></head><body><h1>TITLE</h1><p>This email was sent with</p></body></html>",
+                  "firstName": result1.rows[0].firstname,
+                  "lastName":  result1.rows[0].lastname,
+                  "template":  "<html><head></head><body><h1>Welcome to Prerequisites Free!</h1><p>Welcome to prerequisites free</p></body></html>" + "Your user name is your email adress: " + result1.rows[0].email + "<br>" + "your password is: " + result1.rows[0].passworddigest,
                   "inquiry": result1.rows[0].passworddigest
                 })
               };
@@ -410,24 +412,6 @@ router.post('/NewInstitution',(req,res)=>{
 
 });
 
-router.post('/testLambda', (req,res) => {
-  var lambda = new AWS.Lambda();
-  var params = {
-    FunctionName: 'myEmailSendFunction', /* required */
-    Payload: JSON.stringify({
-      "type": "reponse",
-      "email": "Paul.dan@ucalgary.ca",
-      "firstName": "Paul",
-      "lastName": "Dan",
-      "template": "<html><head></head><body><h1>TITLE</h1><p>This email was sent with</p></body></html>",
-      "inquiry": "How the fuck does this work"
-    })
-  };
-  lambda.invoke(params, function(err, data) {
-    if (err) console.log(err, err.stack); // an error occurred
-    else     console.log(data);           // successful response
-  });
-});
 
 
 router.post('/GetAccounts',(req,res)=>{
@@ -882,5 +866,15 @@ function checkCourse(departmentid, catalognumber, description, topicdescription,
 
 }
 
+
+function makeid(length) {
+  var text = "";
+  var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+  for (var i = 0; i < length; i++)
+    text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+  return text;
+}
 
 module.exports = router;
